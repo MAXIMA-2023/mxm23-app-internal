@@ -1,7 +1,7 @@
 "use client";
 import { Center, Box, Text, HStack } from "@chakra-ui/react";
 
-export default function MALPUN() {
+export default function STATEDetails() {
   return (
     <Center w={"100%"} h={"100vh"}>
       <Box w={"25em"} h={"auto"} boxShadow={"lg"}>
@@ -13,7 +13,7 @@ export default function MALPUN() {
           </HStack>
           <Box mt={"1em"}>
             <Text align={"left"} color={"white"} fontSize={"xl"} fontWeight={"normal"}>
-              Ini Malpun
+              Ini Detail STATE
             </Text>
           </Box>
         </Box>

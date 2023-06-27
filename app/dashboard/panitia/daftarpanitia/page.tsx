@@ -1,7 +1,7 @@
 "use client";
 import { Center, Box, Text, HStack } from "@chakra-ui/react";
 
-export default function Panitia() {
+export default function DaftarPanitia() {
   return (
     <Center w={"100%"} h={"100vh"}>
       <Box w={"25em"} h={"auto"} boxShadow={"lg"}>
@@ -13,7 +13,7 @@ export default function Panitia() {
           </HStack>
           <Box mt={"1em"}>
             <Text align={"left"} color={"white"} fontSize={"xl"} fontWeight={"normal"}>
-              Ini Panitia
+              Ini Daftar Panitia
             </Text>
           </Box>
         </Box>
