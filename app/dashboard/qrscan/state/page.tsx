@@ -16,6 +16,7 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import QRScanner from "@/components/qrscan/QRScanner";
+import Swal from "sweetalert2";
 
 // !CHANGEME: Ini cuma dummy data, nanti diganti schema dengan POST requests
 import { DummyPresensiData } from "../data";
@@ -39,6 +40,15 @@ export default function QRScanSTATE() {
 
           // *debouncing, biar ga open berkali kali
           if (isOpen) {
+            return;
+          }
+
+          if (!DummyPresensiData.state.isEligible) {
+            Swal.fire(
+              "Error!",
+              "Mahasiswa tidak Eligible untuk mengikuti STATE",
+              "error"
+            );
             return;
           }
 
@@ -113,6 +123,13 @@ export default function QRScanSTATE() {
                   colorScheme="green"
                   mr={3}
                   onClick={() => {
+                    if (!DummyPresensiData.state.masuk.isHadir) {
+                      Swal.fire(
+                        "Error!",
+                        "Mahasiswa belum absen masuk",
+                        "warning"
+                      );
+                    }
                     // !CHANGEME: POST Requests absen keluar dan schema buat disable button
                     console.log("ABSEN KELUAR");
                     onClose();

@@ -2,13 +2,18 @@
 export const DummyPresensiData = {
   id: "1a8e8ac8-d3a6-4580-90c6-524febea66b5",
   name: "Muhammad Fathan Ridhwan",
+
+  // kalo internal cuma ada NIM, kalo external
   nim: 69524,
-  isInternal: true,
+  ktp: 3603298463950009,
+
+  isInternal: false,
 
   state: {
     pilihan: "GDC UMN",
+    isEligible: false,
     masuk: {
-      isHadir: true,
+      isHadir: false,
       presensiAt: new Date(Date.now()).toLocaleString(),
     },
     keluar: {
@@ -16,7 +21,9 @@ export const DummyPresensiData = {
       presensiAt: null,
     },
   },
+
   malpun: {
+    isEligible: false,
     isHadir: false,
     presensiAt: null,
   },

@@ -20,6 +20,7 @@ import QRScanner from "@/components/qrscan/QRScanner";
 
 // !CHANGEME: Ini cuma dummy data, nanti diganti schema dengan POST requests
 import { DummyPresensiData } from "../data";
+import Swal from "sweetalert2";
 
 type Modal = {
   isSuccess: boolean;
@@ -39,6 +40,18 @@ export default function QRScanMALPUN() {
 
           // *debouncing, biar ga open berkali kali
           if (isOpen) {
+            return;
+          }
+
+          // !TODO: Handling buat akun yang gak eligible atau belum bayar.
+          if (!DummyPresensiData.malpun.isEligible) {
+            Swal.fire(
+              "Error!",
+              DummyPresensiData.isInternal
+                ? "Mahasiswa tidak eligible untuk mengikuti MALPUN"
+                : "Peserta tidak berhak untuk mengikuti MALPUN karena belum bayar",
+              "error"
+            );
             return;
           }
 
@@ -72,9 +85,15 @@ export default function QRScanMALPUN() {
           <ModalBody>
             {modalState.isSuccess ? (
               <Box>
-                <Text>
-                  <Text fontWeight={"bold"}>NIM</Text> {DummyPresensiData.nim}
-                </Text>
+                {DummyPresensiData.isInternal ? (
+                  <Text>
+                    <Text fontWeight={"bold"}>NIM</Text> {DummyPresensiData.nim}
+                  </Text>
+                ) : (
+                  <Text>
+                    <Text fontWeight={"bold"}>KTP</Text> {DummyPresensiData.ktp}
+                  </Text>
+                )}
                 <Text>
                   <Text fontWeight={"bold"}>Nama</Text> {DummyPresensiData.name}
                 </Text>
