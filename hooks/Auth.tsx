@@ -1,6 +1,6 @@
 import { isExpired, decodeToken } from "react-jwt";
 
-export default function useAuth() {
+export default function useAuth<T>() {
   const jwt = localStorage.getItem("jwt");
   const isJwtExpired = isExpired(jwt ?? "");
 
@@ -8,7 +8,7 @@ export default function useAuth() {
   const isLoggedOut = !jwt && isJwtExpired;
   const setJwt = (jwt: string) => localStorage.setItem("jwt", jwt);
   const removeJwt = () => localStorage.removeItem("jwt");
-  const decodedJwt = decodeToken(jwt ?? "");
+  const decodedJwt: T | null = decodeToken<T>(jwt ?? "");
 
   return { isLoggedIn, isLoggedOut, setJwt, removeJwt, decodedJwt };
 }
