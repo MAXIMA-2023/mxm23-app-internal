@@ -34,7 +34,7 @@ export default function QRScanSTATE() {
 
   return (
     <>
-      <title>MAXIMA 2023 Internal - QR Scan Malpun</title>
+      <title>MAXIMA 2023 Internal - QR Scan State</title>
       <Center w={"100%"} h={"100vh"}>
         <QRScanner
           onSuccess={(id) => {
