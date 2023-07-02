@@ -117,7 +117,7 @@ const QRScanner = ({
       </Button>
 
       {/* modal for menu */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Camera Settings</ModalHeader>

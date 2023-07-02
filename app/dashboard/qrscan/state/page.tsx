@@ -1,6 +1,20 @@
 "use client";
 import { useState } from "react";
-import { Center, Box, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, useDisclosure, Spacer } from "@chakra-ui/react";
+import {
+  Center,
+  Box,
+  Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  Spacer,
+} from "@chakra-ui/react";
 import QRScanner from "@/components/qrscan/QRScanner";
 import Swal from "sweetalert2";
 
@@ -32,7 +46,11 @@ export default function QRScanSTATE() {
             }
 
             if (!DummyPresensiData.state.isEligible) {
-              Swal.fire("Error!", "Mahasiswa tidak Eligible untuk mengikuti STATE", "error");
+              Swal.fire(
+                "Error!",
+                "Mahasiswa tidak Eligible untuk mengikuti STATE",
+                "error"
+              );
               return;
             }
 
@@ -53,10 +71,14 @@ export default function QRScanSTATE() {
 
         {/* !TODO: Buat modal alert */}
         {/* ?TESTING: useState bikin re render gak ya?, sayang performance camera */}
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader textColor={modalState.isSuccess ? "green.400" : "red.400"}>{modalState.isSuccess ? "Sukses!" : "Error!"}</ModalHeader>
+            <ModalHeader
+              textColor={modalState.isSuccess ? "green.400" : "red.400"}
+            >
+              {modalState.isSuccess ? "Sukses!" : "Error!"}
+            </ModalHeader>
             <ModalCloseButton />
 
             <ModalBody>
@@ -66,7 +88,8 @@ export default function QRScanSTATE() {
                     <Text fontWeight={"bold"}>NIM</Text> {DummyPresensiData.nim}
                   </Text>
                   <Text>
-                    <Text fontWeight={"bold"}>Nama</Text> {DummyPresensiData.name}
+                    <Text fontWeight={"bold"}>Nama</Text>{" "}
+                    {DummyPresensiData.name}
                   </Text>
                   <Text>
                     <Text fontWeight={"bold"}>State</Text>
@@ -104,7 +127,11 @@ export default function QRScanSTATE() {
                     mr={3}
                     onClick={() => {
                       if (!DummyPresensiData.state.masuk.isHadir) {
-                        Swal.fire("Error!", "Mahasiswa belum absen masuk", "warning");
+                        Swal.fire(
+                          "Error!",
+                          "Mahasiswa belum absen masuk",
+                          "warning"
+                        );
                       }
                       // !CHANGEME: POST Requests absen keluar dan schema buat disable button
                       console.log("ABSEN KELUAR");

@@ -1,6 +1,21 @@
 "use client";
 import { useState } from "react";
-import { Center, Box, Text, HStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, useDisclosure, Spacer } from "@chakra-ui/react";
+import {
+  Center,
+  Box,
+  Text,
+  HStack,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  Spacer,
+} from "@chakra-ui/react";
 import QRScanner from "@/components/qrscan/QRScanner";
 
 // !CHANGEME: Ini cuma dummy data, nanti diganti schema dengan POST requests
@@ -32,7 +47,13 @@ export default function QRScanMALPUN() {
 
             // !TODO: Handling buat akun yang gak eligible atau belum bayar.
             if (!DummyPresensiData.malpun.isEligible) {
-              Swal.fire("Error!", DummyPresensiData.isInternal ? "Mahasiswa tidak eligible untuk mengikuti MALPUN" : "Peserta tidak berhak untuk mengikuti MALPUN karena belum bayar", "error");
+              Swal.fire(
+                "Error!",
+                DummyPresensiData.isInternal
+                  ? "Mahasiswa tidak eligible untuk mengikuti MALPUN"
+                  : "Peserta tidak berhak untuk mengikuti MALPUN karena belum bayar",
+                "error"
+              );
               return;
             }
 
@@ -53,10 +74,14 @@ export default function QRScanMALPUN() {
 
         {/* !TODO: Buat modal alert */}
         {/* ?TESTING: useState bikin re render gak ya?, sayang performance camera */}
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader textColor={modalState.isSuccess ? "green.400" : "red.400"}>{modalState.isSuccess ? "Sukses!" : "Error!"}</ModalHeader>
+            <ModalHeader
+              textColor={modalState.isSuccess ? "green.400" : "red.400"}
+            >
+              {modalState.isSuccess ? "Sukses!" : "Error!"}
+            </ModalHeader>
             <ModalCloseButton />
 
             <ModalBody>
@@ -64,15 +89,18 @@ export default function QRScanMALPUN() {
                 <Box>
                   {DummyPresensiData.isInternal ? (
                     <Text>
-                      <Text fontWeight={"bold"}>NIM</Text> {DummyPresensiData.nim}
+                      <Text fontWeight={"bold"}>NIM</Text>{" "}
+                      {DummyPresensiData.nim}
                     </Text>
                   ) : (
                     <Text>
-                      <Text fontWeight={"bold"}>KTP</Text> {DummyPresensiData.ktp}
+                      <Text fontWeight={"bold"}>KTP</Text>{" "}
+                      {DummyPresensiData.ktp}
                     </Text>
                   )}
                   <Text>
-                    <Text fontWeight={"bold"}>Nama</Text> {DummyPresensiData.name}
+                    <Text fontWeight={"bold"}>Nama</Text>{" "}
+                    {DummyPresensiData.name}
                   </Text>
                   <Text>
                     <Text fontWeight={"bold"}>Status</Text>
