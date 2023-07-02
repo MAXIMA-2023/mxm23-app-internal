@@ -80,6 +80,7 @@ export default function SignUpPanitia() {
 
   return (
     <>
+      <title>MAXIMA 2023 Internal - Signup</title>
       <Flex h={"auto"} minH={["100vh", "100vh", "100vh", "100vh", "100vh"]} bgColor={"#F8FAFC"}>
         <Box w={"full"} py={["1em", "1em", "1.5em", "3em", "3em"]} px={["1em", "1em", "1.5em", "2em", "2em"]}>
           <Flex p={["1em", "0"]} position={"absolute"} minH={"100vh"} justifyContent={"center"} alignItems={"center"} right={"0"} left={"0"} top={"0 "} bottom={"0"}>
