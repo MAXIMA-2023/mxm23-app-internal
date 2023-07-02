@@ -1,8 +1,10 @@
 "use client";
 import { Center, Box, Text, HStack } from "@chakra-ui/react";
 
-export default function Verification() {
-  return (
+export default function Verifikasi() {
+  <>
+    <title>MAXIMA 2023 Internal - Verifikasi</title>
+    return (
     <Center w={"100%"} h={"100vh"}>
       <Box w={"25em"} h={"auto"} boxShadow={"lg"}>
         <Box w={"full"} p={"2em"} bg={"RGBA(0, 0, 0, 0.92)"} rounded={"md"}>
@@ -13,11 +15,12 @@ export default function Verification() {
           </HStack>
           <Box mt={"1em"}>
             <Text align={"left"} color={"white"} fontSize={"xl"} fontWeight={"normal"}>
-              Ini Verification
+              Ini Verifikasi
             </Text>
           </Box>
         </Box>
       </Box>
     </Center>
-  );
+    );
+  </>;
 }
