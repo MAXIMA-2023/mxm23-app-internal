@@ -25,6 +25,10 @@ type CameraSettings = {
   cameraFacing: "environment" | "user";
 };
 
+const ViewFinder = () => {
+  return <></>;
+};
+
 const QRScanner = ({
   onSuccess,
   onError,
@@ -54,6 +58,9 @@ const QRScanner = ({
       <QrScanner
         // ? TESTING: apakah harus di kasih > 500ms (default) per scan?
         scanDelay={1000}
+        // remove default viewfinder
+        viewFinderBorder={0}
+        viewFinder={ViewFinder}
         containerStyle={{ height: "100%", aspectRatio: 9 / 16 }}
         videoStyle={{
           objectFit: "cover",
