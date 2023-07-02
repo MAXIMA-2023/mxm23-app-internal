@@ -20,7 +20,6 @@ interface IUserInfo {
   email: string;
   password: string;
   divisiID: string;
-
 }
 
 export default function SignUpPanitia() {
@@ -82,8 +81,8 @@ export default function SignUpPanitia() {
   return (
     <>
       <Flex h={"auto"} minH={["100vh", "100vh", "100vh", "100vh", "100vh"]} bgColor={"#F8FAFC"}>
-      <Box w={"full"} py={["1em", "1em", "1.5em", "3em", "3em"]} px={["1em", "1em", "1.5em", "2em", "2em"]}>
-      <Flex p={["1em", "0"]} position={"absolute"} minH={"100vh"} justifyContent={"center"} alignItems={"center"} right={"0"} left={"0"} top={"0 "} bottom={"0"}>
+        <Box w={"full"} py={["1em", "1em", "1.5em", "3em", "3em"]} px={["1em", "1em", "1.5em", "2em", "2em"]}>
+          <Flex p={["1em", "0"]} position={"absolute"} minH={"100vh"} justifyContent={"center"} alignItems={"center"} right={"0"} left={"0"} top={"0 "} bottom={"0"}>
             <Flex w={"auto"} maxW={"35em"} h={"auto"} padding={"2em 2.5em"} borderRadius={"2em"} boxShadow={"lg"} bgColor={"#fff"} justifyContent={"center"} alignItems={"center"}>
               <Box>
                 <Box mb={"1em"}>
@@ -207,7 +206,7 @@ export default function SignUpPanitia() {
               </Box>
             </Flex>
           </Flex>
-      </Box>
+        </Box>
       </Flex>
       <ToastContainer position="bottom-left" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </>
