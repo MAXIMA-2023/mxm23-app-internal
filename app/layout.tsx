@@ -1,7 +1,7 @@
 import { Providers } from "./providers";
-import { Source_Code_Pro } from "next/font/google";
+import { Poppins } from "next/font/google";
 
-const source_code_pro = Source_Code_Pro({
+const poppins = Poppins({
   subsets: ["latin"],
   weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
 });
@@ -9,8 +9,8 @@ const source_code_pro = Source_Code_Pro({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <title>Ganti ini</title>
-      <body className={source_code_pro.className}>
+      <title>MAXIMA 2023 - Internal</title>
+      <body className={poppins.className}>
         <Providers>{children}</Providers>
       </body>
     </html>
