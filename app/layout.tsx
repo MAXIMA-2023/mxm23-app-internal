@@ -9,7 +9,7 @@ const poppins = Poppins({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <title>MAXIMA 2023 - Internal</title>
+      <link rel="icon" href="/LogoMaxima.png" />
       <body className={poppins.className}>
         <Providers>{children}</Providers>
       </body>
