@@ -32,7 +32,8 @@ import {
 
 //importing react icons
 import { AiOutlineUser } from "react-icons/ai";
-import { MdSpaceDashboard, MdPeople, MdToggleOn } from "react-icons/md";
+import { HiOutlineOfficeBuilding, HiOutlineSparkles } from "react-icons/hi";
+import { MdSpaceDashboard, MdPeople, MdToggleOn, MdShield, MdOutlineShield, MdOutlineSchool, MdOutlineToggleOff, MdOutlineAirplanemodeActive, MdPeopleOutline, MdOutlineViewList, MdOutlineEdit, MdQrCodeScanner} from "react-icons/md";
 import { BsToggles, BsPersonFill, BsFillPersonLinesFill, BsFillPersonCheckFill, BsCheckCircle } from "react-icons/bs";
 import { IoRocketSharp, IoPeopleSharp } from "react-icons/io5";
 import { BiLogOut } from "react-icons/bi";
@@ -81,8 +82,8 @@ export default function Sidebar() {
               {/* {divisiID === "0" || divisiID === "5" ? ( */}
               <>
                 <Box>
-                  <Link href={"/dashboard/toggles"}>
-                    <Flex alignItems={"center"} textColor={pathname === "/dashboard/toggles" ? "#EF7903" : "#9CA3AF"} _hover={{ textColor: "#EF7903" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                  <Link href={"/dashboard/verifikasi"}>
+                    <Flex alignItems={"center"} textColor={pathname === "/dashboard/verifikasi" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
                       <Icon as={BsCheckCircle} boxSize={iconBoxSize} />
                       <Text ml={"0.7em"} fontSize={"md"}>
                         Verifikasi
@@ -92,8 +93,8 @@ export default function Sidebar() {
                 </Box>
                 <Box>
                   <Link href={"/dashboard/toggles"}>
-                    <Flex alignItems={"center"} textColor={pathname === "/dashboard/toggles" ? "#EF7903" : "#9CA3AF"} _hover={{ textColor: "#EF7903" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
-                      <Icon as={BsToggles} boxSize={iconBoxSize} />
+                    <Flex alignItems={"center"} textColor={pathname === "/dashboard/toggles" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                      <Icon as={MdOutlineToggleOff} boxSize={iconBoxSize} />
                       <Text ml={"0.7em"} fontSize={"md"}>
                         Toggles
                       </Text>
@@ -107,7 +108,7 @@ export default function Sidebar() {
               {/* )} */}
               <Box>
                 <Link href={"/dashboard"}>
-                  <Flex alignItems={"center"} textColor={pathname === "/dashboard" ? "#EF7903" : "#9CA3AF"} _hover={{ textColor: "#EF7903" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                  <Flex alignItems={"center"} textColor={pathname === "/dashboard" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
                     <Icon as={MdSpaceDashboard} boxSize={iconBoxSize} />
                     <Text ml={"0.7em"} fontSize={"md"}>
                       Dashboard
@@ -125,15 +126,15 @@ export default function Sidebar() {
                   </Flex>
                 </Link>
               </Box> */}
-              <Flex justifyContent={"start"} textColor={pathname === "/dashboard/oprec/agents" ? "#F97316" : pathname === "/dashboard/oprec/admission" ? "#F97316" : "#9CA3AF"}>
+              <Flex justifyContent={"start"} textColor={pathname === "/dashboard/oprec/agents" ? "#185C99" : pathname === "/" ? "#185C99" : "#9CA3AF"}>
                 <Accordion w={"full"} allowToggle>
                   <AccordionItem border={"none"}>
-                    <AccordionButton p={0} _hover={{ textColor: "#EF7903" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <AccordionButton p={0} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
                       <Box flex="1" textAlign="left">
                         <Flex alignItems={"center"}>
-                          <Icon as={IoRocketSharp} boxSize={iconBoxSize} />
+                          <Icon as={MdOutlineShield} boxSize={iconBoxSize} />
                           <Text ml={"0.7em"} fontSize={"md"}>
-                            OPREC
+                            Panitia
                           </Text>
                         </Flex>
                       </Box>
@@ -143,20 +144,20 @@ export default function Sidebar() {
                       <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"0.5em"}>
                         <Box>
                           <Link href={"/dashboard/oprec/agents"}>
-                            <Flex alignItems={"center"} _hover={{ textColor: "#EF7903" }} textColor={pathname === "/dashboard/oprec/agents" ? "#EF7903" : "#9CA3AF"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
-                              <Icon ml={"1.75em"} as={BsFillPersonLinesFill} boxSize={iconBoxSize} />
+                            <Flex alignItems={"center"} _hover={{ textColor: "#185C99" }} textColor={pathname === "/" ? "#185C99" : "#9CA3AF"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={MdPeopleOutline} boxSize={iconBoxSize} />
                               <Text ml={"0.5em"} fontSize={"md"}>
-                                Agents
+                                Daftar Panitia
                               </Text>
                             </Flex>
                           </Link>
                         </Box>
                         <Box>
                           <Link href={"/dashboard/oprec/admission"}>
-                            <Flex alignItems={"center"} textColor={pathname === "/dashboard/oprec/admission" ? "#EF7903" : "#9CA3AF"} _hover={{ textColor: "#EF7903" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
-                              <Icon ml={"1.75em"} as={BsFillPersonCheckFill} boxSize={iconBoxSize} />
+                            <Flex alignItems={"center"} textColor={pathname === "/dashboard/oprec/admission" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={MdPeopleOutline} boxSize={iconBoxSize} />
                               <Text ml={"0.5em"} fontSize={"md"}>
-                                Admission
+                                Panitia Divisi
                               </Text>
                             </Flex>
                           </Link>
@@ -166,6 +167,97 @@ export default function Sidebar() {
                   </AccordionItem>
                 </Accordion>
               </Flex>
+              <Box>
+                <Link href={"/organisator"}>
+                  <Flex alignItems={"center"} textColor={pathname === "/organisator" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={HiOutlineOfficeBuilding} boxSize={iconBoxSize} />
+                    <Text ml={"0.7em"} fontSize={"md"}>
+                      Organisator
+                    </Text>
+                  </Flex>
+                </Link>
+              </Box>
+              <Box>
+                <Link href={"/mahasiswa"}>
+                  <Flex alignItems={"center"} textColor={pathname === "/mahasiswa" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={MdOutlineSchool} boxSize={iconBoxSize} />
+                    <Text ml={"0.7em"} fontSize={"md"}>
+                      Mahasiswa
+                    </Text>
+                  </Flex>
+                </Link>
+              </Box>
+              <Flex justifyContent={"start"} textColor={pathname === "/" ? "#185C99" : pathname === "/" ? "#185C99" : "#9CA3AF"}>
+                <Accordion w={"full"} allowToggle>
+                  <AccordionItem border={"none"}>
+                    <AccordionButton p={0} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                      <Box flex="1" textAlign="left">
+                        <Flex alignItems={"center"}>
+                          <Icon as={MdOutlineAirplanemodeActive} boxSize={iconBoxSize} />
+                          <Text ml={"0.7em"} fontSize={"md"}>
+                            STATE
+                          </Text>
+                        </Flex>
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                    <AccordionPanel p={0}>
+                      <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"0.5em"}>
+                        <Box>
+                          <Link href={"/"}>
+                            <Flex alignItems={"center"} _hover={{ textColor: "#185C99" }} textColor={pathname === "/" ? "#185C99" : "#9CA3AF"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={MdOutlineViewList} boxSize={iconBoxSize} />
+                              <Text ml={"0.5em"} fontSize={"md"}>
+                                Daftar State
+                              </Text>
+                            </Flex>
+                          </Link>
+                        </Box>
+                        <Box>
+                          <Link href={"/"}>
+                            <Flex alignItems={"center"} textColor={pathname === "/" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={MdOutlineEdit} boxSize={iconBoxSize} />
+                              <Text ml={"0.5em"} fontSize={"md"}>
+                                Sunting
+                              </Text>
+                            </Flex>
+                          </Link>
+                        </Box>
+                        <Box>
+                          <Link href={"/"}>
+                            <Flex alignItems={"center"} textColor={pathname === "/" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={MdPeopleOutline} boxSize={iconBoxSize} />
+                              <Text ml={"0.5em"} fontSize={"md"}>
+                                Detail dan Peserta
+                              </Text>
+                            </Flex>
+                          </Link>
+                        </Box>
+                      </Stack>
+                    </AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
+              </Flex>
+              <Box>
+                <Link href={"/"}>
+                  <Flex alignItems={"center"} textColor={pathname === "/" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={HiOutlineSparkles} boxSize={iconBoxSize} />
+                    <Text ml={"0.7em"} fontSize={"md"}>
+                      MALPUN
+                    </Text>
+                  </Flex>
+                </Link>
+              </Box>
+              <Box>
+                <Link href={"/"}>
+                  <Flex alignItems={"center"} textColor={pathname === "/" ? "#185C99" : "#9CA3AF"} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={MdQrCodeScanner} boxSize={iconBoxSize} />
+                    <Text ml={"0.7em"} fontSize={"md"}>
+                      QR Scan
+                    </Text>
+                  </Flex>
+                </Link>
+              </Box>
             </Stack>
           </Box>
         </Flex>
