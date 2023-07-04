@@ -133,7 +133,7 @@ const QRScanner = ({
         viewFinder={ViewFinder}
         containerStyle={{
           height: "100%",
-          paddingTop: "1em",
+          padding: 0,
           aspectRatio: window.innerWidth / window.outerHeight,
         }}
         videoStyle={{
