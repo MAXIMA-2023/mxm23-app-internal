@@ -3,6 +3,7 @@ import { QrScanner } from "@yudiel/react-qr-scanner";
 import { useForm, Controller } from "react-hook-form";
 import {
   Button,
+  IconButton,
   Text,
   Modal,
   ModalBody,
@@ -18,17 +19,86 @@ import {
   Input,
   Select,
   HStack,
+  Box,
+  Icon,
 } from "@chakra-ui/react";
+import { MdSettings, MdCropFree, MdCrop } from "react-icons/md";
 
 type CameraSettings = {
   fps: number;
   cameraFacing: "environment" | "user";
 };
 
-const ViewFinder = () => {
-  return <></>;
+const ViewFinderSvg = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      version="1.1"
+      x="0px"
+      y="0px"
+      viewBox="0 0 100 150"
+      enable-background="new 0 0 100 100"
+    >
+      <g xmlns="http://www.w3.org/2000/svg">
+        <g>
+          <polygon
+            points="13.2,30 12.2,30 12.2,12.2 30,12.2 30,13.2 13.2,13.2   "
+            fill="#FFFFFF"
+          />
+        </g>
+        <g>
+          <polygon
+            points="70,13.2 70,12.2 87.8,12.2 87.8,30 86.8,30 86.8,13.2   "
+            fill="#FFFFFF"
+          />
+        </g>
+        <g>
+          <polygon
+            points="86.8,70 87.8,70 87.8,87.8 70,87.8 70,86.8 86.8,86.8   "
+            fill="#FFFFFF"
+          />
+        </g>
+        <g>
+          <polygon
+            points="30,86.8 30,87.8 12.2,87.8 12.2,70 13.2,70 13.2,86.8   "
+            fill="#FFFFFF"
+          />
+        </g>
+      </g>
+    </svg>
+  );
 };
 
+const ViewFinder = () => {
+  return (
+    <Box
+      position="absolute"
+      top={0}
+      bottom={0}
+      left={0}
+      right={0}
+      zIndex={1}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Box
+        position="relative"
+        width={["16em", "20em", "24em", "32em", "32em"]}
+        height={["16em", "20em", "24em", "32em", "32em"]}
+        bg="transparent"
+        boxShadow={"0 0 0 1000px rgba(0, 0, 0, 0.5)"}
+        borderRadius="md"
+      >
+        <Icon
+          as={ViewFinderSvg}
+          boxSize={["16em", "20em", "24em", "32em", "32em"]}
+          color="white"
+        />
+      </Box>
+    </Box>
+  );
+};
 const QRScanner = ({
   onSuccess,
   onError,
@@ -61,7 +131,11 @@ const QRScanner = ({
         // remove default viewfinder
         viewFinderBorder={0}
         viewFinder={ViewFinder}
-        containerStyle={{ height: "100%", aspectRatio: 9 / 16 }}
+        containerStyle={{
+          height: "100%",
+          paddingTop: "1em",
+          aspectRatio: window.innerWidth / window.outerHeight,
+        }}
         videoStyle={{
           objectFit: "cover",
         }}
@@ -104,17 +178,19 @@ const QRScanner = ({
       />
 
       {/* floating setting */}
-      <Button
-        position="fixed"
+
+      <IconButton
+        aria-label="scanner-settings"
+        icon={<MdSettings color="#FFFFFF" />}
+        position="absolute"
         bottom={8}
         right={8}
-        borderRadius="full"
+        borderRadius="md"
         size="lg"
-        zIndex={1}
+        bgColor="#185C99"
+        zIndex={2}
         onClick={onOpen}
-      >
-        Settings
-      </Button>
+      />
 
       {/* modal for menu */}
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -129,11 +205,11 @@ const QRScanner = ({
               onClose();
             })}
           >
-            <ModalBody>
+            <ModalBody textColor="#1e1d22">
               <FormControl isInvalid={!!errors.fps}>
                 <FormLabel>FPS</FormLabel>
                 <Input
-                  // placeholder={cameraState.fps.toString()}
+                  placeholder="0 (default)"
                   id="fps"
                   type="number"
                   {...register("fps", {
@@ -186,18 +262,24 @@ const QRScanner = ({
                 </FormControl>
               </HStack>
               <Text py={8} textAlign="justify">
-                <Text fontWeight="bold">Note :</Text> FPS yang lebih rendah akan
-                membuat baterai mu lebih irit. Namun, apabila FPS terlalu
-                rendah, scanner akan menjadi delay. Set ke default (0) apabila
-                kamu tidak mau ribet.
+                <Text fontWeight="medium">Note :</Text> FPS yang lebih rendah
+                akan membuat baterai mu lebih irit. Namun, FPS yang terlalu
+                rendah akan membuat scanner menjadi delay. Set ke default (0)
+                apabila kamu tidak mau ribet.
               </Text>
             </ModalBody>
 
             <ModalFooter>
-              <Button type="submit" colorScheme="green" mr={3}>
+              <Button type="submit" color="#185C99" mr={3}>
                 Change
               </Button>
-              <Button colorScheme="red" mr={3} onClick={onClose}>
+              <Button
+                color="#185C99"
+                // outlineColor="#185C99"
+                variant="outline"
+                // mr={3}
+                onClick={onClose}
+              >
                 Cancel
               </Button>
             </ModalFooter>
