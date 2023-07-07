@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Text, Flex, Center, Stack, InputGroup, InputLeftElement, InputRightElement, Input, Icon, Button, Select, textDecoration, FormControl, FormLabel } from "@chakra-ui/react";
+import { Box, Text, Flex, Center, Stack, InputGroup, InputLeftElement, InputRightElement, Input, Icon, Button, Select, textDecoration, FormControl, FormLabel, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 // import Container from "@/components/Container";
 import { RiAccountCircleFill } from "react-icons/ri";
 import { IoKey } from "react-icons/io5";
@@ -20,6 +20,8 @@ interface IUserInfo {
   email: string;
   password: string;
   divisiID: string;
+  role: string;
+  stateID: string;
 }
 
 export default function SignUpPanitia() {
@@ -56,6 +58,7 @@ export default function SignUpPanitia() {
       formData.append("name", data.name);
       formData.append("email", data.email);
       formData.append("divisiID", data.divisiID);
+      formData.append("role", data.role);
       await axios.post(`${process.env.API_URL}/api/`, formData);
       toast.success("Berhasil Terdaftar! harap menunggu verifikasi dari BPH atau Facio", {
         position: "bottom-left",
@@ -170,14 +173,42 @@ export default function SignUpPanitia() {
                         <Box>
                           <FormLabel>
                             <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
-                              Divisi
+                              Role
                             </Text>
                           </FormLabel>
-                          <Select {...register("divisiID", { required: "Divisi harus dipilih" })} w={"full"} placeholder={"Pilih Divisi"} size={"md"}>
-                            <option value="1">Organisator</option>
-                            <option value="2">Panitia</option>
-                          </Select>
-                          {errors.divisiID !== undefined && <Text textColor={"red"}>{errors.divisiID.message}</Text>}
+                          <Tabs isFitted variant='enclosed'>
+                            <TabList mb='1em' {...register("role", { required: "Role harus dipilih" })}>
+                              <Tab _selected={{ color: 'white', bg: 'blue.500' }}>Panitia</Tab>
+                              <Tab _selected={{ color: 'white', bg: 'blue.500' }}>Organisator</Tab>
+                            </TabList>
+                            <TabPanels>
+                              <TabPanel>
+                              <Select {...register("divisiID", { required: "Divisi harus dipilih" })} w={"full"} placeholder={"Pilih Divisi"} size={"md"}>
+                                <option value="1">Eventus - Acara</option>
+                                <option value="2">Novus - Publication</option>
+                                <option value="3">Effigia - Dokumentasi</option>
+                                <option value="4">Ornatus - Dekorasi</option>
+                                <option value="5">Facio - Website</option>
+                                <option value="6">Servanda - Sponsor</option>
+                                <option value="7">Mercatura - Merchandise</option>
+                                <option value="8">Nuntium - Media Relation</option>
+                                <option value="9">Lammina - Fresh Money</option>
+                                <option value="10">Fiducia - Perlengkapan</option>
+                                <option value="11">Emporium - Bazaar</option>
+                                <option value="12">Videre - Visual</option>
+                                <option value="13">Inspice - Registrasi</option>
+                                <option value="14">Armatura - Keamanan</option>
+                              </Select>
+                              {errors.divisiID !== undefined && <Text textColor={"red"}>{errors.divisiID.message}</Text>}
+                              </TabPanel>
+                              <TabPanel>
+                              <Select {...register("stateID", { required: "State harus dipilih" })} w={"full"} size={"md"}>
+                                <option value="1">State</option>
+                              </Select>
+                              {errors.stateID !== undefined && <Text textColor={"red"}>{errors.stateID.message}</Text>}
+                              </TabPanel>
+                            </TabPanels>
+                          </Tabs>
                         </Box>
                       </Stack>
                     </Center>
