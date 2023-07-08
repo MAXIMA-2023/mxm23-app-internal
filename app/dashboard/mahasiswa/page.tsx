@@ -49,7 +49,7 @@ export default function Dashboard() {
   const columnsMahasiswa: MUIDataTableColumn[] = [
     {
       label: "Nama",
-      name: "name",
+      name: "nama",
       options: {
         filter: true,
         customBodyRender: (value: any, tableMeta: any) => {
@@ -110,9 +110,9 @@ export default function Dashboard() {
   return (
     <>
     <title>MAXIMA 2023 Internal - Mahasiswa</title>
-    <Layout title="Mahasiswa">
+    <Layout title="Mahasiswa" showDashboardButton disablePadding>
     <Box w={"full"} overflowY={"auto"} boxShadow={"xs"}>
-      <Box w={"full"}>
+      <Box w={"full"} mx={4} my={4}>
       <ThemeProvider theme={createTheme()}>
         <MUIDataTable
           title={""}
