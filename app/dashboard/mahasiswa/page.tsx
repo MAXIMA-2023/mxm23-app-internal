@@ -10,7 +10,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 
 export default function Dashboard() {
-  
+
   // interface DataMahasiswa {
   //   name: string;
   //   nim: string;
@@ -55,7 +55,6 @@ export default function Dashboard() {
         customBodyRender: (value: any, tableMeta: any) => {
           return (
             <Flex w={"12em"} alignItems={"center"}>
-              {/* {tableMeta.rowData[13] !== 0 ? <CheckCircleIcon w={4} h={4} color={"green.500"} /> : <></>} */}
               <Text>{value}</Text>
             </Flex>
           );
@@ -70,7 +69,6 @@ export default function Dashboard() {
           return (
             <HStack>
               <Text>{value}</Text>
-              {/* {tableMeta.rowData[3] === true ? <CheckCircleIcon w={4} h={4} color={"green.500"} /> : <></>} */}
             </HStack>
           );
         },
