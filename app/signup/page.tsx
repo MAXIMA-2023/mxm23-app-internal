@@ -203,7 +203,7 @@ export default function SignUpPanitia() {
                               </TabPanel>
                               <TabPanel>
                               <Select {...register("stateID", { required: "State harus dipilih" })} w={"full"} size={"md"}>
-                                <option value="1">State</option>
+                                <option value="1">STATE</option>
                               </Select>
                               {errors.stateID !== undefined && <Text textColor={"red"}>{errors.stateID.message}</Text>}
                               </TabPanel>
