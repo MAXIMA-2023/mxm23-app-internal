@@ -1,6 +1,7 @@
 import React from "react";
 import { Center, Box, Text, HStack, Flex, Icon } from "@chakra-ui/react";
 import Sidebar from "./Sidebar";
+import { AppBar, BottomBar } from "./MobileLayout";
 import Link from "next/link";
 import { BsArrowLeftShort } from "react-icons/bs";
 
@@ -26,6 +27,7 @@ export default function Layout({
   return (
     <>
       <Sidebar />
+      <AppBar />
       <Box w={"full"} h={"full"} bgColor={"#FAFAFA"}>
         <Box
           w={"full"}
@@ -82,6 +84,7 @@ export default function Layout({
           </Box>
         </Box>
       </Box>
+      <BottomBar />
     </>
   );
 }
