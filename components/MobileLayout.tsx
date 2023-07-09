@@ -128,6 +128,9 @@ export const AppBar = () => {
               <Text px={"1em"} fontWeight={"medium"}>
                 Windah Barusadar
               </Text>
+              <Text textColor={"#6B6773"} px={"1em"} fontWeight={"medium"}>
+                Facio
+              </Text>
               <MenuDivider />
               <MenuItem color={"red.500"}>
                 <Icon as={MdLogout} />
