@@ -31,12 +31,7 @@ import {
 } from "@chakra-ui/react";
 
 //importing react icons
-import {
-  HiOfficeBuilding,
-  HiOutlineOfficeBuilding,
-  HiOutlineSparkles,
-  HiSparkles,
-} from "react-icons/hi";
+import { HiOfficeBuilding, HiOutlineOfficeBuilding, HiOutlineSparkles, HiSparkles } from "react-icons/hi";
 import {
   MdOutlineSpaceDashboard,
   MdOutlineShield,
@@ -61,14 +56,7 @@ import {
   MdViewList,
   MdEdit,
 } from "react-icons/md";
-import {
-  BsToggles,
-  BsPersonFill,
-  BsFillPersonLinesFill,
-  BsFillPersonCheckFill,
-  BsCheckCircle,
-  BsCheckCircleFill,
-} from "react-icons/bs";
+import { BsToggles, BsPersonFill, BsFillPersonLinesFill, BsFillPersonCheckFill, BsCheckCircle, BsCheckCircleFill } from "react-icons/bs";
 import { IoRocketSharp, IoPeopleSharp } from "react-icons/io5";
 import { BiLogOut } from "react-icons/bi";
 import Link from "next/link";
@@ -99,35 +87,15 @@ export default function Sidebar() {
 
   return (
     <>
-      <Box
-        display={["none", "none", "none", "block"]}
-        w={["17.5em", "17.5em", "17.5em", "15.5em", "20em"]}
-        position={"fixed"}
-      >
-        <Flex
-          py={"1.5em"}
-          justifyContent={"left"}
-          h={"100vh"}
-          bgColor={"white"}
-          overflowY={"auto"}
-          boxShadow={"md"}
-        >
+      <Box display={["none", "none", "none", "block"]} w={["17.5em", "17.5em", "17.5em", "15.5em", "20em"]} position={"fixed"}>
+        <Flex py={"1.5em"} justifyContent={"left"} h={"100vh"} bgColor={"white"} overflowY={"auto"} boxShadow={"md"}>
           <Box w={"full"}>
             <Flex px={"2.5em"} alignItems={"center"} mb={"4em"}>
               <Box>
-                <Image
-                  src={"/assets/LogoMaxima.png"}
-                  alt={"logo"}
-                  boxSize={["2em", "2em", "2em", "2em", "3em"]}
-                />
+                <Image src={"/assets/LogoMaxima.png"} alt={"logo"} boxSize={["2em", "2em", "2em", "2em", "3em"]} />
               </Box>
               <Box ml={"1em"}>
-                <Text
-                  align={"left"}
-                  color={"#1E1D22"}
-                  fontSize={"2xl"}
-                  fontWeight={"semibold"}
-                >
+                <Text align={"left"} color={"#1E1D22"} fontSize={"2xl"} fontWeight={"semibold"}>
                   MAXIMA 2023
                 </Text>
               </Box>
@@ -136,25 +104,8 @@ export default function Sidebar() {
               {/* {divisiID === "0" || divisiID === "5" ? ( */}
               <Box>
                 <Link href={"/dashboard/verifikasi"}>
-                  <Flex
-                    alignItems={"center"}
-                    color={
-                      pathname === "/dashboard/verifikasi"
-                        ? "#185C99"
-                        : "#9CA3AF"
-                    }
-                    _hover={{ color: "#185C99" }}
-                    cursor={"pointer"}
-                    transition={"0.1s ease-in-out"}
-                  >
-                    <Icon
-                      as={
-                        pathname === "/dashboard/verifikasi"
-                          ? BsCheckCircleFill
-                          : BsCheckCircle
-                      }
-                      boxSize={iconBoxSize}
-                    />
+                  <Flex alignItems={"center"} color={pathname === "/dashboard/verifikasi" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={pathname === "/dashboard/verifikasi" ? BsCheckCircleFill : BsCheckCircle} boxSize={iconBoxSize} />
                     <Text ml={"0.7em"} fontSize={"md"}>
                       Verifikasi
                     </Text>
@@ -163,50 +114,22 @@ export default function Sidebar() {
               </Box>
               <Box>
                 <Link href={"/dashboard/toggles"}>
-                  <Flex
-                    alignItems={"center"}
-                    color={
-                      pathname === "/dashboard/toggles" ? "#185C99" : "#9CA3AF"
-                    }
-                    _hover={{ color: "#185C99" }}
-                    cursor={"pointer"}
-                    transition={"0.1s ease-in-out"}
-                  >
-                    <Icon
-                      as={
-                        pathname === "/dashboard/toggles"
-                          ? MdToggleOff
-                          : MdOutlineToggleOff
-                      }
-                      boxSize={iconBoxSize}
-                    />
+                  <Flex alignItems={"center"} color={pathname === "/dashboard/toggles" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={pathname === "/dashboard/toggles" ? MdToggleOff : MdOutlineToggleOff} boxSize={iconBoxSize} />
                     <Text ml={"0.7em"} fontSize={"md"}>
                       Toggles
                     </Text>
                   </Flex>
                 </Link>
               </Box>
-              <Divider borderWidth={"0.05em"} borderColor={"blackAlpha.500"} />
+              <Divider w={"full"} borderWidth={"0.05em"} borderColor={"#1E1D22"} />
               {/* ) : ( */}
               {/* <></> */}
               {/* )} */}
               <Box>
                 <Link href={"/dashboard"}>
-                  <Flex
-                    alignItems={"center"}
-                    color={pathname === "/dashboard" ? "#185C99" : "#9CA3AF"}
-                    _hover={{ color: "#185C99" }}
-                    cursor={"pointer"}
-                    transition={"0.1s ease-in-out"}
-                  >
-                    <Icon
-                      as={
-                        pathname === "/dashboard"
-                          ? MdSpaceDashboard
-                          : MdOutlineSpaceDashboard
-                      }
-                      boxSize={iconBoxSize}
-                    />
+                  <Flex alignItems={"center"} color={pathname === "/dashboard" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={pathname === "/dashboard" ? MdSpaceDashboard : MdOutlineSpaceDashboard} boxSize={iconBoxSize} />
                     <Text ml={"0.7em"} fontSize={"md"}>
                       Dashboard
                     </Text>
@@ -215,7 +138,7 @@ export default function Sidebar() {
               </Box>
               {/* <Box mb={"2em"}>
                 <Link href={"/dashboard/oprec"}>
-                  <Flex alignItems={"center"} textColor={pathname === "/dashboard/oprec" ? "#EF7903" : "#9CA3AF"} _hover={{ textColor: "#EF7903" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                  <Flex alignItems={"center"} textColor={pathname === "/dashboard/oprec" ? "#EF7903" : "#1E1D22"} _hover={{ textColor: "#EF7903" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
                     <Icon as={IoRocketSharp} boxSize={6} />
                     <Text ml={"0.7em"} fontSize={"md"}>
                       OPREC
@@ -223,38 +146,13 @@ export default function Sidebar() {
                   </Flex>
                 </Link>
               </Box> */}
-              <Flex
-                justifyContent={"start"}
-                textColor={
-                  pathname.includes("/dashboard/panitia")
-                    ? "#185C99"
-                    : "#9CA3AF"
-                }
-              >
-                <Accordion
-                  w={"full"}
-                  allowToggle
-                  defaultIndex={
-                    pathname.includes("/dashboard/panitia") ? [0] : undefined
-                  }
-                >
+              <Flex justifyContent={"start"} textColor={pathname.includes("/dashboard/panitia") ? "#185C99" : "#1E1D22"}>
+                <Accordion w={"full"} allowToggle defaultIndex={pathname.includes("/dashboard/panitia") ? [0] : undefined}>
                   <AccordionItem border={"none"}>
-                    <AccordionButton
-                      p={0}
-                      _hover={{ color: "#185C99" }}
-                      cursor={"pointer"}
-                      transition={"0.1s ease-in-out"}
-                    >
+                    <AccordionButton p={0} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
                       <Box flex="1" textAlign="left">
                         <Flex alignItems={"center"}>
-                          <Icon
-                            as={
-                              pathname.includes("/dashboard/panitia")
-                                ? MdShield
-                                : MdOutlineShield
-                            }
-                            boxSize={iconBoxSize}
-                          />
+                          <Icon as={pathname.includes("/dashboard/panitia") ? MdShield : MdOutlineShield} boxSize={iconBoxSize} />
                           <Text ml={"0.7em"} fontSize={"md"}>
                             Panitia
                           </Text>
@@ -263,35 +161,11 @@ export default function Sidebar() {
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel p={0}>
-                      <Stack
-                        ml={"0.35em"}
-                        mt={"0.5em"}
-                        direction={"column"}
-                        spacing={"0.5em"}
-                      >
+                      <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"0.5em"}>
                         <Box>
                           <Link href={"/dashboard/panitia/daftarpanitia"}>
-                            <Flex
-                              alignItems={"center"}
-                              _hover={{ color: "#185C99" }}
-                              color={
-                                pathname === "/dashboard/panitia/daftarpanitia"
-                                  ? "#185C99"
-                                  : "#9CA3AF"
-                              }
-                              cursor={"pointer"}
-                              transition={"0.1s ease-in-out"}
-                            >
-                              <Icon
-                                ml={"1.75em"}
-                                as={
-                                  pathname ===
-                                  "/dashboard/panitia/daftarpanitia"
-                                    ? MdPeople
-                                    : MdPeopleOutline
-                                }
-                                boxSize={iconBoxSize}
-                              />
+                            <Flex alignItems={"center"} _hover={{ color: "#185C99" }} color={pathname === "/dashboard/panitia/daftarpanitia" ? "#185C99" : "#1E1D22"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={pathname === "/dashboard/panitia/daftarpanitia" ? MdPeople : MdPeopleOutline} boxSize={iconBoxSize} />
                               <Text ml={"0.5em"} fontSize={"md"}>
                                 Daftar Panitia
                               </Text>
@@ -300,27 +174,8 @@ export default function Sidebar() {
                         </Box>
                         <Box>
                           <Link href={"/dashboard/panitia/panitiadivisi"}>
-                            <Flex
-                              alignItems={"center"}
-                              color={
-                                pathname === "/dashboard/panitia/panitiadivisi"
-                                  ? "#185C99"
-                                  : "#9CA3AF"
-                              }
-                              _hover={{ color: "#185C99" }}
-                              cursor={"pointer"}
-                              transition={"0.1s ease-in-out"}
-                            >
-                              <Icon
-                                ml={"1.75em"}
-                                as={
-                                  pathname ===
-                                  "/dashboard/panitia/panitiadivisi"
-                                    ? MdPeople
-                                    : MdPeopleOutline
-                                }
-                                boxSize={iconBoxSize}
-                              />
+                            <Flex alignItems={"center"} color={pathname === "/dashboard/panitia/panitiadivisi" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={pathname === "/dashboard/panitia/panitiadivisi" ? MdPeople : MdPeopleOutline} boxSize={iconBoxSize} />
                               <Text ml={"0.5em"} fontSize={"md"}>
                                 Panitia Divisi
                               </Text>
@@ -334,25 +189,8 @@ export default function Sidebar() {
               </Flex>
               <Box>
                 <Link href={"/dashboard/organisator"}>
-                  <Flex
-                    alignItems={"center"}
-                    color={
-                      pathname === "/dashboard/organisator"
-                        ? "#185C99"
-                        : "#9CA3AF"
-                    }
-                    _hover={{ color: "#185C99" }}
-                    cursor={"pointer"}
-                    transition={"0.1s ease-in-out"}
-                  >
-                    <Icon
-                      as={
-                        pathname === "/dashboard/organisator"
-                          ? HiOfficeBuilding
-                          : HiOutlineOfficeBuilding
-                      }
-                      boxSize={iconBoxSize}
-                    />
+                  <Flex alignItems={"center"} color={pathname === "/dashboard/organisator" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={pathname === "/dashboard/organisator" ? HiOfficeBuilding : HiOutlineOfficeBuilding} boxSize={iconBoxSize} />
                     <Text ml={"0.7em"} fontSize={"md"}>
                       Organisator
                     </Text>
@@ -361,61 +199,21 @@ export default function Sidebar() {
               </Box>
               <Box>
                 <Link href={"/dashboard/mahasiswa"}>
-                  <Flex
-                    alignItems={"center"}
-                    color={
-                      pathname === "/dashboard/mahasiswa"
-                        ? "#185C99"
-                        : "#9CA3AF"
-                    }
-                    _hover={{ color: "#185C99" }}
-                    cursor={"pointer"}
-                    transition={"0.1s ease-in-out"}
-                  >
-                    <Icon
-                      as={
-                        pathname === "/dashboard/mahasiswa"
-                          ? MdSchool
-                          : MdOutlineSchool
-                      }
-                      boxSize={iconBoxSize}
-                    />
+                  <Flex alignItems={"center"} color={pathname === "/dashboard/mahasiswa" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={pathname === "/dashboard/mahasiswa" ? MdSchool : MdOutlineSchool} boxSize={iconBoxSize} />
                     <Text ml={"0.7em"} fontSize={"md"}>
                       Mahasiswa
                     </Text>
                   </Flex>
                 </Link>
               </Box>
-              <Flex
-                justifyContent={"start"}
-                textColor={
-                  pathname.includes("/dashboard/state") ? "#185C99" : "#9CA3AF"
-                }
-              >
-                <Accordion
-                  w={"full"}
-                  allowToggle
-                  defaultIndex={
-                    pathname.includes("/dashboard/state") ? [0] : undefined
-                  }
-                >
+              <Flex justifyContent={"start"} textColor={pathname.includes("/dashboard/state") ? "#185C99" : "#1E1D22"}>
+                <Accordion w={"full"} allowToggle defaultIndex={pathname.includes("/dashboard/state") ? [0] : undefined}>
                   <AccordionItem border={"none"}>
-                    <AccordionButton
-                      p={0}
-                      _hover={{ color: "#185C99" }}
-                      cursor={"pointer"}
-                      transition={"0.1s ease-in-out"}
-                    >
+                    <AccordionButton p={0} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
                       <Box flex="1" textAlign="left">
                         <Flex alignItems={"center"}>
-                          <Icon
-                            as={
-                              pathname.includes("/dashboard/state")
-                                ? MdAirplanemodeActive
-                                : MdOutlineAirplanemodeActive
-                            }
-                            boxSize={iconBoxSize}
-                          />
+                          <Icon as={pathname.includes("/dashboard/state") ? MdAirplanemodeActive : MdOutlineAirplanemodeActive} boxSize={iconBoxSize} />
                           <Text ml={"0.7em"} fontSize={"md"}>
                             STATE
                           </Text>
@@ -424,34 +222,11 @@ export default function Sidebar() {
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel p={0}>
-                      <Stack
-                        ml={"0.35em"}
-                        mt={"0.5em"}
-                        direction={"column"}
-                        spacing={"0.5em"}
-                      >
+                      <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"0.5em"}>
                         <Box>
                           <Link href={"/dashboard/state/daftarstate"}>
-                            <Flex
-                              alignItems={"center"}
-                              _hover={{ color: "#185C99" }}
-                              color={
-                                pathname === "/dashboard/state/daftarstate"
-                                  ? "#185C99"
-                                  : "#9CA3AF"
-                              }
-                              cursor={"pointer"}
-                              transition={"0.1s ease-in-out"}
-                            >
-                              <Icon
-                                ml={"1.75em"}
-                                as={
-                                  pathname === "/dashboard/state/daftarstate"
-                                    ? MdViewList
-                                    : MdOutlineViewList
-                                }
-                                boxSize={iconBoxSize}
-                              />
+                            <Flex alignItems={"center"} _hover={{ color: "#185C99" }} color={pathname === "/dashboard/state/daftarstate" ? "#185C99" : "#1E1D22"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={pathname === "/dashboard/state/daftarstate" ? MdViewList : MdOutlineViewList} boxSize={iconBoxSize} />
                               <Text ml={"0.5em"} fontSize={"md"}>
                                 Daftar State
                               </Text>
@@ -460,26 +235,8 @@ export default function Sidebar() {
                         </Box>
                         <Box>
                           <Link href={"/dashboard/state/sunting"}>
-                            <Flex
-                              alignItems={"center"}
-                              color={
-                                pathname === "/dashboard/state/sunting"
-                                  ? "#185C99"
-                                  : "#9CA3AF"
-                              }
-                              _hover={{ color: "#185C99" }}
-                              cursor={"pointer"}
-                              transition={"0.1s ease-in-out"}
-                            >
-                              <Icon
-                                ml={"1.75em"}
-                                as={
-                                  pathname === "/dashboard/state/sunting"
-                                    ? MdEdit
-                                    : MdOutlineEdit
-                                }
-                                boxSize={iconBoxSize}
-                              />
+                            <Flex alignItems={"center"} color={pathname === "/dashboard/state/sunting" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={pathname === "/dashboard/state/sunting" ? MdEdit : MdOutlineEdit} boxSize={iconBoxSize} />
                               <Text ml={"0.5em"} fontSize={"md"}>
                                 Sunting
                               </Text>
@@ -488,26 +245,8 @@ export default function Sidebar() {
                         </Box>
                         <Box>
                           <Link href={"/dashboard/state/details"}>
-                            <Flex
-                              alignItems={"center"}
-                              color={
-                                pathname === "/dashboard/state/details"
-                                  ? "#185C99"
-                                  : "#9CA3AF"
-                              }
-                              _hover={{ color: "#185C99" }}
-                              cursor={"pointer"}
-                              transition={"0.1s ease-in-out"}
-                            >
-                              <Icon
-                                ml={"1.75em"}
-                                as={
-                                  pathname === "/dashboard/state/details"
-                                    ? MdPeople
-                                    : MdPeopleOutline
-                                }
-                                boxSize={iconBoxSize}
-                              />
+                            <Flex alignItems={"center"} color={pathname === "/dashboard/state/details" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={pathname === "/dashboard/state/details" ? MdPeople : MdPeopleOutline} boxSize={iconBoxSize} />
                               <Text ml={"0.5em"} fontSize={"md"}>
                                 Detail dan Peserta
                               </Text>
@@ -521,55 +260,18 @@ export default function Sidebar() {
               </Flex>
               <Box>
                 <Link href={"/dashboard/malpun/peserta"}>
-                  <Flex
-                    alignItems={"center"}
-                    color={
-                      pathname === "/dashboard/malpun/peserta"
-                        ? "#185C99"
-                        : "#9CA3AF"
-                    }
-                    _hover={{ color: "#185C99" }}
-                    cursor={"pointer"}
-                    transition={"0.1s ease-in-out"}
-                  >
-                    <Icon
-                      as={
-                        pathname === "/dashboard/malpun/peserta"
-                          ? HiSparkles
-                          : HiOutlineSparkles
-                      }
-                      boxSize={iconBoxSize}
-                    />
+                  <Flex alignItems={"center"} color={pathname === "/dashboard/malpun/peserta" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                    <Icon as={pathname === "/dashboard/malpun/peserta" ? HiSparkles : HiOutlineSparkles} boxSize={iconBoxSize} />
                     <Text ml={"0.7em"} fontSize={"md"}>
                       MALPUN
                     </Text>
                   </Flex>
                 </Link>
               </Box>
-              <Flex
-                justifyContent={"start"}
-                textColor={
-                  pathname.includes("/dashboard/qrscan")
-                    ? "#185C99"
-                    : pathname === "/"
-                    ? "#185C99"
-                    : "#9CA3AF"
-                }
-              >
-                <Accordion
-                  w={"full"}
-                  allowToggle
-                  defaultIndex={
-                    pathname.includes("/dashboard/qrscan") ? [0] : undefined
-                  }
-                >
+              <Flex justifyContent={"start"} textColor={pathname.includes("/dashboard/qrscan") ? "#185C99" : pathname === "/" ? "#185C99" : "#1E1D22"}>
+                <Accordion w={"full"} allowToggle defaultIndex={pathname.includes("/dashboard/qrscan") ? [0] : undefined}>
                   <AccordionItem border={"none"}>
-                    <AccordionButton
-                      p={0}
-                      _hover={{ textColor: "#185C99" }}
-                      cursor={"pointer"}
-                      transition={"0.1s ease-in-out"}
-                    >
+                    <AccordionButton p={0} _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
                       <Box flex="1" textAlign="left">
                         <Flex alignItems={"center"}>
                           <Icon as={MdQrCodeScanner} boxSize={iconBoxSize} />
@@ -581,34 +283,11 @@ export default function Sidebar() {
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel p={0}>
-                      <Stack
-                        ml={"0.35em"}
-                        mt={"0.5em"}
-                        direction={"column"}
-                        spacing={"0.5em"}
-                      >
+                      <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"0.5em"}>
                         <Box>
                           <Link href={"/dashboard/qrscan/state"}>
-                            <Flex
-                              alignItems={"center"}
-                              _hover={{ color: "#185C99" }}
-                              color={
-                                pathname === "/dashboard/qrscan/state"
-                                  ? "#185C99"
-                                  : "#9CA3AF"
-                              }
-                              cursor={"pointer"}
-                              transition={"0.1s ease-in-out"}
-                            >
-                              <Icon
-                                ml={"1.75em"}
-                                as={
-                                  pathname === "/dashboard/qrscan/state"
-                                    ? MdQrCodeScanner
-                                    : MdQrCodeScanner
-                                }
-                                boxSize={iconBoxSize}
-                              />
+                            <Flex alignItems={"center"} _hover={{ color: "#185C99" }} color={pathname === "/dashboard/qrscan/state" ? "#185C99" : "#1E1D22"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={pathname === "/dashboard/qrscan/state" ? MdQrCodeScanner : MdQrCodeScanner} boxSize={iconBoxSize} />
                               <Text ml={"0.5em"} fontSize={"md"}>
                                 STATE
                               </Text>
@@ -617,26 +296,8 @@ export default function Sidebar() {
                         </Box>
                         <Box>
                           <Link href={"/dashboard/qrscan/malpun"}>
-                            <Flex
-                              alignItems={"center"}
-                              color={
-                                pathname === "/dashboard/qrscan/malpun"
-                                  ? "#185C99"
-                                  : "#9CA3AF"
-                              }
-                              _hover={{ color: "#185C99" }}
-                              cursor={"pointer"}
-                              transition={"0.1s ease-in-out"}
-                            >
-                              <Icon
-                                ml={"1.75em"}
-                                as={
-                                  pathname === "/dashboard/qrscan/malpun"
-                                    ? MdQrCodeScanner
-                                    : MdQrCodeScanner
-                                }
-                                boxSize={iconBoxSize}
-                              />
+                            <Flex alignItems={"center"} color={pathname === "/dashboard/qrscan/malpun" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                              <Icon ml={"1.75em"} as={pathname === "/dashboard/qrscan/malpun" ? MdQrCodeScanner : MdQrCodeScanner} boxSize={iconBoxSize} />
                               <Text ml={"0.5em"} fontSize={"md"}>
                                 MALPUN
                               </Text>
