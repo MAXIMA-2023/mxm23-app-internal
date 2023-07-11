@@ -1,16 +1,16 @@
-"use client"
+"use client";
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { Box, Flex, Text, Divider, HStack, Switch, Link, Select, Image, Button } from "@chakra-ui/react";
+import { Box, Flex, Text, Divider, HStack, Switch, Link, Select, Image, Button, Icon } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
 import { useReadLocalStorage } from "usehooks-ts";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
+import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
 export default function Dashboard() {
-
   // interface DataMahasiswa {
   //   name: string;
   //   nim: string;
@@ -83,51 +83,116 @@ export default function Dashboard() {
     },
     {
       label: "STATE 1",
-      name: "stateID",
+      name: "stateID_1",
       options: {
-        filter: true,
+        customBodyRender: (value: any, tableMeta: any) => {
+          return (
+            <Flex alignItems={"center"}>
+              {value} {dataMahasiswa[tableMeta.rowIndex].kehadiran_1 ? <Icon ms={"0.25em"} as={BsCheckCircleFill} w={3} h={3} color="#36AD2C" /> : <Icon ms={"0.25em"} as={BsXCircleFill} w={3} h={3} color="#F43535" />}
+            </Flex>
+          );
+        },
       },
     },
   ];
 
-  const options = {
-  };
+  const options = {};
 
-// data dummy
+  // data dummy
   const dataMahasiswa = [
-    ["GawrGura1", "12345678", "gawrgura1@student.umn.ac.id", "Jcafe"],
-    ["GawrGura2", "23456789", "gawrgura2@student.umn.ac.id", "Jcafe"],
-    ["GawrGura3", "34567890", "gawrgura3@student.umn.ac.id", "Jcafe"],
-    ["GawrGura4", "45678901", "gawrgura4@student.umn.ac.id", "Jcafe"],
-    ["GawrGura5", "56789012", "gawrgura5@student.umn.ac.id", "Jcafe"],
-    ["GawrGura6", "67890123", "gawrgura6@student.umn.ac.id", "Jcafe"],
-    ["GawrGura7", "78901234", "gawrgura7@student.umn.ac.id", "Jcafe"],
-    ["GawrGura8", "89012345", "gawrgura8@student.umn.ac.id", null],
-    ["GawrGura9", "90123456", "gawrgura9@student.umn.ac.id", null],
-    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", null],
+    {
+      nama: "GawrGura1",
+      nim: "12345678",
+      email: "gawrgura1@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: true,
+    },
+    {
+      nama: "GawrGura2",
+      nim: "23456789",
+      email: "gawrgura2@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: true,
+    },
+    {
+      nama: "GawrGura3",
+      nim: "34567890",
+      email: "gawrgura3@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: false,
+    },
+    {
+      nama: "GawrGura4",
+      nim: "45678901",
+      email: "gawrgura4@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: false,
+    },
+    {
+      nama: "GawrGura5",
+      nim: "56789012",
+      email: "gawrgura5@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: true,
+    },
+    {
+      nama: "GawrGura6",
+      nim: "67890123",
+      email: "gawrgura6@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: true,
+    },
+    {
+      nama: "GawrGura7",
+      nim: "78901234",
+      email: "gawrgura7@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: false,
+    },
+    {
+      nama: "GawrGura8",
+      nim: "89012345",
+      email: "gawrgura8@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: true,
+    },
+    {
+      nama: "GawrGura9",
+      nim: "90123456",
+      email: "gawrgura9@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: false,
+    },
+    {
+      nama: "GawrGura10",
+      nim: "01234567",
+      email: "gawrgura10@student.umn.ac.id",
+      stateID_1: "Jcafe",
+      kehadiran_1: false,
+    },
   ];
 
   return (
     <>
-    <title>MAXIMA 2023 Internal - Mahasiswa</title>
-    <Layout title="Mahasiswa" showDashboardButton disablePadding>
-    <Box w={"full"} overflowY={"auto"} boxShadow={"xs"}>
-      <Box w={"full"} mx={4} my={4}>
-      <ThemeProvider theme={createTheme()}>
-        <MUIDataTable
-          title={""}
-          data={dataMahasiswa}
-          columns={columnsMahasiswa}
-          options={{
-            rowsPerPage: 10,
-            selectableRows: "none",
-            elevation: 1,
-          }}
-        />
-      </ThemeProvider>
-      </Box>
-    </Box>
-    </Layout>
+      <title>MAXIMA 2023 Internal - Mahasiswa</title>
+      <Layout title="Mahasiswa" showDashboardButton disablePadding>
+        <Box w={"full"} overflowY={"auto"} boxShadow={"xs"}>
+          <Box w={"full"} mx={4} my={4}>
+            <ThemeProvider theme={createTheme()}>
+              <MUIDataTable
+                title={""}
+                data={dataMahasiswa}
+                columns={columnsMahasiswa}
+                options={{
+                  rowsPerPage: 10,
+                  selectableRows: "none",
+                  elevation: 1,
+                }}
+              />
+            </ThemeProvider>
+          </Box>
+        </Box>
+      </Layout>
     </>
   );
 }
