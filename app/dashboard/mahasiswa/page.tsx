@@ -83,12 +83,12 @@ export default function Dashboard() {
     },
     {
       label: "STATE 1",
-      name: "stateID_1",
+      name: "kehadiran_1",
       options: {
         customBodyRender: (value: any, tableMeta: any) => {
           return (
             <Flex alignItems={"center"}>
-              {value} {dataMahasiswa[tableMeta.rowIndex].kehadiran_1 ? <Icon ms={"0.25em"} as={BsCheckCircleFill} w={3} h={3} color="#36AD2C" /> : <Icon ms={"0.25em"} as={BsXCircleFill} w={3} h={3} color="#F43535" />}
+              {dataMahasiswa[tableMeta.rowIndex].stateID_1} {value ? <Icon ms={"0.25em"} as={BsCheckCircleFill} w={3} h={3} color="#36AD2C" /> : <Icon ms={"0.25em"} as={BsXCircleFill} w={3} h={3} color="#F43535" />}
             </Flex>
           );
         },
@@ -96,12 +96,12 @@ export default function Dashboard() {
     },
     {
       label: "STATE 2",
-      name: "stateID_2",
+      name: "kehadiran_2",
       options: {
         customBodyRender: (value: any, tableMeta: any) => {
           return (
             <Flex alignItems={"center"}>
-              {value} {dataMahasiswa[tableMeta.rowIndex].kehadiran_2 ? <Icon ms={"0.25em"} as={BsCheckCircleFill} w={3} h={3} color="#36AD2C" /> : <Icon ms={"0.25em"} as={BsXCircleFill} w={3} h={3} color="#F43535" />}
+              {dataMahasiswa[tableMeta.rowIndex].stateID_2} {value ? <Icon ms={"0.25em"} as={BsCheckCircleFill} w={3} h={3} color="#36AD2C" /> : <Icon ms={"0.25em"} as={BsXCircleFill} w={3} h={3} color="#F43535" />}
             </Flex>
           );
         },
@@ -114,7 +114,7 @@ export default function Dashboard() {
         customBodyRender: (value: any, tableMeta: any) => {
           return (
             <Flex alignItems={"center"}>
-              {value} {dataMahasiswa[tableMeta.rowIndex].kehadiran_3 ? <Icon ms={"0.25em"} as={BsCheckCircleFill} w={3} h={3} color="#36AD2C" /> : <Icon ms={"0.25em"} as={BsXCircleFill} w={3} h={3} color="#F43535" />}
+              {dataMahasiswa[tableMeta.rowIndex].stateID_3} {value ? <Icon ms={"0.25em"} as={BsCheckCircleFill} w={3} h={3} color="#36AD2C" /> : <Icon ms={"0.25em"} as={BsXCircleFill} w={3} h={3} color="#F43535" />}
             </Flex>
           );
         },
@@ -157,7 +157,7 @@ export default function Dashboard() {
       stateID_3: "DKBM",
       kehadiran_1: false,
       kehadiran_2: true,
-      kehadiran_3: true,  
+      kehadiran_3: true,
     },
     {
       nama: "GawrGura4",
