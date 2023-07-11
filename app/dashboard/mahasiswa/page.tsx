@@ -94,6 +94,32 @@ export default function Dashboard() {
         },
       },
     },
+    {
+      label: "STATE 2",
+      name: "stateID_2",
+      options: {
+        customBodyRender: (value: any, tableMeta: any) => {
+          return (
+            <Flex alignItems={"center"}>
+              {value} {dataMahasiswa[tableMeta.rowIndex].kehadiran_2 ? <Icon ms={"0.25em"} as={BsCheckCircleFill} w={3} h={3} color="#36AD2C" /> : <Icon ms={"0.25em"} as={BsXCircleFill} w={3} h={3} color="#F43535" />}
+            </Flex>
+          );
+        },
+      },
+    },
+    {
+      label: "STATE 3",
+      name: "stateID_3",
+      options: {
+        customBodyRender: (value: any, tableMeta: any) => {
+          return (
+            <Flex alignItems={"center"}>
+              {value} {dataMahasiswa[tableMeta.rowIndex].kehadiran_3 ? <Icon ms={"0.25em"} as={BsCheckCircleFill} w={3} h={3} color="#36AD2C" /> : <Icon ms={"0.25em"} as={BsXCircleFill} w={3} h={3} color="#F43535" />}
+            </Flex>
+          );
+        },
+      },
+    },
   ];
 
   const options = {};
@@ -105,70 +131,110 @@ export default function Dashboard() {
       nim: "12345678",
       email: "gawrgura1@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "MAPALA",
+      stateID_3: "DKBM",
       kehadiran_1: true,
+      kehadiran_2: false,
+      kehadiran_3: true,
     },
     {
       nama: "GawrGura2",
       nim: "23456789",
       email: "gawrgura2@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "MAPALA",
+      stateID_3: "DKBM",
       kehadiran_1: true,
+      kehadiran_2: true,
+      kehadiran_3: true,
     },
     {
       nama: "GawrGura3",
       nim: "34567890",
       email: "gawrgura3@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "BEM",
+      stateID_3: "DKBM",
       kehadiran_1: false,
+      kehadiran_2: true,
+      kehadiran_3: true,  
     },
     {
       nama: "GawrGura4",
       nim: "45678901",
       email: "gawrgura4@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "BEM",
+      stateID_3: "DKBM",
       kehadiran_1: false,
+      kehadiran_2: false,
+      kehadiran_3: true,
     },
     {
       nama: "GawrGura5",
       nim: "56789012",
       email: "gawrgura5@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "BEM",
+      stateID_3: "DKBM",
       kehadiran_1: true,
+      kehadiran_2: true,
+      kehadiran_3: true,
     },
     {
       nama: "GawrGura6",
       nim: "67890123",
       email: "gawrgura6@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "BEM",
+      stateID_3: "DKBM",
       kehadiran_1: true,
+      kehadiran_2: true,
+      kehadiran_3: true,
     },
     {
       nama: "GawrGura7",
       nim: "78901234",
       email: "gawrgura7@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "BEM",
+      stateID_3: "DKBM",
       kehadiran_1: false,
+      kehadiran_2: true,
+      kehadiran_3: true,
     },
     {
       nama: "GawrGura8",
       nim: "89012345",
       email: "gawrgura8@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "BEM",
+      stateID_3: "DKBM",
       kehadiran_1: true,
+      kehadiran_2: true,
+      kehadiran_3: true,
     },
     {
       nama: "GawrGura9",
       nim: "90123456",
       email: "gawrgura9@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "BEM",
+      stateID_3: "DKBM",
       kehadiran_1: false,
+      kehadiran_2: true,
+      kehadiran_3: true,
     },
     {
       nama: "GawrGura10",
       nim: "01234567",
       email: "gawrgura10@student.umn.ac.id",
       stateID_1: "Jcafe",
+      stateID_2: "BEM",
+      stateID_3: "DKBM",
       kehadiran_1: false,
+      kehadiran_2: true,
+      kehadiran_3: true,
     },
   ];
 
