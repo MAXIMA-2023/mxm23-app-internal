@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -8,132 +8,157 @@ import {
   Center,
   Stack,
   InputGroup,
-  InputLeftElement,
   InputRightElement,
   Input,
   Icon,
   Button,
   Select,
-  textDecoration,
   FormControl,
   FormLabel,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
   Radio,
   RadioGroup,
-  useRadio,
-  useRadioGroup,
-  HStack,
 } from "@chakra-ui/react";
-// import Container from "@/components/Container";
-import { RiAccountCircleFill } from "react-icons/ri";
-import { IoKey } from "react-icons/io5";
 import { BiShow, BiHide } from "react-icons/bi";
 import Link from "next/link";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
-// import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
-import { isExpired } from "react-jwt";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 
-interface IUserInfo {
-  nim: string;
+import api, { HandleAxiosError } from "@/services/api";
+import { useAuth } from "@/contexts/Auth";
+
+type UserSignUp = {
+  nim: number;
   name: string;
   email: string;
   password: string;
   role: string;
   divisiID: string;
-  stateID: string;
-}
+  stateID: number;
+};
+
+type Divisi = {
+  divisiID: string;
+  name: string;
+};
+
+type State = {
+  stateID: number;
+  name: string;
+};
 
 export default function SignUpPanitia() {
-  const [show, setShow] = React.useState(false);
-  const [role, setRole] = React.useState(0);
-  const handleClick = () => setShow(!show);
+  const [show, setShow] = useState(false);
+  const [role, setRole] = useState(0);
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [divisi, setDivisi] = useState<Divisi[]>([]);
+  const [state, setState] = useState<State[]>([]);
+
+  const auth = useAuth();
+  const handleClick = () => setShow(!show);
   const router = useRouter();
+
+  useEffect(() => {
+    if (auth?.isLoggedIn) {
+      router.push("/dashboard");
+      return;
+    }
+
+    const getDivisi = async () => {
+      try {
+        const { data } = await api.get("/divisi");
+        setDivisi(data);
+      } catch (error) {
+        HandleAxiosError(error);
+      }
+    };
+    const getState = async () => {
+      try {
+        const { data } = await api.get("/state");
+        setState(data);
+      } catch (error) {
+        HandleAxiosError(error);
+      }
+    };
+    getDivisi();
+    getState();
+    setIsLoading(false);
+  }, [auth?.isLoggedIn, router]);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     control,
-  } = useForm<IUserInfo>();
-
-  // const [isButtonLoading, setIsButtonLoading] = useState(false);
-  // const [error, setError] = useState(undefined);
-
-  // const [, setLocalStorage] = useLocalStorage("token", "");
-  // const jwt = useReadLocalStorage("token");
-  // const isMyTokenExpired = isExpired(jwt as string);
-
-  // useEffect(() => {
-  //   if (jwt && !isMyTokenExpired) {
-  //     router.push("/");
-  //   }
-  // }, []);
-
-  // const onSubmit: SubmitHandler<IUserInfo> = async (data: IUserInfo) => {
-  //   try {
-  //     setIsButtonLoading(true);
-  //     const formData = new FormData();
-  //     formData.append("nim", data.nim);
-  //     formData.append("password", data.password);
-  //     formData.append("name", data.name);
-  //     formData.append("email", data.email);
-  //     formData.append("divisiID", data.divisiID);
-  //     formData.append("stateID", data.stateID);
-  //     // formData.append("role", data.role);
-  //     // await axios.post(`${process.env.API_URL}/api/`, formData);
-  //     console.log(data);
-  //     console.log("clicked");
-  //     toast.success("Berhasil Terdaftar! harap menunggu verifikasi dari BPH atau Facio", {
-  //       position: "bottom-left",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //     });
-  //     setIsButtonLoading(false);
-  //     setTimeout(() => {
-  //       router.push("/signin");
-  //     }, 2000);
-  //   } catch (err: any) {
-  //     toast.error(err.response.data.message);
-  //     console.log(err.response.data.message);
-  //     setError(err.response.data.message);
-  //     setIsButtonLoading(false);
-  //   }
-  // };
+  } = useForm<UserSignUp>();
 
   //testing console log
-  const onSubmit: SubmitHandler<IUserInfo> = async (data: IUserInfo) => {
-    console.log("clicked");
-    alert(JSON.stringify(data));
+  const onSubmit: SubmitHandler<UserSignUp> = async (data: UserSignUp) => {
+    try {
+      const { data: response } = await api.post<{ message: string }>(
+        data.role === "1" ? "/panitia/register" : "/organisator/register",
+        data
+      );
+      Swal.fire("Success", response.message, "success");
+    } catch (error) {
+      HandleAxiosError(error);
+    }
   };
 
   return (
     <>
       <title>MAXIMA 2023 Internal - Signup</title>
-      <Flex h={"auto"} minH={["100vh", "100vh", "100vh", "100vh", "100vh"]} bgColor={"#F8FAFC"}>
-        <Box w={"full"} py={["1em", "1em", "1.5em", "3em", "3em"]} px={["1em", "1em", "1.5em", "2em", "2em"]}>
-          <Flex p={["1em", "0"]} position={"absolute"} minH={"100vh"} justifyContent={"center"} alignItems={"center"} right={"0"} left={"0"} top={"0 "} bottom={"0"}>
-            <Flex w={"auto"} maxW={"35em"} h={"auto"} padding={"2em 2.5em"} borderRadius={"2em"} boxShadow={"lg"} bgColor={"#fff"} justifyContent={"center"} alignItems={"center"}>
+      <Flex
+        h={"auto"}
+        minH={["100vh", "100vh", "100vh", "100vh", "100vh"]}
+        bgColor={"#F8FAFC"}
+      >
+        <Box
+          w={"full"}
+          py={["1em", "1em", "1.5em", "3em", "3em"]}
+          px={["1em", "1em", "1.5em", "2em", "2em"]}
+        >
+          <Flex
+            p={["1em", "0"]}
+            position={"absolute"}
+            minH={"100vh"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            right={"0"}
+            left={"0"}
+            top={"0 "}
+            bottom={"0"}
+          >
+            <Flex
+              w={"auto"}
+              maxW={"35em"}
+              h={"auto"}
+              padding={"2em 2.5em"}
+              borderRadius={"2em"}
+              boxShadow={"lg"}
+              bgColor={"#fff"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
               <Box>
                 <Box mb={"1em"}>
-                  <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"bold"}>
+                  <Text
+                    align={"left"}
+                    color={"black"}
+                    fontSize={"md"}
+                    fontWeight={"bold"}
+                  >
                     MAXIMA 2023
                   </Text>
                 </Box>
                 <Center mb={"1em"}>
-                  <Text align={"center"} color={"black"} fontSize={["2xl", "2xl", "2xl", "3xl", "3xl"]} fontWeight={"bold"}>
-                    Let's Create Your Account!
+                  <Text
+                    align={"center"}
+                    color={"black"}
+                    fontSize={["2xl", "2xl", "2xl", "3xl", "3xl"]}
+                    fontWeight={"bold"}
+                  >
+                    Let&apos;s Create Your Account!
                   </Text>
                 </Center>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -142,18 +167,48 @@ export default function SignUpPanitia() {
                       <Stack w={"100%"} direction={"column"} spacing={"1em"}>
                         <Box>
                           <FormLabel>
-                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
+                            <Text
+                              align={"left"}
+                              color={"black"}
+                              fontSize={"md"}
+                              fontWeight={"medium"}
+                            >
                               Nomor Induk Mahasiswa
                             </Text>
                           </FormLabel>
                           <InputGroup>
-                            <Input {...register("nim", { required: "NIM harus diisi" })} py={"1.25em"} type="number" placeholder="12345" size={"md"} borderRadius={"lg"} />
+                            <Input
+                              {...register("nim", {
+                                required: "NIM harus diisi",
+                                min: {
+                                  value: 10000,
+                                  message: "NIM harus 5 digit",
+                                },
+                                maxLength: {
+                                  value: 99999,
+                                  message: "NIM harus 5 digit",
+                                },
+                                valueAsNumber: true,
+                              })}
+                              py={"1.25em"}
+                              type="number"
+                              placeholder="12345"
+                              size={"md"}
+                              borderRadius={"lg"}
+                            />
                           </InputGroup>
-                          {errors.nim !== undefined && <Text textColor={"red"}>{errors.nim.message}</Text>}
+                          {errors.nim !== undefined && (
+                            <Text textColor={"red"}>{errors.nim.message}</Text>
+                          )}
                         </Box>
                         <Box>
                           <FormLabel>
-                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
+                            <Text
+                              align={"left"}
+                              color={"black"}
+                              fontSize={"md"}
+                              fontWeight={"medium"}
+                            >
                               Nama Lengkap
                             </Text>
                           </FormLabel>
@@ -161,6 +216,14 @@ export default function SignUpPanitia() {
                             <Input
                               {...register("name", {
                                 required: "Nama lengkap harus diisi",
+                                maxLength: {
+                                  value: 20,
+                                  message: "Nama lengkap maximum 20 karakter",
+                                },
+                                pattern: {
+                                  value: /^[A-Za-z .]*$/,
+                                  message: "Nama lengkap tidak valid",
+                                },
                               })}
                               py={"1.25em"}
                               type="text"
@@ -169,22 +232,51 @@ export default function SignUpPanitia() {
                               borderRadius={"lg"}
                             />
                           </InputGroup>
-                          {errors.name !== undefined && <Text textColor={"red"}>{errors.name.message}</Text>}
+                          {errors.name !== undefined && (
+                            <Text textColor={"red"}>{errors.name.message}</Text>
+                          )}
                         </Box>
                         <Box>
                           <FormLabel>
-                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
+                            <Text
+                              align={"left"}
+                              color={"black"}
+                              fontSize={"md"}
+                              fontWeight={"medium"}
+                            >
                               Email Student
                             </Text>
                           </FormLabel>
                           <InputGroup>
-                            <Input {...register("email", { required: "Email harus diisi" })} py={"1.25em"} type="email" placeholder="abc@student.umn.ac.id" size={"md"} borderRadius={"lg"} />
+                            <Input
+                              {...register("email", {
+                                required: "Email harus diisi",
+                                pattern: {
+                                  value: /^(\w+(.\w+)*)(@student.umn.ac.id)$/gm,
+                                  message: "Harus menggunakan email student",
+                                },
+                              })}
+                              py={"1.25em"}
+                              type="email"
+                              placeholder="abc@student.umn.ac.id"
+                              size={"md"}
+                              borderRadius={"lg"}
+                            />
                           </InputGroup>
-                          {errors.email !== undefined && <Text textColor={"red"}>{errors.email.message}</Text>}
+                          {errors.email !== undefined && (
+                            <Text textColor={"red"}>
+                              {errors.email.message}
+                            </Text>
+                          )}
                         </Box>
                         <Box>
                           <FormLabel>
-                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
+                            <Text
+                              align={"left"}
+                              color={"black"}
+                              fontSize={"md"}
+                              fontWeight={"medium"}
+                            >
                               Password
                             </Text>
                           </FormLabel>
@@ -192,6 +284,10 @@ export default function SignUpPanitia() {
                             <Input
                               {...register("password", {
                                 required: "Password harus diisi",
+                                min: {
+                                  value: 8,
+                                  message: "Password minimum 8 karakter",
+                                },
                               })}
                               py={"1.25em"}
                               type={show ? "text" : "password"}
@@ -201,21 +297,36 @@ export default function SignUpPanitia() {
                             />
                             <InputRightElement py={"1.25em"} width="4.5rem">
                               <Button variant={"none"} onClick={handleClick}>
-                                {show ? <Icon as={BiHide} boxSize={5} /> : <Icon as={BiShow} boxSize={5} />}
+                                {show ? (
+                                  <Icon as={BiHide} boxSize={5} />
+                                ) : (
+                                  <Icon as={BiShow} boxSize={5} />
+                                )}
                               </Button>
                             </InputRightElement>
                           </InputGroup>
-                          {errors.password !== undefined && <Text textColor={"red"}>{errors.password.message}</Text>}
+                          {errors.password !== undefined && (
+                            <Text textColor={"red"}>
+                              {errors.password.message}
+                            </Text>
+                          )}
                         </Box>
                         <Box>
                           <FormLabel>
-                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
+                            <Text
+                              align={"left"}
+                              color={"black"}
+                              fontSize={"md"}
+                              fontWeight={"medium"}
+                            >
                               Role
                             </Text>
                           </FormLabel>
                           <Controller
                             control={control}
-                            {...register("role", { required: "Role harus dipilih" })}
+                            {...register("role", {
+                              required: "Role harus dipilih",
+                            })}
                             render={({ field: { onChange, value } }) => (
                               <>
                                 <RadioGroup onChange={onChange} value={value}>
@@ -228,7 +339,11 @@ export default function SignUpPanitia() {
                                     </Box>
                                   </Stack>
                                 </RadioGroup>
-                                {errors.role !== undefined && <Text textColor={"red"}>{errors.role.message}</Text>}
+                                {errors.role !== undefined && (
+                                  <Text textColor={"red"}>
+                                    {errors.role.message}
+                                  </Text>
+                                )}
                               </>
                             )}
                           />
@@ -239,52 +354,69 @@ export default function SignUpPanitia() {
                           <>
                             <Box>
                               <FormLabel>
-                                <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
+                                <Text
+                                  align={"left"}
+                                  color={"black"}
+                                  fontSize={"md"}
+                                  fontWeight={"medium"}
+                                >
                                   Pilh Divisi
                                 </Text>
                               </FormLabel>
-                              <Select {...register("divisiID")} w={"full"} placeholder={"Pilih Divisi"} size={"md"}>
-                                <option value="1">Eventus - Acara</option>
-                                <option value="2">Novus - Publication</option>
-                                <option value="3">Effigia - Dokumentasi</option>
-                                <option value="4">Ornatus - Dekorasi</option>
-                                <option value="5">Facio - Website</option>
-                                <option value="6">Servanda - Sponsor</option>
-                                <option value="7">Mercatura - Merchandise</option>
-                                <option value="8">Nuntium - Media Relation</option>
-                                <option value="9">Lammina - Fresh Money</option>
-                                <option value="10">Fiducia - Perlengkapan</option>
-                                <option value="11">Emporium - Bazaar</option>
-                                <option value="12">Videre - Visual</option>
-                                <option value="13">Inspice - Registrasi</option>
-                                <option value="14">Armatura - Keamanan</option>
+                              <Select
+                                {...register("divisiID", {
+                                  required: "Divisi harus dipilih",
+                                })}
+                                w={"full"}
+                                placeholder={"Pilih Divisi"}
+                                size={"md"}
+                              >
+                                {divisi.map((v) => (
+                                  <option value={v.divisiID} key={v.divisiID}>
+                                    {v.name}
+                                  </option>
+                                ))}
                               </Select>
+                              {errors.divisiID !== undefined && (
+                                <Text textColor={"red"}>
+                                  {errors.divisiID.message}
+                                </Text>
+                              )}
                             </Box>
                           </>
                         ) : role === 2 ? (
                           <>
                             <Box>
                               <FormLabel>
-                                <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
+                                <Text
+                                  align={"left"}
+                                  color={"black"}
+                                  fontSize={"md"}
+                                  fontWeight={"medium"}
+                                >
                                   Pilh STATE
                                 </Text>
                               </FormLabel>
-                              <Select {...register("stateID")} w={"full"} placeholder={"Pilih STATE"} size={"md"}>
-                                <option value="1">Eventus - Acara</option>
-                                <option value="2">Novus - Publication</option>
-                                <option value="3">Effigia - Dokumentasi</option>
-                                <option value="4">Ornatus - Dekorasi</option>
-                                <option value="5">Facio - Website</option>
-                                <option value="6">Servanda - Sponsor</option>
-                                <option value="7">Mercatura - Merchandise</option>
-                                <option value="8">Nuntium - Media Relation</option>
-                                <option value="9">Lammina - Fresh Money</option>
-                                <option value="10">Fiducia - Perlengkapan</option>
-                                <option value="11">Emporium - Bazaar</option>
-                                <option value="12">Videre - Visual</option>
-                                <option value="13">Inspice - Registrasi</option>
-                                <option value="14">Armatura - Keamanan</option>
+                              <Select
+                                {...register("stateID", {
+                                  required: "STATE harus dipilih",
+                                  valueAsNumber: true,
+                                })}
+                                w={"full"}
+                                placeholder={"Pilih STATE"}
+                                size={"md"}
+                              >
+                                {state.map((v) => (
+                                  <option value={v.stateID} key={v.stateID}>
+                                    {v.name}
+                                  </option>
+                                ))}
                               </Select>
+                              {errors.stateID !== undefined && (
+                                <Text textColor={"red"}>
+                                  {errors.stateID.message}
+                                </Text>
+                              )}
                             </Box>
                           </>
                         ) : (
@@ -294,16 +426,35 @@ export default function SignUpPanitia() {
                     </Center>
                   </FormControl>
                   <Center mb={"1.5em"}>
-                    <Button type={"submit"} w={"100%"} size={"md"} bgColor={"#185C99"} color={"white"} variant={"solid"} _hover={{ bgColor: "#185CDC" }} isLoading={isSubmitting}>
+                    <Button
+                      type={"submit"}
+                      w={"100%"}
+                      size={"md"}
+                      bgColor={"#185C99"}
+                      color={"white"}
+                      variant={"solid"}
+                      _hover={{ bgColor: "#185CDC" }}
+                      isLoading={isSubmitting || isLoading}
+                    >
                       Sign up
                     </Button>
                   </Center>
                 </form>
                 <Box mb={"2em"}>
-                  <Text align={"center"} color={"black"} fontSize={"sm"} fontWeight={"medium"}>
+                  <Text
+                    align={"center"}
+                    color={"black"}
+                    fontSize={"sm"}
+                    fontWeight={"medium"}
+                  >
                     Sudah punya akun?{" "}
                     <Link href={"/signin"}>
-                      <Text as={"span"} color={"#185C99"} fontWeight={"bold"} _hover={{ textDecoration: "underline" }}>
+                      <Text
+                        as={"span"}
+                        color={"#185C99"}
+                        fontWeight={"bold"}
+                        _hover={{ textDecoration: "underline" }}
+                      >
                         Kembali
                       </Text>
                     </Link>
@@ -314,7 +465,6 @@ export default function SignUpPanitia() {
           </Flex>
         </Box>
       </Flex>
-      <ToastContainer position="bottom-left" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </>
   );
 }
