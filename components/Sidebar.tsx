@@ -28,6 +28,23 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
 } from "@chakra-ui/react";
 
 //importing react icons
@@ -90,7 +107,7 @@ export default function Sidebar() {
       <Box display={["none", "none", "none", "block"]} w={["17.5em", "17.5em", "17.5em", "15.5em", "20em"]} position={"fixed"}>
         <Flex py={"1.5em"} justifyContent={"left"} h={"100vh"} bgColor={"white"} overflowY={"auto"} overflowX={"hidden"} boxShadow={"md"}>
           <Box w={"full"}>
-            <Flex px={"2.5em"} alignItems={"center"} mb={"4em"}>
+            <Flex px={"2.5em"} alignItems={"center"} mb={"2em"}>
               <Box>
                 <Image src={"/assets/LogoMaxima.png"} alt={"logo"} boxSize={["2em", "2em", "2em", "2em", "3em"]} />
               </Box>
@@ -142,8 +159,8 @@ export default function Sidebar() {
                 </Link>
               </Box>
             </Stack>
-            <Divider w={"full"} my={"2em"} borderWidth={2} borderColor={"#EFEFEF"} />
-            <Stack px={"2em"} direction={"column"}>
+            <Divider w={"full"} my={"1em"} borderWidth={2} borderColor={"#EFEFEF"} />
+            <Stack w={"full"} h={"auto"} px={"2em"} direction={"column"} maxH={"50vh"} overflowY={"auto"}>
               <Box>
                 <Link href={"/dashboard"}>
                   <Flex
@@ -228,10 +245,11 @@ export default function Sidebar() {
                 <Link href={"/dashboard/organisator"}>
                   <Flex
                     alignItems={"center"}
-                    color={pathname === "/dashboard/organisator" ? "#185C99" : "#1E1D22"}
                     borderRadius={"md"}
                     py={"0.75em"}
                     px={"1.25em"}
+                    bgColor={pathname === "/dashboard/organisator" ? "#FAFAFA" : "transparent"}
+                    color={pathname === "/dashboard/organisator" ? "#185C99" : "#1E1D22"}
                     _hover={{ bgColor: "#FAFAFA", color: "#185C99" }}
                     cursor={"pointer"}
                     transition={"0.1s ease-in-out"}
@@ -247,10 +265,11 @@ export default function Sidebar() {
                 <Link href={"/dashboard/mahasiswa"}>
                   <Flex
                     alignItems={"center"}
-                    color={pathname === "/dashboard/mahasiswa" ? "#185C99" : "#1E1D22"}
                     borderRadius={"md"}
                     py={"0.75em"}
                     px={"1.25em"}
+                    bgColor={pathname === "/dashboard/mahasiswa" ? "#FAFAFA" : "transparent"}
+                    color={pathname === "/dashboard/mahasiswa" ? "#185C99" : "#1E1D22"}
                     _hover={{ bgColor: "#FAFAFA", color: "#185C99" }}
                     cursor={"pointer"}
                     transition={"0.1s ease-in-out"}
@@ -327,8 +346,8 @@ export default function Sidebar() {
                     alignItems={"center"}
                     py={"0.75em"}
                     px={"1.25em"}
-                    bgColor={pathname === "/dashboard/malpun" ? "#FAFAFA" : "transparent"}
-                    color={pathname === "/dashboard/malpun" ? "#185C99" : "#1E1D22"}
+                    bgColor={pathname === "/dashboard/malpun/peserta" ? "#FAFAFA" : "transparent"}
+                    color={pathname === "/dashboard/malpun/peserta" ? "#185C99" : "#1E1D22"}
                     _hover={{ bgColor: "#FAFAFA", color: "#185C99" }}
                     cursor={"pointer"}
                     borderRadius={"md"}
@@ -391,6 +410,33 @@ export default function Sidebar() {
                 </Accordion>
               </Flex>
             </Stack>
+            <Box w={"full"} h={"7.5em"} position={"absolute"} bottom={0}>
+              <Divider w={"full"} my={"1em"} borderWidth={2} borderColor={"#EFEFEF"} />
+              <Box w={"full"} h={"100%"} px={"2em"}>
+                <Menu>
+                  <MenuButton w={"full"} py={"0.75em"} px={"1.25em"} _hover={{ bgColor: "#FAFAFA" }} _expanded={{ bg: "gray.200" }} _focus={{ boxShadow: "outline" }} cursor={"pointer"} borderRadius={"md"} transition={"0.1s ease-in-out"}>
+                    <Flex alignItems={"center"}>
+                      <Avatar boxSize={["2.25em", "2.25em", "1em", "1.25em", "2.25em"]} src="https://bit.ly/broken-link" />
+                      <Box ml={["0.2em", "0.2em", "0.2em", "0.7em"]}>
+                        <Text fontSize={["xs", "sm"]} fontWeight={"medium"} align={"left"}>
+                          Monkey D. Luffy
+                        </Text>
+                        <Text mt={"-0.25em"} fontSize={"xs"} fontWeight={"medium"} align={"left"} color={"#6B6773"}>
+                          FACIO - Website
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </MenuButton>
+                  <MenuList>
+                    <MenuGroup title="Profile">
+                      {/* <MenuItem>My Account</MenuItem> */}
+                      <MenuItem onClick={onOpen}>Logout </MenuItem>
+                    </MenuGroup>
+                    <MenuDivider />
+                  </MenuList>
+                </Menu>
+              </Box>
+            </Box>
           </Box>
         </Flex>
       </Box>
@@ -406,9 +452,9 @@ export default function Sidebar() {
               Kembali
             </Button>
             <Button
-              bgColor={"#EF7903"}
+              bgColor={"#185C99"}
               color={"white"}
-              _hover={{ bgColor: "#BE6913" }}
+              _hover={{ bgColor: "#4A647B" }}
               onClick={() => {
                 // deleteToken("");
                 // deleteUserData();
