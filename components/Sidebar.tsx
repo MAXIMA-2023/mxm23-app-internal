@@ -304,7 +304,7 @@ export default function Sidebar() {
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel p={0}>
-                      <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"0.5em"}>
+                      <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"1em"}>
                         <Box>
                           <Link href={"/dashboard/state/daftarstate"}>
                             <Flex alignItems={"center"} _hover={{ color: "#185C99" }} color={pathname === "/dashboard/state/daftarstate" ? "#185C99" : "#1E1D22"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
@@ -315,7 +315,7 @@ export default function Sidebar() {
                             </Flex>
                           </Link>
                         </Box>
-                        <Box>
+                        {/* <Box>
                           <Link href={"/dashboard/state/sunting"}>
                             <Flex alignItems={"center"} color={pathname === "/dashboard/state/sunting" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
                               <Icon ml={"1.75em"} as={pathname === "/dashboard/state/sunting" ? MdEdit : MdOutlineEdit} boxSize={iconBoxSize} />
@@ -324,7 +324,7 @@ export default function Sidebar() {
                               </Text>
                             </Flex>
                           </Link>
-                        </Box>
+                        </Box> */}
                         <Box>
                           <Link href={"/dashboard/state/details"}>
                             <Flex alignItems={"center"} color={pathname === "/dashboard/state/details" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
