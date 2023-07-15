@@ -1,26 +1,79 @@
 "use client";
-import { Center, Box, Text, HStack } from "@chakra-ui/react";
+import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
+import React, { useState, useEffect } from "react";
+import { ThemeProvider } from "@mui/material/styles";
+import {
+  Box,
+  Flex,
+  Text,
+  Divider,
+  HStack,
+  Switch,
+  Link,
+  Select,
+  Image,
+  Button,
+  Icon,
+} from "@chakra-ui/react";
+import { createTheme } from "@mui/material/styles";
+import Layout from "@/components/Layout";
+import { SubmitHandler, useForm } from "react-hook-form";
+import axios from "axios";
+import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
-export default function Toggles() {
+export default function Dashboard() {
+  // data dummy
+  const dataSTATE = [
+    {
+      timeline: "Pendaftaran",
+      tlStatus: "Open",
+    },
+    {
+      timeline: "Malam Puncak",
+      tlStatus: "Closed",
+    },
+  ];
+
+  const columnState: MUIDataTableColumn[] = [
+    {
+      label: "Toggle",
+      name: "timeline",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      label: "Status",
+      name: "tlStatus",
+      options: {
+        filter: true,
+      },
+    },
+  ];
+
+  const options = {};
+
   return (
     <>
       <title>MAXIMA 2023 Internal - Toggles</title>
-      <Center w={"100%"} h={"100vh"}>
-        <Box w={"25em"} h={"auto"} boxShadow={"lg"}>
-          <Box w={"full"} p={"2em"} bg={"RGBA(0, 0, 0, 0.92)"} rounded={"md"}>
-            <HStack spacing={3}>
-              <Box boxSize={"1em"} bg={"white"} rounded={"full"}></Box>
-              <Box boxSize={"1em"} bg={"white"} rounded={"full"}></Box>
-              <Box boxSize={"1em"} bg={"white"} rounded={"full"}></Box>
-            </HStack>
-            <Box mt={"1em"}>
-              <Text align={"left"} color={"white"} fontSize={"xl"} fontWeight={"normal"}>
-                Ini Toggles
-              </Text>
-            </Box>
+      <Layout title="Toggles" showDashboardButton disablePadding>
+        <Box w={"full"} overflowY={"auto"} boxShadow={"xs"}>
+          <Box w={"full"} mx={4} my={4}>
+            <ThemeProvider theme={createTheme()}>
+              <MUIDataTable
+                title={""}
+                data={dataSTATE}
+                columns={columnState}
+                options={{
+                  rowsPerPage: 10,
+                  selectableRows: "none",
+                  elevation: 1,
+                }}
+              />
+            </ThemeProvider>
           </Box>
         </Box>
-      </Center>
+      </Layout>
     </>
   );
 }
