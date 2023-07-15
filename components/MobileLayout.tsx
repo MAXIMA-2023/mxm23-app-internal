@@ -65,8 +65,9 @@ import { HiOutlineSparkles, HiOutlineOfficeBuilding } from "react-icons/hi";
 import { BsCheckCircle } from "react-icons/bs";
 
 // types
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { As, PlacementWithLogical } from "@chakra-ui/react";
+import { useAuth } from "@/contexts/Auth";
 
 // const
 const activeColor = "#185C99";
@@ -74,6 +75,16 @@ const activeColor = "#185C99";
 const inactiveColor = undefined;
 
 export const AppBar = () => {
+  const auth = useAuth()!;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!auth.loading && !auth?.isLoggedIn) {
+      router.push("/signin");
+      return;
+    }
+  }, [auth?.isLoggedIn, auth.loading, router]);
+
   return (
     <>
       <Box
@@ -126,13 +137,15 @@ export const AppBar = () => {
             </MenuButton>
             <MenuList>
               <Text px={"1em"} fontWeight={"medium"}>
-                Windah Barusadar
+                {auth?.user?.name}
               </Text>
               <Text textColor={"#6B6773"} px={"1em"} fontWeight={"medium"}>
-                Facio
+                {auth.user?.divisi
+                  ? auth.user?.divisi
+                  : auth.user?.Statenameisi}
               </Text>
               <MenuDivider />
-              <MenuItem color={"red.500"}>
+              <MenuItem color={"red.500"} onClick={auth?.logout}>
                 <Icon as={MdLogout} />
                 <Text px={"1em"}>Log Out</Text>
               </MenuItem>

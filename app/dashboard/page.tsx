@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState, MutableRefObject } from "react";
 import Layout from "@/components/Layout";
+import { useAuth } from "@/contexts/Auth";
 import { Text, Box, Flex, Icon } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { MdOutlineShield, MdOutlineSchool, MdOutlineAirplanemodeActive } from "react-icons/md";
@@ -9,6 +10,7 @@ import Charts from "@/components/Charts";
 import Loading from "@/components/Loading";
 
 export default function Dashboard() {
+  const auth = useAuth()!;
   const [width, setWidth] = useState(0);
   const cardRef = useRef() as MutableRefObject<HTMLDivElement>;
 
@@ -74,6 +76,15 @@ export default function Dashboard() {
       total: 4021,
     },
   ];
+
+  if (auth.loading) {
+    return (
+      <>
+        <Text>Loading...</Text>
+      </>
+    );
+  }
+
   return (
     <>
       <title>MAXIMA 2023 Internal - Dashboard</title>

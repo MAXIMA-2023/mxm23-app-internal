@@ -54,7 +54,7 @@ export default function SignUpPanitia() {
   const [divisi, setDivisi] = useState<Divisi[]>([]);
   const [state, setState] = useState<State[]>([]);
 
-  const auth = useAuth();
+  const auth = useAuth()!;
   const handleClick = () => setShow(!show);
   const router = useRouter();
 
@@ -74,7 +74,7 @@ export default function SignUpPanitia() {
     };
     const getState = async () => {
       try {
-        const { data } = await api.get("/state");
+        const { data } = await api.get("/state_activities");
         setState(data);
       } catch (error) {
         HandleAxiosError(error);
@@ -96,10 +96,11 @@ export default function SignUpPanitia() {
   const onSubmit: SubmitHandler<UserSignUp> = async (data: UserSignUp) => {
     try {
       const { data: response } = await api.post<{ message: string }>(
-        data.role === "1" ? "/panitia/register" : "/organisator/register",
+        data.role === "1" ? "/panit/register" : "/organisator/register",
         data
       );
       Swal.fire("Success", response.message, "success");
+      router.push("/signin");
     } catch (error) {
       HandleAxiosError(error);
     }
@@ -434,7 +435,7 @@ export default function SignUpPanitia() {
                       color={"white"}
                       variant={"solid"}
                       _hover={{ bgColor: "#185CDC" }}
-                      isLoading={isSubmitting || isLoading}
+                      isLoading={isSubmitting || isLoading || auth.loading}
                     >
                       Sign up
                     </Button>
