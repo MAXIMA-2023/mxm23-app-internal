@@ -1,4 +1,4 @@
-import api, { baseUrl, HandleAxiosError } from "@/services/api";
+import api, { baseUrl, HandleAxiosError, ResponseModel } from "@/services/api";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { decodeToken } from "react-jwt";
@@ -30,7 +30,7 @@ type AuthContext = {
   role: "organisator" | "panit" | null;
   loading: boolean;
   isLoggedIn: boolean;
-  login: (user: string, password: string) => void;
+  login: (nim: number, password: string) => void;
   logout: () => void;
 };
 
@@ -95,27 +95,32 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loadUser();
   }, []);
 
-  const login = async (username: string, password: string) => {
+  const login = async (nim: number, password: string) => {
+    console.log(nim, password);
     try {
-      const { data } = await api.post<JWT>(
-        `/login`, // harusnya masih default
+      const { data } = await api.post<ResponseModel<JWT>>(
+        `/internal/login`, // harusnya masih default
         {
-          username,
+          nim,
           password,
         }
       );
-      const decoded = decodeToken(data.token) as DecodedJWT;
+      const decoded = decodeToken(data.data?.token!) as DecodedJWT;
 
-      api.defaults.headers.Authorization = `Bearer ${data.token}`;
-      api.defaults.headers.common["x-access-token"] = data.token;
+      api.defaults.headers.Authorization = `Bearer ${data.data?.token!}`;
+      api.defaults.headers.common["x-access-token"] = data.data?.token!;
       api.defaults.baseURL = `${baseUrl}/${decoded.role}`;
 
-      const { data: user } = await api.get<User[]>(`/get/${decoded.nim}`);
+      const { data: user } = await api.get<User[]>(
+        decoded.role === "organisator"
+          ? `/get/${decoded.nim}`
+          : `/${decoded.nim}`
+      );
 
       setUser(user[0]);
       setUserRole(decoded.role);
 
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.data?.token!);
       localStorage.setItem("role", decoded.role);
 
       Swal.fire("Berhasil", "Selamat, anda berhasil masuk!", "success");
