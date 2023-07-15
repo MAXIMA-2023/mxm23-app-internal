@@ -25,7 +25,7 @@ import { useAuth } from "@/contexts/Auth";
 import { HandleAxiosError } from "@/services/api";
 
 type UserLogin = {
-  nim: string;
+  nim: number;
   password: string;
 };
 
@@ -46,7 +46,6 @@ export default function Login() {
   const onSubmit: SubmitHandler<UserLogin> = async (data: UserLogin) => {
     try {
       auth?.login(data.nim, data.password);
-      Swal.fire("Success", "Selamat kamu berhasil masuk!", "success");
     } catch (error) {
       HandleAxiosError(error);
     }
@@ -147,6 +146,15 @@ export default function Login() {
                           <Input
                             {...register("nim", {
                               required: "NIM harap diisi",
+                              min: {
+                                value: 10000,
+                                message: "NIM harus 5 digit",
+                              },
+                              max: {
+                                value: 99999,
+                                message: "NIM harus 5 digit",
+                              },
+                              valueAsNumber: true,
                             })}
                             py={"1.25em"}
                             type="number"
@@ -174,6 +182,10 @@ export default function Login() {
                           <Input
                             {...register("password", {
                               required: "Password harap diisi",
+                              minLength: {
+                                value: 8,
+                                message: "Password harus 8 karakter",
+                              },
                             })}
                             py={"1.25em"}
                             type={show ? "text" : "password"}
