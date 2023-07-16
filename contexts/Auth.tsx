@@ -9,10 +9,10 @@ type User = {
   nim: number;
   name: string;
   email: string;
-  stateID: number;
-  isverified: boolean;
-  Statenameisi?: string;
-  divisi?: string;
+  stateID?: number;
+  stateName?: string;
+  divisiID?: string;
+  divisiName?: string;
 };
 
 type JWT = {
@@ -42,7 +42,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     null
   );
   const [loading, setLoading] = useState<boolean>(true);
-  // const router = useRouter();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -54,36 +53,20 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      api.defaults.headers.Authorization = `Bearer ${token}`;
-      api.defaults.headers.common["x-access-token"] = token;
+      api.defaults.headers.authorization = `Bearer ${token}`;
       api.defaults.baseURL = `${baseUrl}/${role}`;
 
       try {
         // ambil nim aja
         const decoded = decodeToken(token) as DecodedJWT;
+        const { data } = await api.get<ResponseModel<User>>(`/profile`);
 
-        const { data } = await api.get<User[]>(
-          role === "organisator" ? `/get/${decoded.nim}` : `/${decoded.nim}`
-        );
-        if (!data.length) {
-          localStorage.removeItem("token");
-          Swal.fire(
-            "Error",
-            "Sesi kamu telah expired, silahkan login kembali",
-            "error"
-          );
-
-          // raise error
-          throw new Error();
-        }
-
-        setUser(data[0]);
+        setUser(data.data!);
         setUserRole(role as "organisator" | "panit");
       } catch (error) {
         console.log(error);
 
-        delete api.defaults.headers.Authorization;
-        delete api.defaults.headers.common["x-access-token"];
+        delete api.defaults.headers.authorization;
         api.defaults.baseURL = baseUrl;
         localStorage.removeItem("token");
         localStorage.removeItem("role");
@@ -96,7 +79,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = async (nim: number, password: string) => {
-    console.log(nim, password);
     try {
       const { data } = await api.post<ResponseModel<JWT>>(
         `/internal/login`, // harusnya masih default
@@ -105,19 +87,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           password,
         }
       );
+
       const decoded = decodeToken(data.data?.token!) as DecodedJWT;
 
-      api.defaults.headers.Authorization = `Bearer ${data.data?.token!}`;
-      api.defaults.headers.common["x-access-token"] = data.data?.token!;
+      api.defaults.headers.authorization = `Bearer ${data.data?.token!}`;
       api.defaults.baseURL = `${baseUrl}/${decoded.role}`;
 
-      const { data: user } = await api.get<User[]>(
-        decoded.role === "organisator"
-          ? `/get/${decoded.nim}`
-          : `/${decoded.nim}`
-      );
+      const { data: user } = await api.get<ResponseModel<User>>(`/profile/`);
 
-      setUser(user[0]);
+      setUser(user.data!);
       setUserRole(decoded.role);
 
       localStorage.setItem("token", data.data?.token!);
@@ -125,9 +103,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       Swal.fire("Berhasil", "Selamat, anda berhasil masuk!", "success");
     } catch (error: any) {
-      delete api.defaults.headers.Authorization;
-      delete api.defaults.headers.common["x-access-token"];
-
+      delete api.defaults.headers.authorization;
       api.defaults.baseURL = baseUrl;
       console.log(error);
       HandleAxiosError(error);
@@ -139,11 +115,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("role");
     setUser(null);
     setUserRole(null);
-    delete api.defaults.headers.Authorization;
-    delete api.defaults.headers.common["x-access-token"];
-
+    delete api.defaults.headers.authorization;
     api.defaults.baseURL = baseUrl;
-    // router.push("/login");
   };
 
   return (
@@ -163,4 +136,4 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default AuthProvider;
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext)!;
