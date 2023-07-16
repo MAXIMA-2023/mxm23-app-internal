@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
@@ -89,10 +89,9 @@ export default function Organisator() {
     },
   ];
 
-  const options = {
-  };
+  const options = {};
 
-// data dummy
+  // data dummy
   const dataOrganisator = [
     ["GawrGura1", "12345678", "gawrgura1@student.umn.ac.id", "Jcafe"],
     ["GawrGura2", "23456789", "gawrgura2@student.umn.ac.id", "Mapala"],
@@ -104,29 +103,56 @@ export default function Organisator() {
     ["GawrGura8", "89012345", "gawrgura8@student.umn.ac.id", "Rencang"],
     ["GawrGura9", "90123456", "gawrgura9@student.umn.ac.id", "BEM"],
     ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
+    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", "DKBM"],
   ];
 
   return (
     <>
-    <title>MAXIMA 2023 Internal - Organisator</title>
-    <Layout title="Organisator" showDashboardButton disablePadding>
-    <Box w={"full"} overflowY={"auto"} boxShadow={"xs"}>
-      <Box w={"full"} mx={4} my={4}>
-      <ThemeProvider theme={createTheme()}>
-        <MUIDataTable
-          title={""}
-          data={dataOrganisator}
-          columns={columnsOrganisator}
-          options={{
-            rowsPerPage: 10,
-            selectableRows: "none",
-            elevation: 1,
-          }}
-        />
-      </ThemeProvider>
-      </Box>
-    </Box>
-    </Layout>
+      <title>MAXIMA 2023 Internal - Organisator</title>
+      <Layout title="Organisator" showDashboardButton>
+        <Box w={"full"}>
+          <ThemeProvider theme={createTheme()}>
+            <MUIDataTable
+              title={""}
+              data={dataOrganisator}
+              columns={columnsOrganisator}
+              options={{
+                rowsPerPage: 10,
+                selectableRows: "none",
+                elevation: 1,
+                tableBodyHeight: "70vh",
+                tableBodyMaxHeight: "70vh",
+              }}
+            />
+          </ThemeProvider>
+        </Box>
+      </Layout>
     </>
   );
 }

@@ -11,7 +11,7 @@ import axios from "axios";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
 export default function PesertaMalpun() {
-  const columnsMahasiswa: MUIDataTableColumn[] = [
+  const columnsMalpun: MUIDataTableColumn[] = [
     {
       label: "Nama",
       name: "nama",
@@ -60,7 +60,7 @@ export default function PesertaMalpun() {
   const options = {};
 
   // data dummy
-  const dataMahasiswa = [
+  const dataMalpun = [
     ["GawrGura1", "12345678", "gawrgura1@student.umn.ac.id", true],
     ["GawrGura2", "23456789", "gawrgura2@student.umn.ac.id", false],
     ["GawrGura3", "34567890", "gawrgura3@student.umn.ac.id", true],
@@ -76,24 +76,22 @@ export default function PesertaMalpun() {
   return (
     <>
       <title>MAXIMA 2023 Internal - MALPUN</title>
-      <Layout title="MALPUN" showDashboardButton disablePadding>
-        <Box w={"full"} overflowY={"auto"} boxShadow={"xs"}>
-          <Box mx={4} my={4}>
-            <Box w={"full"} overflow={"auto"}>
-              <ThemeProvider theme={createTheme()}>
-                <MUIDataTable
-                  title={""}
-                  data={dataMahasiswa}
-                  columns={columnsMahasiswa}
-                  options={{
-                    rowsPerPage: 10,
-                    selectableRows: "none",
-                    elevation: 1,
-                  }}
-                />
-              </ThemeProvider>
-            </Box>
-          </Box>
+      <Layout title="Malpun" showDashboardButton>
+        <Box w={"full"}>
+          <ThemeProvider theme={createTheme()}>
+            <MUIDataTable
+              title={""}
+              data={dataMalpun}
+              columns={columnsMalpun}
+              options={{
+                rowsPerPage: 10,
+                selectableRows: "none",
+                elevation: 1,
+                tableBodyHeight: "70vh",
+                tableBodyMaxHeight: "70vh",
+              }}
+            />
+          </ThemeProvider>
         </Box>
       </Layout>
     </>

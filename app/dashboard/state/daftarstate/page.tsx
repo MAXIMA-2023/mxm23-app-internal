@@ -2,32 +2,13 @@
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import {
-  Box,
-  Flex,
-  Text,
-  Divider,
-  HStack,
-  Switch,
-  Link,
-  Select,
-  Image,
-  Button,
-  Icon,
-  Spacer,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, Divider, HStack, Switch, Link, Select, Image, Button, Icon, Spacer } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
-import {
-  MdSearch,
-  MdViewColumn,
-  MdPrint,
-  MdCloudDownload,
-  MdFilterList,
-} from "react-icons/md";
+import { MdSearch, MdViewColumn, MdPrint, MdCloudDownload, MdFilterList } from "react-icons/md";
 import { MdDeleteForever, MdInfo, MdOutlineEdit } from "react-icons/md";
 
 export default function Dashboard() {
@@ -90,7 +71,7 @@ export default function Dashboard() {
     },
   ];
 
-  const columnState: MUIDataTableColumn[] = [
+  const columnsSTATE: MUIDataTableColumn[] = [
     {
       label: "Nama STATE",
       name: "namaSTATE",
@@ -156,22 +137,22 @@ export default function Dashboard() {
   return (
     <>
       <title>MAXIMA 2023 Internal - STATE</title>
-      <Layout title="Daftar STATE" showDashboardButton disablePadding>
-        <Box w={"full"} overflowY={"auto"} boxShadow={"xs"}>
-          <Box w={"full"} mx={4} my={4}>
-            <ThemeProvider theme={createTheme()}>
-              <MUIDataTable
-                title={""}
-                data={dataSTATE}
-                columns={columnState}
-                options={{
-                  rowsPerPage: 10,
-                  selectableRows: "none",
-                  elevation: 1,
-                }}
-              />
-            </ThemeProvider>
-          </Box>
+      <Layout title="Daftar STATE" showDashboardButton>
+        <Box w={"full"}>
+          <ThemeProvider theme={createTheme()}>
+            <MUIDataTable
+              title={""}
+              data={dataSTATE}
+              columns={columnsSTATE}
+              options={{
+                rowsPerPage: 10,
+                selectableRows: "none",
+                elevation: 1,
+                tableBodyHeight: "70vh",
+                tableBodyMaxHeight: "70vh",
+              }}
+            />
+          </ThemeProvider>
         </Box>
       </Layout>
     </>

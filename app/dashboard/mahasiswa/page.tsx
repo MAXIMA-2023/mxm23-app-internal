@@ -241,22 +241,22 @@ export default function Dashboard() {
   return (
     <>
       <title>MAXIMA 2023 Internal - Mahasiswa</title>
-      <Layout title="Mahasiswa" showDashboardButton disablePadding>
-        <Box w={"full"} overflowY={"auto"} boxShadow={"xs"}>
-          <Box w={"full"} mx={4} my={4}>
-            <ThemeProvider theme={createTheme()}>
-              <MUIDataTable
-                title={""}
-                data={dataMahasiswa}
-                columns={columnsMahasiswa}
-                options={{
-                  rowsPerPage: 10,
-                  selectableRows: "none",
-                  elevation: 1,
-                }}
-              />
-            </ThemeProvider>
-          </Box>
+      <Layout title="Mahasiswa" showDashboardButton>
+        <Box w={"full"}>
+          <ThemeProvider theme={createTheme()}>
+            <MUIDataTable
+              title={""}
+              data={dataMahasiswa}
+              columns={columnsMahasiswa}
+              options={{
+                rowsPerPage: 10,
+                selectableRows: "none",
+                elevation: 1,
+                tableBodyHeight: "70vh",
+                tableBodyMaxHeight: "70vh",
+              }}
+            />
+          </ThemeProvider>
         </Box>
       </Layout>
     </>
