@@ -37,15 +37,15 @@ export default function Login() {
   const auth = useAuth();
 
   useEffect(() => {
-    if (auth?.isLoggedIn) {
+    if (auth.isLoggedIn) {
       router.push("/dashboard");
       return;
     }
-  }, [auth?.isLoggedIn, router]);
+  }, [auth.isLoggedIn, router]);
 
   const onSubmit: SubmitHandler<UserLogin> = async (data: UserLogin) => {
     try {
-      auth?.login(data.nim, data.password);
+      auth.login(data.nim, data.password);
     } catch (error) {
       HandleAxiosError(error);
     }
@@ -231,7 +231,7 @@ export default function Login() {
                   </Text>
                 </Box>
                 <Center mb={"1.5em"}>
-                  {auth?.loading ? (
+                  {auth.loading ? (
                     <Button
                       type="submit"
                       w={"100%"}
