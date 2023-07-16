@@ -1,3 +1,5 @@
+"use client";
+
 //importing next components
 import { usePathname, useRouter } from "next/navigation";
 
@@ -816,9 +818,9 @@ export default function Sidebar() {
                           align={"left"}
                           color={"#6B6773"}
                         >
-                          {auth.user?.divisi
-                            ? auth.user?.divisi
-                            : auth.user?.Statenameisi}
+                          {auth.user?.divisiID
+                            ? auth.user?.divisiName
+                            : auth.user?.stateName}
                         </Text>
                       </Box>
                     </Flex>

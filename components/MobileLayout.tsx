@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import {
@@ -75,7 +77,7 @@ const activeColor = "#185C99";
 const inactiveColor = undefined;
 
 export const AppBar = () => {
-  const auth = useAuth()!;
+  const auth = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -137,15 +139,15 @@ export const AppBar = () => {
             </MenuButton>
             <MenuList>
               <Text px={"1em"} fontWeight={"medium"}>
-                {auth?.user?.name}
+                {auth.user?.name}
               </Text>
               <Text textColor={"#6B6773"} px={"1em"} fontWeight={"medium"}>
-                {auth.user?.divisi
-                  ? auth.user?.divisi
-                  : auth.user?.Statenameisi}
+                {auth.user?.divisiID
+                  ? auth.user?.divisiName
+                  : auth.user?.stateName}
               </Text>
               <MenuDivider />
-              <MenuItem color={"red.500"} onClick={auth?.logout}>
+              <MenuItem color={"red.500"} onClick={auth.logout}>
                 <Icon as={MdLogout} />
                 <Text px={"1em"}>Log Out</Text>
               </MenuItem>
