@@ -1,8 +1,6 @@
-import api, { baseUrl, HandleAxiosError, ResponseModel } from "@/services/api";
-import { useRouter } from "next/navigation";
+import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 import { createContext, useContext, useEffect, useState } from "react";
 import { decodeToken } from "react-jwt";
-import { AxiosError, isAxiosError } from "axios";
 import Swal from "sweetalert2";
 
 type User = {
@@ -48,18 +46,17 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const token = localStorage.getItem("token");
       const role = localStorage.getItem("role");
 
-      if (!token) {
+      if (!token || !role) {
         setLoading(false);
         return;
       }
 
       api.defaults.headers.authorization = `Bearer ${token}`;
-      api.defaults.baseURL = `${baseUrl}/${role}`;
 
       try {
         // ambil nim aja
-        const decoded = decodeToken(token) as DecodedJWT;
-        const { data } = await api.get<ResponseModel<User>>(`/profile`);
+        // const decoded = decodeToken(token) as DecodedJWT;
+        const { data } = await api.get<ResponseModel<User>>(`${role}/profile`);
 
         setUser(data.data!);
         setUserRole(role as "organisator" | "panit");
@@ -67,7 +64,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log(error);
 
         delete api.defaults.headers.authorization;
-        api.defaults.baseURL = baseUrl;
         localStorage.removeItem("token");
         localStorage.removeItem("role");
 
@@ -91,9 +87,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const decoded = decodeToken(data.data?.token!) as DecodedJWT;
 
       api.defaults.headers.authorization = `Bearer ${data.data?.token!}`;
-      api.defaults.baseURL = `${baseUrl}/${decoded.role}`;
 
-      const { data: user } = await api.get<ResponseModel<User>>(`/profile/`);
+      const { data: user } = await api.get<ResponseModel<User>>(
+        `${decoded.role}/profile/`
+      );
 
       setUser(user.data!);
       setUserRole(decoded.role);
@@ -104,7 +101,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       Swal.fire("Berhasil", "Selamat, anda berhasil masuk!", "success");
     } catch (error: any) {
       delete api.defaults.headers.authorization;
-      api.defaults.baseURL = baseUrl;
       console.log(error);
       HandleAxiosError(error);
     }
@@ -116,7 +112,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
     setUserRole(null);
     delete api.defaults.headers.authorization;
-    api.defaults.baseURL = baseUrl;
   };
 
   return (
