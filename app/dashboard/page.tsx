@@ -4,18 +4,39 @@ import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/Auth";
 import { Text, Box, Flex, Icon } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { MdOutlineShield, MdOutlineSchool, MdOutlineAirplanemodeActive } from "react-icons/md";
+import {
+  MdOutlineShield,
+  MdOutlineSchool,
+  MdOutlineAirplanemodeActive,
+} from "react-icons/md";
 import { HiOutlineOfficeBuilding, HiOutlineSparkles } from "react-icons/hi";
 import Charts from "@/components/Charts";
-import Loading from "@/components/Loading";
+
+// chart dummy data
+
+const dummyJmlMahasiswa = [20, 9, 12, 5, 7, 10, 15, 20, 25, 30];
+const dummyDates = [
+  "2023-07-18T15:50:24+0000",
+  "2023-07-25T15:50:24+0000",
+  "2023-07-30T15:50:24+0000",
+  "2023-08-01T15:50:24+0000",
+  "2023-08-05T15:50:24+0000",
+  "2023-08-08T15:50:24+0000",
+  "2023-08-15T15:50:24+0000",
+  "2023-08-21T15:50:24+0000",
+  "2023-08-30T15:50:24+0000",
+  "2023-09-01T15:50:24+0000",
+];
 
 export default function Dashboard() {
-  const auth = useAuth()!;
+  const auth = useAuth();
   const [width, setWidth] = useState(0);
   const cardRef = useRef() as MutableRefObject<HTMLDivElement>;
 
   useEffect(() => {
-    setWidth(cardRef.current.scrollWidth - cardRef.current.offsetWidth);
+    if (cardRef.current) {
+      setWidth(cardRef.current.scrollWidth - cardRef.current.offsetWidth);
+    }
   }, []);
 
   const tabs = [
@@ -77,14 +98,6 @@ export default function Dashboard() {
     },
   ];
 
-  if (auth.loading) {
-    return (
-      <>
-        <Loading />
-      </>
-    );
-  }
-
   return (
     <>
       <title>MAXIMA 2023 Internal - Dashboard</title>
@@ -101,19 +114,61 @@ export default function Dashboard() {
                 Tab
               </Text>
             </Box> */}
-            <Box as={motion.div} overflowX={"hidden"} cursor={"grab"} whileTap={{ cursor: "grabbing" }}>
-              <Flex as={motion.div} w={"full"} maxW={"full"} mt={"0.5em"} drag={"x"} dragConstraints={{ right: 0, left: -width }} ref={cardRef}>
+            <Box
+              as={motion.div}
+              overflowX={"hidden"}
+              cursor={"grab"}
+              whileTap={{ cursor: "grabbing" }}
+            >
+              <Flex
+                as={motion.div}
+                w={"full"}
+                maxW={"full"}
+                mt={"0.5em"}
+                drag={"x"}
+                dragConstraints={{ right: 0, left: -width }}
+                ref={cardRef}
+              >
                 {tabs.map((tab, index) => (
-                  <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tab.bgColor} mr={"1em"} mb={"1em"} key={index} borderRadius={"lg"}>
+                  <Box
+                    as={motion.div}
+                    minW={"15em"}
+                    h={"7.5em"}
+                    p={"1em"}
+                    bg={tab.bgColor}
+                    mr={"1em"}
+                    mb={"1em"}
+                    key={index}
+                    borderRadius={"lg"}
+                  >
                     <Box w={"full"} h={"auto"}>
-                      <Flex w={"full"} h={"auto"} justifyContent={"space-between"} alignItems={"center"}>
+                      <Flex
+                        w={"full"}
+                        h={"auto"}
+                        justifyContent={"space-between"}
+                        alignItems={"center"}
+                      >
                         <Box>
                           <Text fontSize={"md"} fontWeight={"medium"}>
                             {tab.name}
                           </Text>
                         </Box>
-                        <Box ml={"auto"} bg={tab.iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                          <Icon as={tab.icon} color={"white"} w={"1em"} h={"1em"} />
+                        <Box
+                          ml={"auto"}
+                          bg={tab.iconBgColor}
+                          w={"1.5em"}
+                          h={"1.5em"}
+                          borderRadius={"50%"}
+                          display={"flex"}
+                          justifyContent={"center"}
+                          alignItems={"center"}
+                        >
+                          <Icon
+                            as={tab.icon}
+                            color={"white"}
+                            w={"1em"}
+                            h={"1em"}
+                          />
                         </Box>
                       </Flex>
                       <Box w={"full"} h={"auto"} mt={"1em"}>
@@ -128,7 +183,7 @@ export default function Dashboard() {
             </Box>
           </Box>
           <Box w={"full"} mt={"2em"}>
-            <Charts />
+            <Charts jmlPendaftar={dummyJmlMahasiswa} dates={dummyDates} />
           </Box>
         </Box>
       </Layout>
