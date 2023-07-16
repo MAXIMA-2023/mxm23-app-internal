@@ -3,13 +3,13 @@ import Chart from "react-apexcharts";
 import { Text, Box, Flex, Icon } from "@chakra-ui/react";
 
 class Charts extends Component {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
 
     this.state = {
       series: [
         {
-          name: "Sales",
+          name: "Mahasiswa",
           data: [4, 3, 10, 9, 29, 19, 22, 9, 12, 7, 19, 5, 13, 9, 17, 2, 7, 5],
         },
       ],
@@ -49,7 +49,7 @@ class Charts extends Component {
           ],
           tickAmount: 10,
           labels: {
-            formatter: function (value, timestamp, opts) {
+            formatter: function (value: any, timestamp: any, opts: any) {
               return opts.dateFormatter(new Date(timestamp), "dd MMM");
             },
           },
