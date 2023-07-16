@@ -40,13 +40,11 @@ export const HandleAxiosError = (error: any) => {
   );
 };
 
-export type ResponseModel<R> = {
+export type ResponseModel<T> = {
   code?: number;
   message: string;
-  data?: R;
-  error?: {
-    message: string;
-  };
+  data?: T;
+  error?: any;
 };
 
 type ZodError = {
