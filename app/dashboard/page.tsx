@@ -80,7 +80,7 @@ export default function Dashboard() {
   if (auth.loading) {
     return (
       <>
-        <Text>Loading...</Text>
+        <Loading />
       </>
     );
   }
