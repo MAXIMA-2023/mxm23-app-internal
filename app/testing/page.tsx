@@ -9,6 +9,7 @@ import { useReadLocalStorage } from "usehooks-ts";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function Dashboard() {
   // interface DataMahasiswa {
@@ -242,7 +243,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Layout title="Mahasiswa" showDashboardButton>
+      {/* <Layout title="Mahasiswa" showDashboardButton>
         <Box w={"full"} maxH={"70vh"} overflowY={"auto"}>
           <Skeleton height="3em" />
           <Stack>
@@ -259,7 +260,8 @@ export default function Dashboard() {
           </Stack>
           <Skeleton height="3em" />
         </Box>
-      </Layout>
+      </Layout> */}
+      <LoadingSpinner />
     </>
   );
 }
