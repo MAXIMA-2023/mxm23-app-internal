@@ -1,30 +1,88 @@
 "use client";
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { Box, Flex, Text, Divider, HStack, Switch, Link, Select, Image, Button, Icon } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
-import { SubmitHandler, useForm } from "react-hook-form";
-import axios from "axios";
-import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
+import { Switch as MuiSwitch } from "@mui/material";
+import api, { HandleAxiosError, ResponseModel } from "@/services/api";
+import { useAuth } from "@/contexts/Auth";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+
+type Organisator = {
+  nim: number;
+  name: string;
+  email: string;
+  stateID: number;
+  isverified: number;
+  stateName: string;
+};
+
+type Panitia = {
+  nim: number;
+  name: string;
+  email: string;
+  isverified: boolean;
+  divisiID: string;
+  divisiName: string;
+};
 
 export default function Dashboard() {
-  // data dummy
-  const dataVerifikasi = [
-    {
-      nama: "Michael Danda Pratama",
-      nim: "12345",
-      ketOrg: "Panitia",
-      ketDiv: "Facio",
-    },
-    {
-      nama: "Zedro Deniro Mason",
-      nim: "54321",
-      ketOrg: "Organisator",
-      ketDiv: "MAPALA",
-    },
-  ];
+  const auth = useAuth();
+  const route = useRouter();
+  const [dataVerifikasi, setDataVerifikasi] = useState<
+    (string | number | boolean)[][]
+  >([]);
+
+  const loadVerifikasiData = async () => {
+    try {
+      const { data: responsePanit } = await api.get<ResponseModel<Panitia[]>>(
+        "/panit/data"
+      );
+      const { data: respOrganisator } = await api.get<
+        ResponseModel<Organisator[]>
+      >("/organisator/data");
+
+      const dataPanitia = responsePanit.data?.map((panitia) => [
+        panitia.name,
+        panitia.nim,
+        "Panitia",
+        panitia.divisiName,
+        panitia.isverified,
+      ]);
+
+      const dataOrganisator = respOrganisator.data?.map((organisator) => [
+        organisator.name,
+        organisator.nim,
+        "Organisator",
+        organisator.stateName,
+        organisator.isverified,
+      ]);
+
+      setDataVerifikasi([...dataPanitia!, ...dataOrganisator!]);
+    } catch (error) {
+      console.log(error);
+      HandleAxiosError(error);
+    }
+  };
+  const superAdmin = ["D01", "D02"];
+
+  useEffect(() => {
+    if (
+      !auth.loading &&
+      auth.role !== "panit" &&
+      !superAdmin.includes(auth.user?.divisiID!)
+    ) {
+      Swal.fire("Error!", "Anda tidak memiliki akses ke halaman ini", "error");
+      route.push("/dashboard");
+      return;
+    }
+    loadVerifikasiData();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const columnsVerifikasi: MUIDataTableColumn[] = [
     {
@@ -32,26 +90,13 @@ export default function Dashboard() {
       name: "nama",
       options: {
         filter: true,
-        customBodyRender: (value: any, tableMeta: any) => {
-          return (
-            <Flex w={"12em"} alignItems={"center"}>
-              <Text>{value}</Text>
-            </Flex>
-          );
-        },
       },
     },
     {
       label: "NIM",
       name: "nim",
       options: {
-        customBodyRender: (value: any, tableMeta: any) => {
-          return (
-            <HStack>
-              <Text>{value}</Text>
-            </HStack>
-          );
-        },
+        filter: true,
       },
     },
     {
@@ -73,16 +118,41 @@ export default function Dashboard() {
       name: "verifAdm",
       options: {
         filter: true,
+        customBodyRender: (value: boolean, tableMeta, updateValue) => {
+          return (
+            <MuiSwitch
+              checked={value}
+              onChange={() => {
+                api
+                  .put(
+                    `/${
+                      tableMeta.rowData[2] === "Panitia"
+                        ? "panit"
+                        : "organisator"
+                    }/verifyAcc/${tableMeta.rowData[1]}`,
+                    {
+                      isverified: !value,
+                    }
+                  )
+                  // iyaa tau emg ini jelek, yang penting work😂
+                  // gua ga ngerti cara masukkin types ke customBodyRender, yg penting typescript nya bungkam
+                  .then((res) => updateValue(!value as unknown as string))
+                  .catch((err) => {
+                    console.log(err);
+                    HandleAxiosError(err);
+                  });
+              }}
+            />
+          );
+        },
       },
     },
   ];
 
-  const options = {};
-
   return (
     <>
       <title>MAXIMA 2023 Internal - Verifikasi</title>
-      <Layout title="Verifikasi" showDashboardButton>
+      <Layout title="Verifikasi" tag="SUPERADMIN" showDashboardButton>
         <Box w={"full"}>
           <ThemeProvider theme={createTheme()}>
             <MUIDataTable
