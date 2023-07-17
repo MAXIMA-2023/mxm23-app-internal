@@ -38,7 +38,7 @@ export default function QRScanSTATE() {
       <Layout title="QR Scan STATE" showDashboardButton disablePadding>
         <Box
           w="full"
-          h="100vh"
+          h="80vh"
           position="relative"
           borderRadius="2xl"
           overflow="hidden"

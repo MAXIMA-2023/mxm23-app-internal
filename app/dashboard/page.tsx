@@ -11,9 +11,9 @@ import {
 } from "react-icons/md";
 import { HiOutlineOfficeBuilding, HiOutlineSparkles } from "react-icons/hi";
 import Charts from "@/components/Charts";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 // chart dummy data
-
 const dummyJmlMahasiswa = [20, 9, 12, 5, 7, 10, 15, 20, 25, 30];
 const dummyDates = [
   "2023-07-18T15:50:24+0000",
@@ -28,6 +28,65 @@ const dummyDates = [
   "2023-09-01T15:50:24+0000",
 ];
 
+const tabs = [
+  {
+    name: "Panitia",
+    href: "/dashboard/daftarpanitia",
+    icon: MdOutlineShield,
+    bgColor: "#E7EDFE",
+    iconBgColor: "#185C99",
+    total: 249,
+  },
+  {
+    name: "Panitia Divisi",
+    href: "/dashboard/panitiafivisi",
+    icon: MdOutlineShield,
+    bgColor: "#E7EDFE",
+    iconBgColor: "#185C99",
+    total: 19,
+  },
+  {
+    name: "Organisator",
+    href: "/dashboard/organisator",
+    icon: HiOutlineOfficeBuilding,
+    bgColor: "#FEE7E7",
+    iconBgColor: "#E53E3E",
+    total: 86,
+  },
+  {
+    name: "Mahasiswa",
+    href: "/dashboard/mahasiswa",
+    icon: MdOutlineSchool,
+    bgColor: "#FEF5E7",
+    iconBgColor: "#D77300",
+    total: 3409,
+  },
+  {
+    name: "STATE",
+    href: "/dashboard/daftarstate ",
+    icon: MdOutlineAirplanemodeActive,
+    bgColor: "#ECE7FE",
+    iconBgColor: "#4A05DE",
+    total: 49,
+  },
+  {
+    name: "Detail dan Peserta",
+    href: "/dashboard/details ",
+    icon: MdOutlineAirplanemodeActive,
+    bgColor: "#ECE7FE",
+    iconBgColor: "#4A05DE",
+    total: 73,
+  },
+  {
+    name: "Malpun",
+    href: "/dashboard/malpun ",
+    icon: HiOutlineSparkles,
+    bgColor: "#FEE7FC",
+    iconBgColor: "#DE05C8",
+    total: 4021,
+  },
+];
+
 export default function Dashboard() {
   const auth = useAuth();
   const [width, setWidth] = useState(0);
@@ -39,64 +98,9 @@ export default function Dashboard() {
     }
   }, []);
 
-  const tabs = [
-    {
-      name: "Panitia",
-      href: "/dashboard/daftarpanitia",
-      icon: MdOutlineShield,
-      bgColor: "#E7EDFE",
-      iconBgColor: "#185C99",
-      total: 249,
-    },
-    {
-      name: "Panitia Divisi",
-      href: "/dashboard/panitiafivisi",
-      icon: MdOutlineShield,
-      bgColor: "#E7EDFE",
-      iconBgColor: "#185C99",
-      total: 19,
-    },
-    {
-      name: "Organisator",
-      href: "/dashboard/organisator",
-      icon: HiOutlineOfficeBuilding,
-      bgColor: "#FEE7E7",
-      iconBgColor: "#E53E3E",
-      total: 86,
-    },
-    {
-      name: "Mahasiswa",
-      href: "/dashboard/mahasiswa",
-      icon: MdOutlineSchool,
-      bgColor: "#FEF5E7",
-      iconBgColor: "#D77300",
-      total: 3409,
-    },
-    {
-      name: "STATE",
-      href: "/dashboard/daftarstate ",
-      icon: MdOutlineAirplanemodeActive,
-      bgColor: "#ECE7FE",
-      iconBgColor: "#4A05DE",
-      total: 49,
-    },
-    {
-      name: "Detail dan Peserta",
-      href: "/dashboard/details ",
-      icon: MdOutlineAirplanemodeActive,
-      bgColor: "#ECE7FE",
-      iconBgColor: "#4A05DE",
-      total: 73,
-    },
-    {
-      name: "Malpun",
-      href: "/dashboard/malpun ",
-      icon: HiOutlineSparkles,
-      bgColor: "#FEE7FC",
-      iconBgColor: "#DE05C8",
-      total: 4021,
-    },
-  ];
+  if (auth.loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>
@@ -105,7 +109,7 @@ export default function Dashboard() {
         <Box w={"full"} h={"auto"}>
           <Box w={"full"}>
             <Text color={"#6B6773"} fontSize="2xl" fontWeight={"medium"}>
-              Selamat datang, <strong>Monkey D. Luffy</strong> 🤩
+              Selamat datang, <strong>{auth.user?.name}</strong> 🤩
             </Text>
           </Box>
           <Box w={"full"} mt={"2em"}>
