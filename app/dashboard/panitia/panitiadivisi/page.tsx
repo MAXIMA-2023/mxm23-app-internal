@@ -1,26 +1,137 @@
 "use client";
-import { Center, Box, Text, HStack } from "@chakra-ui/react";
+import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
+import { useState, useEffect } from "react";
+import { ThemeProvider } from "@mui/material/styles";
+import {
+  Box,
+  Flex,
+  Text,
+  Divider,
+  HStack,
+  Switch,
+  Link,
+  Select,
+  Image,
+  Button,
+} from "@chakra-ui/react";
+import { createTheme } from "@mui/material/styles";
+import Layout from "@/components/Layout";
+import api, { ResponseModel, HandleAxiosError } from "@/services/api";
+import { useAuth } from "@/contexts/Auth";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+
+type Panitia = {
+  nim: number;
+  name: string;
+  email: string;
+  isverified: boolean;
+  divisiID: string;
+  divisiName: string;
+};
 
 export default function PanitiaDivisi() {
+  const [dataPanit, setDataPanit] = useState<string[][]>([]);
+  const [fetchLoading, setFetchLoading] = useState<boolean>(true);
+  const auth = useAuth();
+  const route = useRouter();
+
+  const columnsPanitia: MUIDataTableColumn[] = [
+    {
+      label: "Nama",
+      name: "nama",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      label: "NIM",
+      name: "nim",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      label: "Email",
+      name: "email",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      label: "Divisi",
+      name: "DivisiName",
+      options: {
+        filter: true,
+      },
+    },
+  ];
+
+  useEffect(() => {
+    if (!auth.loading && auth.role !== "panit") {
+      Swal.fire(
+        "Error!",
+        "Maaf, anda tidak memiliki akses ke page ini",
+        "error"
+      );
+      route.push("/dashboard");
+      return;
+    }
+
+    const loadDataPanit = async () => {
+      try {
+        const { data } = await api.get<ResponseModel<Panitia[]>>(`panit/data`);
+        setDataPanit(
+          data
+            .data!.filter((panitia) => panitia.divisiID === auth.user?.divisiID)
+            .map((panitia) => [
+              panitia.name,
+              panitia.nim.toString(),
+              panitia.email,
+              panitia.divisiName,
+            ])
+        );
+      } catch (error) {
+        console.log(error);
+        HandleAxiosError(error);
+      }
+    };
+    loadDataPanit();
+    setFetchLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // sementara fetch loading pake spinner, kalo jadi pake skeleton gaskan
+  if (fetchLoading || auth.loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <>
-      <title>MAXIMA 2023 Internal - Signin</title>
-      <Center w={"100%"} h={"100vh"}>
-        <Box w={"25em"} h={"auto"} boxShadow={"lg"}>
-          <Box w={"full"} p={"2em"} bg={"RGBA(0, 0, 0, 0.92)"} rounded={"md"}>
-            <HStack spacing={3}>
-              <Box boxSize={"1em"} bg={"white"} rounded={"full"}></Box>
-              <Box boxSize={"1em"} bg={"white"} rounded={"full"}></Box>
-              <Box boxSize={"1em"} bg={"white"} rounded={"full"}></Box>
-            </HStack>
-            <Box mt={"1em"}>
-              <Text align={"left"} color={"white"} fontSize={"xl"} fontWeight={"normal"}>
-                Ini Panitia Divisi
-              </Text>
-            </Box>
-          </Box>
+      <title>MAXIMA 2023 Internal - Organisator</title>
+      <Layout
+        title="Organisator"
+        tag={auth.user?.divisiName}
+        showDashboardButton
+      >
+        <Box w={"full"}>
+          <ThemeProvider theme={createTheme()}>
+            <MUIDataTable
+              title={""}
+              data={dataPanit}
+              columns={columnsPanitia}
+              options={{
+                rowsPerPage: 10,
+                selectableRows: "none",
+                elevation: 1,
+                tableBodyHeight: "70vh",
+                tableBodyMaxHeight: "70vh",
+              }}
+            />
+          </ThemeProvider>
         </Box>
-      </Center>
+      </Layout>
     </>
   );
 }
