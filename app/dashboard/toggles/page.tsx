@@ -25,8 +25,9 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 type Toggles = {
-  timeline: string;
-  isOpen: boolean;
+  id: number;
+  name: string;
+  toggle: boolean;
 };
 
 export default function Dashboard() {
@@ -34,27 +35,18 @@ export default function Dashboard() {
   const route = useRouter();
 
   // data dummy -- nunggu backend
-  const [dataToggles, setDataToggles] = useState<Toggles[]>([
-    {
-      timeline: "Pendaftaran",
-      isOpen: true,
-    },
-    {
-      timeline: "Malam Puncak",
-      isOpen: true,
-    },
-  ]);
+  const [dataToggles, setDataToggles] = useState<Toggles[]>([]);
 
   const loadTogglesData = async () => {
     try {
-      const { data } = await api.get<ResponseModel<Toggles[]>>("/toggles");
-      setDataToggles(data.data!);
+      const { data } = await api.get<Toggles[]>("/toggle");
+      setDataToggles(data);
     } catch (error) {
       console.log(error);
       HandleAxiosError(error);
     }
   };
-  const superAdmin = ["D01", "D02"];
+  const superAdmin = ["D01", "D02", "D05"];
 
   useEffect(() => {
     if (
@@ -66,21 +58,29 @@ export default function Dashboard() {
       route.push("/dashboard");
       return;
     }
-    // loadTogglesData();
+    loadTogglesData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const columnsToggles: MUIDataTableColumn[] = [
     {
+      label: "ID",
+      name: "id",
+      options: {
+        filter: true,
+        display: false,
+      },
+    },
+    {
       label: "Toggle",
-      name: "timeline",
+      name: "name",
       options: {
         filter: true,
       },
     },
     {
       label: "Status",
-      name: "status",
+      name: "toggle",
       options: {
         filter: true,
         customBodyRender: (value: boolean, tableMeta, updateValue) => {
@@ -88,25 +88,17 @@ export default function Dashboard() {
             <MuiSwitch
               checked={value}
               onChange={() => {
-                // tunggu backend :)
-
-                // api
-                //   .put(
-                //     `/toggle/data${tableMeta.rowData[0]}`,
-                //     {
-                //       isverified: !value,
-                //     }
-                //   )
-                //   // iyaa tau emg ini jelek, yang penting work😂
-                //   // gua ga ngerti cara masukkin types ke customBodyRender, yg penting typescript nya bungkam
-                //   .then((res) => updateValue(!value as unknown as string))
-                //   .catch((err) => {
-                //     console.log(err);
-                //     HandleAxiosError(err);
-                //   });
-
-                // buat dummy data
-                updateValue(!value as unknown as string);
+                api
+                  .put(`/toggle/updateToggle/${tableMeta.rowData[0]}`, {
+                    toggle: !value,
+                  })
+                  // iyaa tau emg ini jelek, yang penting work😂
+                  // gua ga ngerti cara masukkin types ke customBodyRender, yg penting typescript nya bungkam
+                  .then((res) => updateValue(!value as unknown as string))
+                  .catch((err) => {
+                    console.log(err);
+                    HandleAxiosError(err);
+                  });
               }}
             />
           );
