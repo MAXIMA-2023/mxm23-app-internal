@@ -1,18 +1,10 @@
 import React from "react";
-import {
-  Center,
-  Box,
-  Text,
-  HStack,
-  Flex,
-  Icon,
-  Stack,
-  Tag,
-} from "@chakra-ui/react";
+import { Center, Box, Text, HStack, Flex, Icon, Stack, Tag, Button } from "@chakra-ui/react";
 import Sidebar from "./Sidebar";
 import { AppBar, BottomBar } from "./MobileLayout";
 import Link from "next/link";
 import { BsArrowLeftShort } from "react-icons/bs";
+import { MdEdit } from "react-icons/md";
 
 /* 
   * property title : buat judul halaman
@@ -25,12 +17,14 @@ import { BsArrowLeftShort } from "react-icons/bs";
 export default function Layout({
   title,
   tag,
+  showSuntingButton = false,
   showDashboardButton = false,
   disablePadding = false,
   children,
 }: {
   title: string;
   tag?: string;
+  showSuntingButton?: boolean;
   showDashboardButton?: boolean;
   disablePadding?: boolean;
   children: React.ReactNode;
@@ -40,26 +34,12 @@ export default function Layout({
       <Sidebar />
       <AppBar />
       <Box w={"full"} h={"auto"}>
-        <Box
-          w={"full"}
-          py={["1em", "1em", "1.5em", "3em", "3em"]}
-          px={["1em", "1em", "1.5em", "2em", "2em"]}
-        >
-          <Box
-            w={"full"}
-            py={["4em", "4em", "4em", "0em"]}
-            pl={["0", "0", "0", "17em", "20em"]}
-          >
+        <Box w={"full"} py={["1em", "1em", "1.5em", "3em", "3em"]} px={["1em", "1em", "1.5em", "2em", "2em"]}>
+          <Box w={"full"} py={["4em", "4em", "4em", "0em"]} pl={["0", "0", "0", "17em", "20em"]}>
             <Box mb={"2em"}>
               {showDashboardButton && (
                 <Link href={"/dashboard"}>
-                  <Flex
-                    alignItems={"center"}
-                    textColor="#9CA3AF"
-                    _hover={{ textColor: "#185C99" }}
-                    cursor={"pointer"}
-                    transition={"0.1s ease-in-out"}
-                  >
+                  <Flex alignItems={"center"} textColor="#9CA3AF" _hover={{ textColor: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
                     <Icon as={BsArrowLeftShort} boxSize={6} />
                     <Text ml={"0.7em"} fontSize={"md"}>
                       Back to Dashboard
@@ -68,39 +48,35 @@ export default function Layout({
                 </Link>
               )}
               <Stack direction={"row"} align={"center"}>
-                <Text
-                  fontSize={"4xl"}
-                  fontWeight={"medium"}
-                  textColor={"#1E1D22"}
-                >
-                  {title}
-                </Text>
+                <Flex w={"full"} justifyContent={"space-between"} alignItems={"center"}>
+                  <Box>
+                    <Text fontSize={"4xl"} fontWeight={"medium"} textColor={"#1E1D22"}>
+                      {title}
+                    </Text>
+                  </Box>
+                  {/* <Box display={["none", "block"]}>
+                    {showSuntingButton && (
+                      <Button h={"2.75em"} bgColor={"#185C99"} borderRadius={"full"} _hover={{ bgColor: "#295278" }}>
+                        <Flex alignItems={"center"} color={"white"}>
+                          <Icon as={MdEdit} boxSize={5} />
+                          <Text ml={"0.5em"} fontSize={"xl"} fontWeight={"semibold"}>
+                            Sunting
+                          </Text>
+                        </Flex>
+                      </Button>
+                    )}
+                  </Box> */}
+                </Flex>
                 {tag && (
-                  <Tag
-                    maxH={"1.5em"}
-                    size={"md"}
-                    color={"#185C99"}
-                    variant={"subtle"}
-                    rounded={"full"}
-                  >
+                  <Tag maxH={"1.5em"} size={"md"} color={"#185C99"} variant={"subtle"} rounded={"full"}>
                     {tag}
                   </Tag>
                 )}
               </Stack>
             </Box>
-            <Flex
-              w={"full"}
-              h={"auto"}
-              bgColor={"white"}
-              borderRadius={"2xl"}
-              boxShadow={"lg"}
-            >
+            <Flex w={"full"} h={"auto"} bgColor={"white"} borderRadius={"2xl"} boxShadow={"lg"}>
               <Box w={"full"} p={disablePadding ? undefined : "2em"}>
-                <Flex
-                  p={"0em"}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                >
+                <Flex p={"0em"} justifyContent={"space-between"} alignItems={"center"}>
                   {children}
                 </Flex>
                 {/* <Box maxH={["88.5%", "60vh", "75vh", "70vh", "70vh"]} overflowY={"auto"}></Box> */}
