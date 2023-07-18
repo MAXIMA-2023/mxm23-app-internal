@@ -1,23 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Box,
-  Text,
-  Flex,
-  Center,
-  Stack,
-  InputGroup,
-  InputRightElement,
-  Input,
-  Icon,
-  Button,
-  Select,
-  FormControl,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from "@chakra-ui/react";
+import { Box, Text, Flex, Center, Stack, InputGroup, InputRightElement, Input, Icon, Button, Select, FormControl, FormLabel, Radio, RadioGroup } from "@chakra-ui/react";
 import { BiShow, BiHide } from "react-icons/bi";
 import Link from "next/link";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
@@ -67,7 +51,7 @@ export default function SignUpPanitia() {
     const getDivisi = async () => {
       try {
         const { data } = await api.get("/divisi");
-        setDivisi(data);
+        setDivisi(data.data);
       } catch (error) {
         HandleAxiosError(error);
       }
@@ -95,10 +79,7 @@ export default function SignUpPanitia() {
   //testing console log
   const onSubmit: SubmitHandler<UserSignUp> = async (data: UserSignUp) => {
     try {
-      const { data: response } = await api.post<{ message: string }>(
-        data.role === "1" ? "/panit/register" : "/organisator/register",
-        data
-      );
+      const { data: response } = await api.post<{ message: string }>(data.role === "1" ? "/panit/register" : "/organisator/register", data);
       Swal.fire("Success", response.message, "success");
       router.push("/signin");
     } catch (error) {
@@ -109,56 +90,18 @@ export default function SignUpPanitia() {
   return (
     <>
       <title>MAXIMA 2023 Internal - Signup</title>
-      <Flex
-        h={"auto"}
-        minH={["100vh", "100vh", "100vh", "100vh", "100vh"]}
-        bgColor={"#F8FAFC"}
-      >
-        <Box
-          w={"full"}
-          py={["1em", "1em", "1.5em", "3em", "3em"]}
-          px={["1em", "1em", "1.5em", "2em", "2em"]}
-        >
-          <Flex
-            p={["1em", "0"]}
-            position={"absolute"}
-            minH={"100vh"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            right={"0"}
-            left={"0"}
-            top={"0 "}
-            bottom={"0"}
-          >
-            <Flex
-              w={"auto"}
-              maxW={"35em"}
-              h={"auto"}
-              padding={"2em 2.5em"}
-              borderRadius={"2em"}
-              boxShadow={"lg"}
-              bgColor={"#fff"}
-              justifyContent={"center"}
-              alignItems={"center"}
-            >
+      <Flex h={"auto"} minH={["100vh", "100vh", "100vh", "100vh", "100vh"]} bgColor={"#F8FAFC"}>
+        <Box w={"full"} py={["1em", "1em", "1.5em", "3em", "3em"]} px={["1em", "1em", "1.5em", "2em", "2em"]}>
+          <Flex p={["1em", "0"]} position={"absolute"} minH={"100vh"} justifyContent={"center"} alignItems={"center"} right={"0"} left={"0"} top={"0 "} bottom={"0"}>
+            <Flex w={"auto"} maxW={"35em"} h={"auto"} padding={"2em 2.5em"} borderRadius={"2em"} boxShadow={"lg"} bgColor={"#fff"} justifyContent={"center"} alignItems={"center"}>
               <Box>
                 <Box mb={"1em"}>
-                  <Text
-                    align={"left"}
-                    color={"black"}
-                    fontSize={"md"}
-                    fontWeight={"bold"}
-                  >
+                  <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"bold"}>
                     MAXIMA 2023
                   </Text>
                 </Box>
                 <Center mb={"1em"}>
-                  <Text
-                    align={"center"}
-                    color={"black"}
-                    fontSize={["2xl", "2xl", "2xl", "3xl", "3xl"]}
-                    fontWeight={"bold"}
-                  >
+                  <Text align={"center"} color={"black"} fontSize={["2xl", "2xl", "2xl", "3xl", "3xl"]} fontWeight={"bold"}>
                     Let&apos;s Create Your Account!
                   </Text>
                 </Center>
@@ -168,12 +111,7 @@ export default function SignUpPanitia() {
                       <Stack w={"100%"} direction={"column"} spacing={"1em"}>
                         <Box>
                           <FormLabel>
-                            <Text
-                              align={"left"}
-                              color={"black"}
-                              fontSize={"md"}
-                              fontWeight={"medium"}
-                            >
+                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
                               Nomor Induk Mahasiswa
                             </Text>
                           </FormLabel>
@@ -198,18 +136,11 @@ export default function SignUpPanitia() {
                               borderRadius={"lg"}
                             />
                           </InputGroup>
-                          {errors.nim !== undefined && (
-                            <Text textColor={"red"}>{errors.nim.message}</Text>
-                          )}
+                          {errors.nim !== undefined && <Text textColor={"red"}>{errors.nim.message}</Text>}
                         </Box>
                         <Box>
                           <FormLabel>
-                            <Text
-                              align={"left"}
-                              color={"black"}
-                              fontSize={"md"}
-                              fontWeight={"medium"}
-                            >
+                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
                               Nama Lengkap
                             </Text>
                           </FormLabel>
@@ -233,18 +164,11 @@ export default function SignUpPanitia() {
                               borderRadius={"lg"}
                             />
                           </InputGroup>
-                          {errors.name !== undefined && (
-                            <Text textColor={"red"}>{errors.name.message}</Text>
-                          )}
+                          {errors.name !== undefined && <Text textColor={"red"}>{errors.name.message}</Text>}
                         </Box>
                         <Box>
                           <FormLabel>
-                            <Text
-                              align={"left"}
-                              color={"black"}
-                              fontSize={"md"}
-                              fontWeight={"medium"}
-                            >
+                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
                               Email Student
                             </Text>
                           </FormLabel>
@@ -264,20 +188,11 @@ export default function SignUpPanitia() {
                               borderRadius={"lg"}
                             />
                           </InputGroup>
-                          {errors.email !== undefined && (
-                            <Text textColor={"red"}>
-                              {errors.email.message}
-                            </Text>
-                          )}
+                          {errors.email !== undefined && <Text textColor={"red"}>{errors.email.message}</Text>}
                         </Box>
                         <Box>
                           <FormLabel>
-                            <Text
-                              align={"left"}
-                              color={"black"}
-                              fontSize={"md"}
-                              fontWeight={"medium"}
-                            >
+                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
                               Password
                             </Text>
                           </FormLabel>
@@ -298,28 +213,15 @@ export default function SignUpPanitia() {
                             />
                             <InputRightElement py={"1.25em"} width="4.5rem">
                               <Button variant={"none"} onClick={handleClick}>
-                                {show ? (
-                                  <Icon as={BiHide} boxSize={5} />
-                                ) : (
-                                  <Icon as={BiShow} boxSize={5} />
-                                )}
+                                {show ? <Icon as={BiHide} boxSize={5} /> : <Icon as={BiShow} boxSize={5} />}
                               </Button>
                             </InputRightElement>
                           </InputGroup>
-                          {errors.password !== undefined && (
-                            <Text textColor={"red"}>
-                              {errors.password.message}
-                            </Text>
-                          )}
+                          {errors.password !== undefined && <Text textColor={"red"}>{errors.password.message}</Text>}
                         </Box>
                         <Box>
                           <FormLabel>
-                            <Text
-                              align={"left"}
-                              color={"black"}
-                              fontSize={"md"}
-                              fontWeight={"medium"}
-                            >
+                            <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
                               Role
                             </Text>
                           </FormLabel>
@@ -340,11 +242,7 @@ export default function SignUpPanitia() {
                                     </Box>
                                   </Stack>
                                 </RadioGroup>
-                                {errors.role !== undefined && (
-                                  <Text textColor={"red"}>
-                                    {errors.role.message}
-                                  </Text>
-                                )}
+                                {errors.role !== undefined && <Text textColor={"red"}>{errors.role.message}</Text>}
                               </>
                             )}
                           />
@@ -355,12 +253,7 @@ export default function SignUpPanitia() {
                           <>
                             <Box>
                               <FormLabel>
-                                <Text
-                                  align={"left"}
-                                  color={"black"}
-                                  fontSize={"md"}
-                                  fontWeight={"medium"}
-                                >
+                                <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
                                   Pilh Divisi
                                 </Text>
                               </FormLabel>
@@ -378,23 +271,14 @@ export default function SignUpPanitia() {
                                   </option>
                                 ))}
                               </Select>
-                              {errors.divisiID !== undefined && (
-                                <Text textColor={"red"}>
-                                  {errors.divisiID.message}
-                                </Text>
-                              )}
+                              {errors.divisiID !== undefined && <Text textColor={"red"}>{errors.divisiID.message}</Text>}
                             </Box>
                           </>
                         ) : role === 2 ? (
                           <>
                             <Box>
                               <FormLabel>
-                                <Text
-                                  align={"left"}
-                                  color={"black"}
-                                  fontSize={"md"}
-                                  fontWeight={"medium"}
-                                >
+                                <Text align={"left"} color={"black"} fontSize={"md"} fontWeight={"medium"}>
                                   Pilh STATE
                                 </Text>
                               </FormLabel>
@@ -413,11 +297,7 @@ export default function SignUpPanitia() {
                                   </option>
                                 ))}
                               </Select>
-                              {errors.stateID !== undefined && (
-                                <Text textColor={"red"}>
-                                  {errors.stateID.message}
-                                </Text>
-                              )}
+                              {errors.stateID !== undefined && <Text textColor={"red"}>{errors.stateID.message}</Text>}
                             </Box>
                           </>
                         ) : (
@@ -427,35 +307,16 @@ export default function SignUpPanitia() {
                     </Center>
                   </FormControl>
                   <Center mb={"1.5em"}>
-                    <Button
-                      type={"submit"}
-                      w={"100%"}
-                      size={"md"}
-                      bgColor={"#185C99"}
-                      color={"white"}
-                      variant={"solid"}
-                      _hover={{ bgColor: "#185CDC" }}
-                      isLoading={isSubmitting || isLoading || auth.loading}
-                    >
+                    <Button type={"submit"} w={"100%"} size={"md"} bgColor={"#185C99"} color={"white"} variant={"solid"} _hover={{ bgColor: "#185CDC" }} isLoading={isSubmitting || isLoading || auth.loading}>
                       Sign up
                     </Button>
                   </Center>
                 </form>
                 <Box mb={"2em"}>
-                  <Text
-                    align={"center"}
-                    color={"black"}
-                    fontSize={"sm"}
-                    fontWeight={"medium"}
-                  >
+                  <Text align={"center"} color={"black"} fontSize={"sm"} fontWeight={"medium"}>
                     Sudah punya akun?{" "}
                     <Link href={"/signin"}>
-                      <Text
-                        as={"span"}
-                        color={"#185C99"}
-                        fontWeight={"bold"}
-                        _hover={{ textDecoration: "underline" }}
-                      >
+                      <Text as={"span"} color={"#185C99"} fontWeight={"bold"} _hover={{ textDecoration: "underline" }}>
                         Kembali
                       </Text>
                     </Link>

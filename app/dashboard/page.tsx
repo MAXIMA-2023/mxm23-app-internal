@@ -4,11 +4,7 @@ import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/Auth";
 import { Text, Box, Flex, Icon } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import {
-  MdOutlineShield,
-  MdOutlineSchool,
-  MdOutlineAirplanemodeActive,
-} from "react-icons/md";
+import { MdOutlineShield, MdOutlineSchool, MdOutlineAirplanemodeActive } from "react-icons/md";
 import { HiOutlineOfficeBuilding, HiOutlineSparkles } from "react-icons/hi";
 import Charts from "@/components/Charts";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -70,14 +66,6 @@ const tabs = [
     total: 49,
   },
   {
-    name: "Detail dan Peserta",
-    href: "/dashboard/details ",
-    icon: MdOutlineAirplanemodeActive,
-    bgColor: "#ECE7FE",
-    iconBgColor: "#4A05DE",
-    total: 73,
-  },
-  {
     name: "Malpun",
     href: "/dashboard/malpun ",
     icon: HiOutlineSparkles,
@@ -88,7 +76,7 @@ const tabs = [
 ];
 
 export default function Dashboard() {
-  const auth = useAuth();
+  const auth = useAuth()!;
   const [width, setWidth] = useState(0);
   const cardRef = useRef() as MutableRefObject<HTMLDivElement>;
 
@@ -97,10 +85,6 @@ export default function Dashboard() {
       setWidth(cardRef.current.scrollWidth - cardRef.current.offsetWidth);
     }
   }, []);
-
-  if (auth.loading) {
-    return <LoadingSpinner />;
-  }
 
   return (
     <>
@@ -118,71 +102,57 @@ export default function Dashboard() {
                 Tab
               </Text>
             </Box> */}
-            <Box
-              as={motion.div}
-              overflowX={"hidden"}
-              cursor={"grab"}
-              whileTap={{ cursor: "grabbing" }}
-            >
-              <Flex
-                as={motion.div}
-                w={"full"}
-                maxW={"full"}
-                mt={"0.5em"}
-                drag={"x"}
-                dragConstraints={{ right: 0, left: -width }}
-                ref={cardRef}
-              >
-                {tabs.map((tab, index) => (
-                  <Box
-                    as={motion.div}
-                    minW={"15em"}
-                    h={"7.5em"}
-                    p={"1em"}
-                    bg={tab.bgColor}
-                    mr={"1em"}
-                    mb={"1em"}
-                    key={index}
-                    borderRadius={"lg"}
-                  >
-                    <Box w={"full"} h={"auto"}>
-                      <Flex
-                        w={"full"}
-                        h={"auto"}
-                        justifyContent={"space-between"}
-                        alignItems={"center"}
-                      >
-                        <Box>
-                          <Text fontSize={"md"} fontWeight={"medium"}>
-                            {tab.name}
+            <Box as={motion.div} overflowX={"hidden"} cursor={"grab"} whileTap={{ cursor: "grabbing" }}>
+              <Flex as={motion.div} w={"full"} maxW={"full"} mt={"0.5em"} drag={"x"} dragConstraints={{ right: 0, left: -width }} ref={cardRef}>
+                {auth.role === "panit" ? (
+                  <>
+                    {tabs.map((tab, index) => (
+                      <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tab.bgColor} mr={"1em"} mb={"1em"} key={index} borderRadius={"lg"}>
+                        <Box w={"full"} h={"auto"}>
+                          <Flex w={"full"} h={"auto"} justifyContent={"space-between"} alignItems={"center"}>
+                            <Box>
+                              <Text fontSize={"md"} fontWeight={"medium"}>
+                                {tab.name}
+                              </Text>
+                            </Box>
+                            <Box ml={"auto"} bg={tab.iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                              <Icon as={tab.icon} color={"white"} w={"1em"} h={"1em"} />
+                            </Box>
+                          </Flex>
+                          <Box w={"full"} h={"auto"} mt={"1em"}>
+                            <Text fontSize={"3xl"} fontWeight={"semibold"}>
+                              {tab.total}
+                            </Text>
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))}
+                  </>
+                ) : auth.role === "organisator" ? (
+                  <>
+                    <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tabs[4].bgColor} mr={"1em"} mb={"1em"} borderRadius={"lg"}>
+                      <Box w={"full"} h={"auto"}>
+                        <Flex w={"full"} h={"auto"} justifyContent={"space-between"} alignItems={"center"}>
+                          <Box>
+                            <Text fontSize={"md"} fontWeight={"medium"}>
+                              Detail dan Peserta
+                            </Text>
+                          </Box>
+                          <Box ml={"auto"} bg={tabs[4].iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                            <Icon as={tabs[4].icon} color={"white"} w={"1em"} h={"1em"} />
+                          </Box>
+                        </Flex>
+                        <Box w={"full"} h={"auto"} mt={"1em"}>
+                          <Text fontSize={"3xl"} fontWeight={"semibold"}>
+                            0
                           </Text>
                         </Box>
-                        <Box
-                          ml={"auto"}
-                          bg={tab.iconBgColor}
-                          w={"1.5em"}
-                          h={"1.5em"}
-                          borderRadius={"50%"}
-                          display={"flex"}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                        >
-                          <Icon
-                            as={tab.icon}
-                            color={"white"}
-                            w={"1em"}
-                            h={"1em"}
-                          />
-                        </Box>
-                      </Flex>
-                      <Box w={"full"} h={"auto"} mt={"1em"}>
-                        <Text fontSize={"3xl"} fontWeight={"semibold"}>
-                          {tab.total}
-                        </Text>
                       </Box>
                     </Box>
-                  </Box>
-                ))}
+                  </>
+                ) : (
+                  <></>
+                )}
               </Flex>
             </Box>
           </Box>
