@@ -18,6 +18,8 @@ type Organisator = {
   stateID: number;
   isverified: number;
   stateName: string;
+  role?: string;
+  stateOrDivisiName: string;
 };
 
 type Panitia = {
@@ -27,13 +29,15 @@ type Panitia = {
   isverified: boolean;
   divisiID: string;
   divisiName: string;
+  role?: string;
+  stateOrDivisiName: string;
 };
 
 export default function Dashboard() {
   const auth = useAuth();
   const route = useRouter();
   const [dataVerifikasi, setDataVerifikasi] = useState<
-    (string | number | boolean)[][]
+    (Panitia | Organisator)[]
   >([]);
 
   const loadVerifikasiData = async () => {
@@ -45,21 +49,17 @@ export default function Dashboard() {
         ResponseModel<Organisator[]>
       >("/organisator/data");
 
-      const dataPanitia = responsePanit.data?.map((panitia) => [
-        panitia.name,
-        panitia.nim,
-        "Panitia",
-        panitia.divisiName,
-        panitia.isverified,
-      ]);
-
-      const dataOrganisator = respOrganisator.data?.map((organisator) => [
-        organisator.name,
-        organisator.nim,
-        "Organisator",
-        organisator.stateName,
-        organisator.isverified,
-      ]);
+      // yes ik this is ugly, but its better than handling a nested array with 3 different types
+      const dataPanitia = responsePanit.data?.map((panitia) => ({
+        ...panitia,
+        role: "Panitia",
+        stateOrDivisiName: panitia.divisiName,
+      }));
+      const dataOrganisator = respOrganisator.data?.map((organisator) => ({
+        ...organisator,
+        role: "Organisator",
+        stateOrDivisiName: organisator.stateName,
+      }));
 
       setDataVerifikasi([...dataPanitia!, ...dataOrganisator!]);
     } catch (error) {
@@ -87,7 +87,7 @@ export default function Dashboard() {
   const columnsVerifikasi: MUIDataTableColumn[] = [
     {
       label: "Nama",
-      name: "nama",
+      name: "name",
       options: {
         filter: true,
       },
@@ -101,21 +101,21 @@ export default function Dashboard() {
     },
     {
       label: "Panitia / Organisator",
-      name: "ketOrg",
+      name: "role",
       options: {
         filter: true,
       },
     },
     {
       label: "Divisi / Kategori",
-      name: "ketDiv",
+      name: "stateOrDivisiName",
       options: {
         filter: true,
       },
     },
     {
       label: "Verifikasi",
-      name: "verifAdm",
+      name: "isverified",
       options: {
         filter: true,
         customBodyRender: (value: boolean, tableMeta, updateValue) => {

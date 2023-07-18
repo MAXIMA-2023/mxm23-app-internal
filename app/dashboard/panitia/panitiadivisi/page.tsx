@@ -32,7 +32,7 @@ type Panitia = {
 };
 
 export default function PanitiaDivisi() {
-  const [dataPanit, setDataPanit] = useState<string[][]>([]);
+  const [dataPanitia, setDataPanitia] = useState<Panitia[]>([]);
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
   const auth = useAuth();
   const route = useRouter();
@@ -40,7 +40,7 @@ export default function PanitiaDivisi() {
   const columnsPanitia: MUIDataTableColumn[] = [
     {
       label: "Nama",
-      name: "nama",
+      name: "name",
       options: {
         filter: true,
       },
@@ -61,7 +61,7 @@ export default function PanitiaDivisi() {
     },
     {
       label: "Divisi",
-      name: "DivisiName",
+      name: "divisiName",
       options: {
         filter: true,
       },
@@ -82,16 +82,7 @@ export default function PanitiaDivisi() {
     const loadDataPanit = async () => {
       try {
         const { data } = await api.get<ResponseModel<Panitia[]>>(`panit/data`);
-        setDataPanit(
-          data
-            .data!.filter((panitia) => panitia.divisiID === auth.user?.divisiID)
-            .map((panitia) => [
-              panitia.name,
-              panitia.nim.toString(),
-              panitia.email,
-              panitia.divisiName,
-            ])
-        );
+        setDataPanitia(data.data!);
       } catch (error) {
         console.log(error);
         HandleAxiosError(error);
@@ -119,7 +110,7 @@ export default function PanitiaDivisi() {
           <ThemeProvider theme={createTheme()}>
             <MUIDataTable
               title={""}
-              data={dataPanit}
+              data={dataPanitia}
               columns={columnsPanitia}
               options={{
                 rowsPerPage: 10,

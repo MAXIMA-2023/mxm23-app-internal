@@ -55,9 +55,9 @@ type Mahasiswa = {
   nim: number;
   name: string;
   email: string;
-  state_1: StateStatus | null;
-  state_2: StateStatus | null;
-  state_3: StateStatus | null;
+  state_1?: StateStatus | null;
+  state_2?: StateStatus | null;
+  state_3?: StateStatus | null;
 };
 
 type ProfileMahasiswa = Omit<Mahasiswa, "state_1" | "state_2" | "state_3"> & {
@@ -94,9 +94,7 @@ export default function Dashboard() {
   const auth = useAuth();
   const route = useRouter();
 
-  const [dataMahasiswa, setDataMahasiswa] = useState<
-    (string | number | StateStatus | null)[][]
-  >([]);
+  const [dataMahasiswa, setDataMahasiswa] = useState<Mahasiswa[]>([]);
   const [fetchLoading, setFetchLoading] = useState(false);
 
   // modal
@@ -120,22 +118,7 @@ export default function Dashboard() {
       const { data } = await api.get<ResponseModel<Mahasiswa[]>>(
         "/mahasiswa/data"
       );
-      setDataMahasiswa(
-        data.data!.map((mahasiswa) => [
-          mahasiswa.name,
-          mahasiswa.nim,
-          mahasiswa.email,
-
-          // sementara tunggu api backend
-          {
-            stateID: 1,
-            stateName: "Ultima Sonora",
-            isFinished: true,
-          },
-          null,
-          null,
-        ])
-      );
+      setDataMahasiswa(data.data!);
     } catch (error) {
       console.log(error);
       HandleAxiosError(error);

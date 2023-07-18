@@ -63,7 +63,7 @@ type SelectOptions = {
 };
 
 export default function Organisator() {
-  const [dataOrganisator, setDataOrganisator] = useState<string[][]>([]);
+  const [dataOrganisator, setDataOrganisator] = useState<Organisator[]>([]);
   const [dataState, setDataState] = useState<State[]>([]);
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
 
@@ -94,7 +94,7 @@ export default function Organisator() {
   const columnsOrganisator: MUIDataTableColumn[] = [
     {
       label: "Nama",
-      name: "nama",
+      name: "name",
       options: {
         filter: true,
       },
@@ -115,7 +115,7 @@ export default function Organisator() {
     },
     {
       label: "STATE",
-      name: "stateID",
+      name: "stateName",
       options: {
         filter: true,
       },
@@ -136,9 +136,11 @@ export default function Organisator() {
                       nim: tableMeta.rowData[1],
                     });
                     api
-                      .get(`organisator/data/${tableMeta.rowData[1]}`)
+                      .get<ResponseModel<Organisator>>(
+                        `organisator/data/${tableMeta.rowData[1]}`
+                      )
                       .then((res) => {
-                        setSelectedOrganisator(res.data.data);
+                        setSelectedOrganisator(res.data.data!);
                         reset();
                         onOpen();
                       })
@@ -180,17 +182,10 @@ export default function Organisator() {
 
   const loadDataOrganisator = async () => {
     try {
-      const response = await api.get<ResponseModel<Organisator[]>>(
+      const { data } = await api.get<ResponseModel<Organisator[]>>(
         `organisator/data`
       );
-      setDataOrganisator(
-        response.data.data!.map((organisator) => [
-          organisator.name,
-          organisator.nim.toString(),
-          organisator.email,
-          organisator.stateName,
-        ])
-      );
+      setDataOrganisator(data.data!);
     } catch (error) {
       console.log(error);
       HandleAxiosError(error);

@@ -64,7 +64,7 @@ type SelectOptions = {
 };
 
 export default function DaftarPanitia() {
-  const [dataPanitia, setDataPanitia] = useState<string[][]>([]);
+  const [dataPanitia, setDataPanitia] = useState<Panitia[]>([]);
   const [dataDivisi, setDataDivisi] = useState<Divisi[]>([]);
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
 
@@ -92,7 +92,7 @@ export default function DaftarPanitia() {
   const columnsPanitia: MUIDataTableColumn[] = [
     {
       label: "Nama",
-      name: "nama",
+      name: "name",
       options: {
         filter: true,
       },
@@ -113,7 +113,7 @@ export default function DaftarPanitia() {
     },
     {
       label: "Divisi",
-      name: "DivisiName",
+      name: "divisiName",
       options: {
         filter: true,
       },
@@ -179,14 +179,7 @@ export default function DaftarPanitia() {
   const loadDataPanit = async () => {
     try {
       const { data } = await api.get<ResponseModel<Panitia[]>>(`panit/data`);
-      setDataPanitia(
-        data.data!.map((organisator) => [
-          organisator.name,
-          organisator.nim.toString(),
-          organisator.email,
-          organisator.divisiName,
-        ])
-      );
+      setDataPanitia(data.data!);
     } catch (error) {
       console.log(error);
       HandleAxiosError(error);
