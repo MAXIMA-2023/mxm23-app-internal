@@ -476,7 +476,7 @@ export default function Sidebar() {
             <Button mr={3} onClick={onClose}>
               Kembali
             </Button>
-            <Button bgColor={"#185C99"} color={"white"} _hover={{ bgColor: "#4A647B" }} onClick={auth.logout}>
+            <Button bgColor={"#185C99"} color={"white"} _hover={{ bgColor: "#295278" }} onClick={auth.logout}>
               Keluar
             </Button>
           </ModalFooter>
