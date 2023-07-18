@@ -85,7 +85,7 @@ import { useAuth } from "@/contexts/Auth";
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
-  const auth = useAuth()!;
+  const auth = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -93,11 +93,6 @@ export default function Sidebar() {
       router.push("/signin");
       return;
     }
-    console.log(auth.user);
-    console.log(auth.role);
-    console.log(auth.user?.divisiID);
-
-    console.log((auth.role === "panit" && auth.user?.divisiID === "D01") || (auth.role === "panit" && auth.user?.divisiID === "D02"));
   }, [auth?.isLoggedIn, auth.loading, router]);
 
   const iconBoxSize = 5;
@@ -291,67 +286,73 @@ export default function Sidebar() {
               ) : (
                 <></>
               )}
-              <Flex
-                justifyContent={"start"}
-                textColor={pathname.includes("/dashboard/state") ? "#185C99" : "#1E1D22"}
-                py={"0.75em"}
-                px={"1.25em"}
-                _hover={{ bgColor: "#FAFAFA", color: "#185C99" }}
-                cursor={"pointer"}
-                transition={"0.1s ease-in-out"}
-              >
-                <Accordion w={"full"} allowToggle defaultIndex={pathname.includes("/dashboard/state") ? [0] : undefined} borderRadius={"md"}>
-                  <AccordionItem border={"none"}>
-                    <AccordionButton p={0} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
-                      <Box flex="1" textAlign="left">
-                        <Flex alignItems={"center"}>
-                          <Icon as={pathname.includes("/dashboard/state") ? MdAirplanemodeActive : MdOutlineAirplanemodeActive} boxSize={iconBoxSize} />
-                          <Text ml={"0.7em"} fontSize={"md"} fontWeight={"medium"}>
-                            STATE
-                          </Text>
-                        </Flex>
-                      </Box>
-                      <AccordionIcon />
-                    </AccordionButton>
-                    <AccordionPanel p={0}>
-                      <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"0.5em"}>
-                        {auth.role === "panit" ? (
-                          <>
-                            <Box>
-                              <Link href={"/dashboard/state/daftarstate"}>
-                                <Flex alignItems={"center"} _hover={{ color: "#185C99" }} color={pathname === "/dashboard/state/daftarstate" ? "#185C99" : "#1E1D22"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
-                                  <Icon ml={"1.75em"} as={pathname === "/dashboard/state/daftarstate" ? MdViewList : MdOutlineViewList} boxSize={iconBoxSize} />
-                                  <Text ml={"0.5em"} fontSize={"md"} fontWeight={"medium"}>
-                                    Daftar State
-                                  </Text>
-                                </Flex>
-                              </Link>
-                            </Box>
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                        {auth.role === "organisator" ? (
-                          <>
-                            <Box>
-                              <Link href={"/dashboard/state/details"}>
-                                <Flex alignItems={"center"} color={pathname === "/dashboard/state/details" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
-                                  <Icon ml={"1.75em"} as={pathname === "/dashboard/state/details" ? MdPeople : MdPeopleOutline} boxSize={iconBoxSize} />
-                                  <Text ml={"0.5em"} fontSize={"md"} fontWeight={"medium"}>
-                                    Detail dan Peserta
-                                  </Text>
-                                </Flex>
-                              </Link>
-                            </Box>
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </Stack>
-                    </AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </Flex>
+              {auth.role === "panit" || auth.role === "organisator" ? (
+                <>
+                  <Flex
+                    justifyContent={"start"}
+                    textColor={pathname.includes("/dashboard/state") ? "#185C99" : "#1E1D22"}
+                    py={"0.75em"}
+                    px={"1.25em"}
+                    _hover={{ bgColor: "#FAFAFA", color: "#185C99" }}
+                    cursor={"pointer"}
+                    transition={"0.1s ease-in-out"}
+                  >
+                    <Accordion w={"full"} allowToggle defaultIndex={pathname.includes("/dashboard/state") ? [0] : undefined} borderRadius={"md"}>
+                      <AccordionItem border={"none"}>
+                        <AccordionButton p={0} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                          <Box flex="1" textAlign="left">
+                            <Flex alignItems={"center"}>
+                              <Icon as={pathname.includes("/dashboard/state") ? MdAirplanemodeActive : MdOutlineAirplanemodeActive} boxSize={iconBoxSize} />
+                              <Text ml={"0.7em"} fontSize={"md"} fontWeight={"medium"}>
+                                STATE
+                              </Text>
+                            </Flex>
+                          </Box>
+                          <AccordionIcon />
+                        </AccordionButton>
+                        <AccordionPanel p={0}>
+                          <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"0.5em"}>
+                            {auth.role === "panit" ? (
+                              <>
+                                <Box>
+                                  <Link href={"/dashboard/state/daftarstate"}>
+                                    <Flex alignItems={"center"} _hover={{ color: "#185C99" }} color={pathname === "/dashboard/state/daftarstate" ? "#185C99" : "#1E1D22"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                                      <Icon ml={"1.75em"} as={pathname === "/dashboard/state/daftarstate" ? MdViewList : MdOutlineViewList} boxSize={iconBoxSize} />
+                                      <Text ml={"0.5em"} fontSize={"md"} fontWeight={"medium"}>
+                                        Daftar State
+                                      </Text>
+                                    </Flex>
+                                  </Link>
+                                </Box>
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                            {auth.role === "organisator" ? (
+                              <>
+                                <Box>
+                                  <Link href={"/dashboard/state/details"}>
+                                    <Flex alignItems={"center"} color={pathname === "/dashboard/state/details" ? "#185C99" : "#1E1D22"} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                                      <Icon ml={"1.75em"} as={pathname === "/dashboard/state/details" ? MdPeople : MdPeopleOutline} boxSize={iconBoxSize} />
+                                      <Text ml={"0.5em"} fontSize={"md"} fontWeight={"medium"}>
+                                        Detail dan Peserta
+                                      </Text>
+                                    </Flex>
+                                  </Link>
+                                </Box>
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                          </Stack>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    </Accordion>
+                  </Flex>
+                </>
+              ) : (
+                <></>
+              )}
               {auth.role === "panit" ? (
                 <>
                   <Box>
@@ -378,7 +379,7 @@ export default function Sidebar() {
               ) : (
                 <></>
               )}
-              {auth.role === "panit" && auth.user?.divisiID === "D10" ? (
+              {(auth.role === "panit" && auth.user?.divisiID === "D01") || (auth.role === "panit" && auth.user?.divisiID === "D02") || (auth.role === "panit" && auth.user?.divisiID === "D10") ? (
                 <>
                   <Flex
                     justifyContent={"start"}

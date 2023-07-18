@@ -76,7 +76,7 @@ const tabs = [
 ];
 
 export default function Dashboard() {
-  const auth = useAuth()!;
+  const auth = useAuth();
   const [width, setWidth] = useState(0);
   const cardRef = useRef() as MutableRefObject<HTMLDivElement>;
 
