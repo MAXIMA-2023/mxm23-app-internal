@@ -27,6 +27,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import {
@@ -135,8 +136,7 @@ export default function Dashboard() {
       return;
     }
 
-    loadDataMahasiswa();
-    setFetchLoading(false);
+    loadDataMahasiswa().finally(() => setFetchLoading(false));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -258,8 +258,16 @@ export default function Dashboard() {
           return (
             <>
               <Stack direction={"row"}>
-                <MuiIconButton
-                  sx={{ color: "#185C99" }}
+                <MuiButton
+                  startIcon={<MdOutlineEdit />}
+                  sx={{
+                    borderRadius: "100px",
+                    px: "1em",
+                    color: "#185C99",
+                    // color: "#fff",
+                    textTransform: "none",
+                  }}
+                  variant="outlined"
                   onClick={() => {
                     setSelectOptions({
                       selectMode: "Edit",
@@ -277,10 +285,17 @@ export default function Dashboard() {
                       });
                   }}
                 >
-                  <MdOutlineEdit />
-                </MuiIconButton>
+                  Sunting
+                </MuiButton>
                 <MuiIconButton
-                  color="error"
+                  size="small"
+                  sx={{
+                    borderRadius: "8px",
+                    px: "0.5em",
+                    backgroundColor: "red",
+                    color: "#fff",
+                    textTransform: "none",
+                  }}
                   onClick={() => {
                     setSelectOptions({
                       selectMode: "Delete",
@@ -307,30 +322,40 @@ export default function Dashboard() {
       },
     });
 
-  // sementara fetch loading pake spinner, kalo jadi pake skeleton gaskan
-  if (fetchLoading || auth.loading) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <>
       <title>MAXIMA 2023 Internal - Mahasiswa</title>
-      <Layout title="Mahasiswa" tag={auth.user?.divisiName} showDashboardButton>
+      <Layout
+        title="Mahasiswa"
+        tag={
+          allowedEditPanitia.includes(auth.user?.divisiID!)
+            ? "SUPERADMIN"
+            : auth.user?.divisiName
+        }
+        showDashboardButton
+      >
         <Box w={"full"}>
-          <ThemeProvider theme={createTheme()}>
-            <MUIDataTable
-              title={""}
-              data={dataMahasiswa}
-              columns={columnsMahasiswa}
-              options={{
-                rowsPerPage: 10,
-                selectableRows: "none",
-                elevation: 1,
-                tableBodyHeight: "70vh",
-                tableBodyMaxHeight: "70vh",
-              }}
-            />
-          </ThemeProvider>
+          <SkeletonText
+            isLoaded={!fetchLoading}
+            noOfLines={10}
+            spacing={8}
+            skeletonHeight={12}
+          >
+            <ThemeProvider theme={createTheme()}>
+              <MUIDataTable
+                title={""}
+                data={dataMahasiswa}
+                columns={columnsMahasiswa}
+                options={{
+                  rowsPerPage: 10,
+                  selectableRows: "none",
+                  elevation: 1,
+                  tableBodyHeight: "70vh",
+                  tableBodyMaxHeight: "70vh",
+                }}
+              />
+            </ThemeProvider>
+          </SkeletonText>
         </Box>
 
         {/* modal coy */}

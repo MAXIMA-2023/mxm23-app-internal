@@ -14,6 +14,7 @@ import {
   Image,
   Button,
   Icon,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import { Switch as MuiSwitch } from "@mui/material";
@@ -34,8 +35,8 @@ export default function Dashboard() {
   const auth = useAuth();
   const route = useRouter();
 
-  // data dummy -- nunggu backend
   const [dataToggles, setDataToggles] = useState<Toggles[]>([]);
+  const [fetchLoading, setFetchLoading] = useState<boolean>(true);
 
   const loadTogglesData = async () => {
     try {
@@ -46,19 +47,18 @@ export default function Dashboard() {
       HandleAxiosError(error);
     }
   };
-  const superAdmin = ["D01", "D02", "D05"];
+  const superAdmin = ["D01", "D02"];
 
   useEffect(() => {
     if (
       !auth.loading &&
-      auth.role !== "panit" &&
-      !superAdmin.includes(auth.user?.divisiID!)
+      (auth.role !== "panit" || !superAdmin.includes(auth.user?.divisiID!))
     ) {
       Swal.fire("Error!", "Anda tidak memiliki akses!", "error");
       route.push("/dashboard");
       return;
     }
-    loadTogglesData();
+    loadTogglesData().finally(() => setFetchLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -114,20 +114,27 @@ export default function Dashboard() {
       <title>MAXIMA 2023 Internal - Toggles</title>
       <Layout title="Toggles" tag="SUPERADMIN" showDashboardButton>
         <Box w={"full"}>
-          <ThemeProvider theme={createTheme()}>
-            <MUIDataTable
-              title={""}
-              data={dataToggles}
-              columns={columnsToggles}
-              options={{
-                rowsPerPage: 10,
-                selectableRows: "none",
-                elevation: 1,
-                tableBodyHeight: "70vh",
-                tableBodyMaxHeight: "70vh",
-              }}
-            />
-          </ThemeProvider>
+          <SkeletonText
+            isLoaded={!fetchLoading}
+            noOfLines={10}
+            spacing={8}
+            skeletonHeight={12}
+          >
+            <ThemeProvider theme={createTheme()}>
+              <MUIDataTable
+                title={""}
+                data={dataToggles}
+                columns={columnsToggles}
+                options={{
+                  rowsPerPage: 10,
+                  selectableRows: "none",
+                  elevation: 1,
+                  tableBodyHeight: "70vh",
+                  tableBodyMaxHeight: "70vh",
+                }}
+              />
+            </ThemeProvider>
+          </SkeletonText>
         </Box>
       </Layout>
     </>

@@ -13,6 +13,7 @@ import {
   Select,
   Image,
   Button,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
@@ -82,21 +83,19 @@ export default function PanitiaDivisi() {
     const loadDataPanit = async () => {
       try {
         const { data } = await api.get<ResponseModel<Panitia[]>>(`panit/data`);
-        setDataPanitia(data.data!);
+        setDataPanitia(
+          data.data!.filter(
+            (panitia) => panitia.divisiID === auth.user?.divisiID
+          )
+        );
       } catch (error) {
         console.log(error);
         HandleAxiosError(error);
       }
     };
-    loadDataPanit();
-    setFetchLoading(false);
+    loadDataPanit().finally(() => setFetchLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // sementara fetch loading pake spinner, kalo jadi pake skeleton gaskan
-  if (fetchLoading || auth.loading) {
-    return <LoadingSpinner />;
-  }
 
   return (
     <>
@@ -107,20 +106,27 @@ export default function PanitiaDivisi() {
         showDashboardButton
       >
         <Box w={"full"}>
-          <ThemeProvider theme={createTheme()}>
-            <MUIDataTable
-              title={""}
-              data={dataPanitia}
-              columns={columnsPanitia}
-              options={{
-                rowsPerPage: 10,
-                selectableRows: "none",
-                elevation: 1,
-                tableBodyHeight: "70vh",
-                tableBodyMaxHeight: "70vh",
-              }}
-            />
-          </ThemeProvider>
+          <SkeletonText
+            isLoaded={!fetchLoading}
+            noOfLines={10}
+            spacing={8}
+            skeletonHeight={12}
+          >
+            <ThemeProvider theme={createTheme()}>
+              <MUIDataTable
+                title={""}
+                data={dataPanitia}
+                columns={columnsPanitia}
+                options={{
+                  rowsPerPage: 10,
+                  selectableRows: "none",
+                  elevation: 1,
+                  tableBodyHeight: "70vh",
+                  tableBodyMaxHeight: "70vh",
+                }}
+              />
+            </ThemeProvider>
+          </SkeletonText>
         </Box>
       </Layout>
     </>

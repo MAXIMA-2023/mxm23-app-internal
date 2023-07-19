@@ -2,7 +2,7 @@
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { Box } from "@chakra-ui/react";
+import { Box, SkeletonText } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
 import { Switch as MuiSwitch } from "@mui/material";
@@ -39,6 +39,7 @@ export default function Dashboard() {
   const [dataVerifikasi, setDataVerifikasi] = useState<
     (Panitia | Organisator)[]
   >([]);
+  const [fetchLoading, setFetchLoading] = useState<boolean>(true);
 
   const loadVerifikasiData = async () => {
     try {
@@ -72,14 +73,13 @@ export default function Dashboard() {
   useEffect(() => {
     if (
       !auth.loading &&
-      auth.role !== "panit" &&
-      !superAdmin.includes(auth.user?.divisiID!)
+      (auth.role !== "panit" || !superAdmin.includes(auth.user?.divisiID!))
     ) {
       Swal.fire("Error!", "Anda tidak memiliki akses ke halaman ini", "error");
       route.push("/dashboard");
       return;
     }
-    loadVerifikasiData();
+    loadVerifikasiData().finally(() => setFetchLoading(false));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -154,20 +154,27 @@ export default function Dashboard() {
       <title>MAXIMA 2023 Internal - Verifikasi</title>
       <Layout title="Verifikasi" tag="SUPERADMIN" showDashboardButton>
         <Box w={"full"}>
-          <ThemeProvider theme={createTheme()}>
-            <MUIDataTable
-              title={""}
-              data={dataVerifikasi}
-              columns={columnsVerifikasi}
-              options={{
-                rowsPerPage: 10,
-                selectableRows: "none",
-                elevation: 1,
-                tableBodyHeight: "70vh",
-                tableBodyMaxHeight: "70vh",
-              }}
-            />
-          </ThemeProvider>
+          <SkeletonText
+            isLoaded={!fetchLoading}
+            noOfLines={10}
+            spacing={8}
+            skeletonHeight={12}
+          >
+            <ThemeProvider theme={createTheme()}>
+              <MUIDataTable
+                title={""}
+                data={dataVerifikasi}
+                columns={columnsVerifikasi}
+                options={{
+                  rowsPerPage: 10,
+                  selectableRows: "none",
+                  elevation: 1,
+                  tableBodyHeight: "70vh",
+                  tableBodyMaxHeight: "70vh",
+                }}
+              />
+            </ThemeProvider>
+          </SkeletonText>
         </Box>
       </Layout>
     </>

@@ -26,6 +26,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
@@ -120,7 +121,12 @@ export default function Organisator() {
         filter: true,
       },
     },
-    {
+  ];
+
+  const superAdmin = ["D01", "D02"];
+
+  if (superAdmin.includes(auth.user?.divisiID!)) {
+    columnsOrganisator.push({
       label: "Aksi",
       name: "aksi",
       options: {
@@ -128,8 +134,16 @@ export default function Organisator() {
           return (
             <>
               <Stack direction={"row"}>
-                <MuiIconButton
-                  sx={{ color: "#185C99" }}
+                <MuiButton
+                  startIcon={<MdOutlineEdit />}
+                  sx={{
+                    borderRadius: "100px",
+                    px: "1em",
+                    color: "#185C99",
+                    // color: "#fff",
+                    textTransform: "none",
+                  }}
+                  variant="outlined"
                   onClick={() => {
                     setSelectOptions({
                       selectMode: "Edit",
@@ -149,10 +163,17 @@ export default function Organisator() {
                       });
                   }}
                 >
-                  <MdOutlineEdit />
-                </MuiIconButton>
+                  Sunting
+                </MuiButton>
                 <MuiIconButton
-                  color="error"
+                  size="small"
+                  sx={{
+                    borderRadius: "8px",
+                    px: "0.5em",
+                    backgroundColor: "red",
+                    color: "#fff",
+                    textTransform: "none",
+                  }}
                   onClick={() => {
                     setSelectOptions({
                       selectMode: "Delete",
@@ -177,8 +198,8 @@ export default function Organisator() {
           );
         },
       },
-    },
-  ];
+    });
+  }
 
   const loadDataOrganisator = async () => {
     try {
@@ -203,14 +224,8 @@ export default function Organisator() {
     }
   };
 
-  const superAdmin = ["D01", "D02"];
-
   useEffect(() => {
-    if (
-      !auth.loading &&
-      auth.role !== "panit" &&
-      !superAdmin.includes(auth.user?.divisiID!)
-    ) {
+    if (!auth.loading && auth.role !== "panit") {
       Swal.fire(
         "Error!",
         "Maaf, anda tidak memiliki akses ke page ini",
@@ -220,36 +235,38 @@ export default function Organisator() {
       return;
     }
 
-    loadDataOrganisator();
-    loadDataState();
-    setFetchLoading(false);
+    Promise.all([loadDataOrganisator(), loadDataState()]).finally(() => {
+      setFetchLoading(false);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // sementara fetch loading pake spinner, kalo jadi pake skeleton gaskan
-  if (fetchLoading || auth.loading) {
-    return <LoadingSpinner />;
-  }
 
   return (
     <>
       <title>MAXIMA 2023 Internal - Organisator</title>
       <Layout title="Organisator" showDashboardButton>
         <Box w={"full"}>
-          <ThemeProvider theme={createTheme()}>
-            <MUIDataTable
-              title={""}
-              data={dataOrganisator}
-              columns={columnsOrganisator}
-              options={{
-                rowsPerPage: 10,
-                selectableRows: "none",
-                elevation: 1,
-                tableBodyHeight: "70vh",
-                tableBodyMaxHeight: "70vh",
-              }}
-            />
-          </ThemeProvider>
+          <SkeletonText
+            isLoaded={!fetchLoading}
+            noOfLines={10}
+            spacing={8}
+            skeletonHeight={12}
+          >
+            <ThemeProvider theme={createTheme()}>
+              <MUIDataTable
+                title={""}
+                data={dataOrganisator}
+                columns={columnsOrganisator}
+                options={{
+                  rowsPerPage: 10,
+                  selectableRows: "none",
+                  elevation: 1,
+                  tableBodyHeight: "70vh",
+                  tableBodyMaxHeight: "70vh",
+                }}
+              />
+            </ThemeProvider>
+          </SkeletonText>
         </Box>
         {/* buat moodal */}
         <Modal isOpen={isOpen} onClose={onClose} isCentered>

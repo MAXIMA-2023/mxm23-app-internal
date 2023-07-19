@@ -27,6 +27,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
@@ -126,8 +127,16 @@ export default function DaftarPanitia() {
           return (
             <>
               <Stack direction={"row"}>
-                <MuiIconButton
-                  sx={{ color: "#185C99" }}
+                <MuiButton
+                  startIcon={<MdOutlineEdit />}
+                  sx={{
+                    borderRadius: "100px",
+                    px: "1em",
+                    color: "#185C99",
+                    // color: "#fff",
+                    textTransform: "none",
+                  }}
+                  variant="outlined"
                   onClick={() => {
                     setSelectOptions({
                       selectMode: "Edit",
@@ -145,10 +154,17 @@ export default function DaftarPanitia() {
                       });
                   }}
                 >
-                  <MdOutlineEdit />
-                </MuiIconButton>
+                  Sunting
+                </MuiButton>
                 <MuiIconButton
-                  color="error"
+                  size="small"
+                  sx={{
+                    borderRadius: "8px",
+                    px: "0.5em",
+                    backgroundColor: "red",
+                    color: "#fff",
+                    textTransform: "none",
+                  }}
                   onClick={() => {
                     setSelectOptions({
                       selectMode: "Delete",
@@ -200,8 +216,7 @@ export default function DaftarPanitia() {
   useEffect(() => {
     if (
       !auth.loading &&
-      auth.role !== "panit" &&
-      !superAdmin.includes(auth.user?.divisiID!)
+      (auth.role !== "panit" || !superAdmin.includes(auth.user?.divisiID!))
     ) {
       Swal.fire(
         "Error!",
@@ -214,34 +229,38 @@ export default function DaftarPanitia() {
 
     loadDataPanit();
     loadDataDivisi();
-    setFetchLoading(false);
+    Promise.all([loadDataPanit(), loadDataDivisi()]).finally(() =>
+      setFetchLoading(false)
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // sementara fetch loading pake spinner, kalo jadi pake skeleton gaskan
-  if (fetchLoading || auth.loading) {
-    return <LoadingSpinner />;
-  }
 
   return (
     <>
       <title>MAXIMA 2023 Internal - Organisator</title>
       <Layout title="Panitia" tag="SUPERADMIN" showDashboardButton>
         <Box w={"full"}>
-          <ThemeProvider theme={createTheme()}>
-            <MUIDataTable
-              title={""}
-              data={dataPanitia}
-              columns={columnsPanitia}
-              options={{
-                rowsPerPage: 10,
-                selectableRows: "none",
-                elevation: 1,
-                tableBodyHeight: "70vh",
-                tableBodyMaxHeight: "70vh",
-              }}
-            />
-          </ThemeProvider>
+          <SkeletonText
+            isLoaded={!fetchLoading}
+            noOfLines={10}
+            spacing={8}
+            skeletonHeight={12}
+          >
+            <ThemeProvider theme={createTheme()}>
+              <MUIDataTable
+                title={""}
+                data={dataPanitia}
+                columns={columnsPanitia}
+                options={{
+                  rowsPerPage: 10,
+                  selectableRows: "none",
+                  elevation: 1,
+                  tableBodyHeight: "70vh",
+                  tableBodyMaxHeight: "70vh",
+                }}
+              />
+            </ThemeProvider>
+          </SkeletonText>
         </Box>
 
         {/* buat moodal */}
