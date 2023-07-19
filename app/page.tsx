@@ -11,7 +11,9 @@ export default function Home() {
     if (!auth.loading && !auth?.isLoggedIn) {
       router.push("/signin");
       return;
-    } else {
+    }
+
+    if (!auth.loading && auth?.isLoggedIn) {
       router.push("/dashboard");
       return;
     }
