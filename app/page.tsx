@@ -1,23 +1,21 @@
 "use client";
-import { Center, Box, Text, HStack } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/Auth";
 
 export default function Home() {
-  return (
-    <Center w={"100%"} h={"100vh"}>
-      <Box w={"25em"} h={"auto"} boxShadow={"lg"}>
-        <Box w={"full"} p={"2em"} bg={"RGBA(0, 0, 0, 0.92)"} rounded={"md"}>
-          <HStack spacing={3}>
-            <Box boxSize={"1em"} bg={"white"} rounded={"full"}></Box>
-            <Box boxSize={"1em"} bg={"white"} rounded={"full"}></Box>
-            <Box boxSize={"1em"} bg={"white"} rounded={"full"}></Box>
-          </HStack>
-          <Box mt={"1em"}>
-            <Text align={"left"} color={"white"} fontSize={"xl"} fontWeight={"normal"}>
-              Hi, selamat liburan para frontend MAXIMA 2023
-            </Text>
-          </Box>
-        </Box>
-      </Box>
-    </Center>
-  );
+  const auth = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!auth.loading && !auth?.isLoggedIn) {
+      router.push("/signin");
+      return;
+    } else {
+      router.push("/dashboard");
+      return;
+    }
+  }, [auth?.isLoggedIn, auth.loading, router]);
+
+  return <></>;
 }
