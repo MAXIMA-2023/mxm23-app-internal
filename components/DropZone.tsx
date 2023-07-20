@@ -2,21 +2,25 @@ import { useState, useEffect } from "react";
 import { Box, Text, Image, Center } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
+import imageCompression from "browser-image-compression";
+import Swal from "sweetalert2";
 
 const DropZone = ({
   control,
   name,
   rules,
+  defaultValue,
 }: {
   control: any;
   name: string;
   rules: any;
+  defaultValue?: any;
 }) => {
   // yep ini buat nge hook ke react-hook-form
   const {
     field: { value, onChange },
     fieldState: { error },
-  } = useController({ control, name, rules });
+  } = useController({ control, name, rules, defaultValue });
 
   useEffect(() => {
     return () => {
@@ -31,7 +35,20 @@ const DropZone = ({
     accept: { "image/jpeg": [], "image/jpg": [], "image/png": [] },
     onDrop: (acceptedFiles: File[]) => {
       if (acceptedFiles.length) {
-        onChange(acceptedFiles[0]);
+        imageCompression(acceptedFiles[0], {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 512,
+          useWebWorker: true,
+        })
+          .then((file) => onChange(file))
+          .catch((err) => {
+            console.error(err);
+            Swal.fire(
+              "Error",
+              "Terjadi kesalahan saat mengompres gambar",
+              "error"
+            );
+          });
       }
     },
   });
