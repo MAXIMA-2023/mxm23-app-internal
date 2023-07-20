@@ -48,7 +48,7 @@ import {
 } from "react-icons/md";
 import { useAuth } from "@/contexts/Auth";
 import { useParams, useRouter } from "next/navigation";
-import api, { HandleAxiosError } from "@/services/api";
+import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 import Swal from "sweetalert2";
 
 type StateActivities = {
@@ -79,12 +79,15 @@ type DayManagement = {
 type PesertaSTATE = {
   stateID: number;
   nim: number;
-  attendanceTime: string | null;
+  token: string;
+  name: string;
+  created_at: string;
+  attendanceTime: string;
   isFirstAttended: boolean;
   isLastAttended: boolean;
-  name: string;
   stateName: string;
   stateLogo: string;
+  day: string;
 };
 
 export default function Details() {
@@ -122,8 +125,10 @@ export default function Details() {
 
   const loadDataPesertaState = async () => {
     try {
-      const { data } = await api.get(`/stateRegBySID/data/${params.stateID}`);
-      setDataPesertaState(data);
+      const { data } = await api.get<ResponseModel<PesertaSTATE[]>>(
+        `/stateRegBySID/data/${params.stateID}`
+      );
+      setDataPesertaState(data.data!);
     } catch (error) {
       console.log(error);
       HandleAxiosError(error);
@@ -204,7 +209,7 @@ export default function Details() {
               onChange={() => {
                 api
                   .post(`state/attendance/first`, {
-                    token: `MXM-${rowData.nim}`,
+                    token: rowData.token,
                     stateID: rowData.stateID,
                   })
                   .then((res) => {
@@ -246,7 +251,7 @@ export default function Details() {
               onChange={() => {
                 api
                   .post(`state/attendance/last`, {
-                    token: `MXM-${rowData.nim}`,
+                    token: rowData.token,
                     stateID: rowData.stateID,
                   })
                   .then((res) => {
