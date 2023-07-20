@@ -315,11 +315,11 @@ export default function Organisator() {
                   <FormControl isInvalid={!!errors.nim}>
                     <FormLabel>NIM</FormLabel>
                     <Input
-                      placeholder={selectedOrganisator?.nim.toString()}
                       id="nim"
                       type="number"
                       {...register("nim", {
                         required: false,
+                        value: selectedOrganisator?.nim,
                         max: {
                           value: 99999,
                           message: "NIM harus 5 digit",
@@ -339,10 +339,10 @@ export default function Organisator() {
                   <FormControl isInvalid={!!errors.name}>
                     <FormLabel>Nama</FormLabel>
                     <Input
-                      placeholder={selectedOrganisator?.name}
                       id="name"
                       {...register("name", {
                         required: false,
+                        value: selectedOrganisator?.name,
                         maxLength: {
                           value: 20,
                           message: "Nama lengkap maximum 20 karakter",
@@ -361,10 +361,10 @@ export default function Organisator() {
                   <FormControl isInvalid={!!errors.email}>
                     <FormLabel>Email</FormLabel>
                     <Input
-                      placeholder={selectedOrganisator?.email}
                       id="email"
                       {...register("email", {
                         required: false,
+                        value: selectedOrganisator?.email,
                         pattern: {
                           value: /^(\w+(.\w+)*)(@student.umn.ac.id)$/gm,
                           message: "Harus menggunakan email student",
@@ -402,11 +402,7 @@ export default function Organisator() {
                         control={control}
                         defaultValue={selectedOrganisator?.stateID}
                         render={({ field: { onChange, value } }) => (
-                          <Select
-                            // placeholder="Pilih arah kamera"
-                            onChange={onChange}
-                            value={value}
-                          >
+                          <Select onChange={onChange} value={value}>
                             {dataState.map((state) => (
                               <option value={state.stateID} key={state.stateID}>
                                 {state.name}
@@ -420,12 +416,6 @@ export default function Organisator() {
                       </FormErrorMessage>
                     </FormControl>
                   </HStack>
-                  <Text py={8} textAlign="justify">
-                    <Text as="span" fontWeight="medium">
-                      Note :
-                    </Text>{" "}
-                    Hanya isi yang ingin diganti saja, tidak perlu diisi semua.
-                  </Text>
                 </ModalBody>
 
                 <ModalFooter>

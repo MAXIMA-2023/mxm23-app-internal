@@ -166,7 +166,7 @@ export default function DaftarSTATE() {
     }
     loadDataDayManagement();
     loadDataSTATE();
-    Promise.all([loadDataDayManagement(), loadDataSTATE()]).finally(() =>
+    Promise.all([loadDataDayManagement, loadDataSTATE]).finally(() =>
       setFetchLoading(false)
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -485,7 +485,6 @@ export default function DaftarSTATE() {
                         <Select
                           // placeholder="Pilih arah kamera"
                           onChange={onChange}
-                          defaultValue={"D1"}
                           value={value}
                         >
                           {dataDayManagement.map((day) => (
@@ -524,7 +523,7 @@ export default function DaftarSTATE() {
 
                 <ModalFooter>
                   <Button type="submit" color="#185C99" mr={3}>
-                    Change
+                    Create
                   </Button>
                   <Button
                     color="#185C99"

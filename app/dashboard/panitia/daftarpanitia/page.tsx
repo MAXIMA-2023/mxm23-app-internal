@@ -306,11 +306,11 @@ export default function DaftarPanitia() {
                   <FormControl isInvalid={!!errors.nim}>
                     <FormLabel>NIM</FormLabel>
                     <Input
-                      placeholder={selectedPanitia?.nim.toString()}
                       id="nim"
                       type="number"
                       {...register("nim", {
                         required: false,
+                        value: selectedPanitia?.nim,
                         max: {
                           value: 99999,
                           message: "NIM harus 5 digit",
@@ -330,10 +330,10 @@ export default function DaftarPanitia() {
                   <FormControl isInvalid={!!errors.name}>
                     <FormLabel>Nama</FormLabel>
                     <Input
-                      placeholder={selectedPanitia?.name}
                       id="name"
                       {...register("name", {
                         required: false,
+                        value: selectedPanitia?.name,
                         maxLength: {
                           value: 20,
                           message: "Nama lengkap maximum 20 karakter",
@@ -352,10 +352,10 @@ export default function DaftarPanitia() {
                   <FormControl isInvalid={!!errors.email}>
                     <FormLabel>Email</FormLabel>
                     <Input
-                      placeholder={selectedPanitia?.email}
                       id="email"
                       {...register("email", {
                         required: false,
+                        value: selectedPanitia?.email,
                         pattern: {
                           value: /^(\w+(.\w+)*)(@student.umn.ac.id)$/gm,
                           message: "Harus menggunakan email student",
@@ -393,11 +393,7 @@ export default function DaftarPanitia() {
                         control={control}
                         defaultValue={selectedPanitia?.divisiID}
                         render={({ field: { onChange, value } }) => (
-                          <Select
-                            // placeholder="Pilih arah kamera"
-                            onChange={onChange}
-                            value={value}
-                          >
+                          <Select onChange={onChange} value={value}>
                             {dataDivisi.map((divisi) => (
                               <option
                                 value={divisi.divisiID}

@@ -402,11 +402,11 @@ export default function Dashboard() {
                   <FormControl isInvalid={!!errors.nim}>
                     <FormLabel>NIM</FormLabel>
                     <Input
-                      placeholder={selectedMahasiswa?.nim.toString()}
                       id="nim"
                       type="number"
                       {...register("nim", {
                         required: false,
+                        value: selectedMahasiswa?.nim,
                         max: {
                           value: 99999,
                           message: "NIM harus 5 digit",
@@ -426,10 +426,10 @@ export default function Dashboard() {
                   <FormControl isInvalid={!!errors.name}>
                     <FormLabel>Nama</FormLabel>
                     <Input
-                      placeholder={selectedMahasiswa?.name}
                       id="name"
                       {...register("name", {
                         required: false,
+                        value: selectedMahasiswa?.name,
                         maxLength: {
                           value: 20,
                           message: "Nama lengkap maximum 20 karakter",
@@ -448,10 +448,10 @@ export default function Dashboard() {
                   <FormControl isInvalid={!!errors.email}>
                     <FormLabel>Email</FormLabel>
                     <Input
-                      placeholder={selectedMahasiswa?.email}
                       id="email"
                       {...register("email", {
                         required: false,
+                        value: selectedMahasiswa?.email,
                         pattern: {
                           value: /^(\w+(.\w+)*)(@student.umn.ac.id)$/gm,
                           message: "Harus menggunakan email student",
@@ -489,11 +489,7 @@ export default function Dashboard() {
                         control={control}
                         defaultValue={selectedMahasiswa?.prodi}
                         render={({ field: { onChange, value } }) => (
-                          <Select
-                            // placeholder="Pilih arah kamera"
-                            onChange={onChange}
-                            value={value}
-                          >
+                          <Select onChange={onChange} value={value}>
                             {dataProdi.map((prodi) => (
                               <option value={prodi} key={prodi}>
                                 {prodi}
@@ -511,10 +507,10 @@ export default function Dashboard() {
                   <FormControl isInvalid={!!errors.whatsapp}>
                     <FormLabel>No. WhatsApp</FormLabel>
                     <Input
-                      placeholder={selectedMahasiswa?.whatsapp}
                       id="whatsapp"
                       {...register("whatsapp", {
                         required: false,
+                        value: selectedMahasiswa?.whatsapp,
                         min: {
                           value: 10,
                           message: "Nomor WhatsApp tidak valid",
@@ -533,10 +529,10 @@ export default function Dashboard() {
                   <FormControl isInvalid={!!errors.idLine}>
                     <FormLabel>Id Line</FormLabel>
                     <Input
-                      placeholder={selectedMahasiswa?.idLine}
                       id="idLine"
                       {...register("idLine", {
                         required: false,
+                        value: selectedMahasiswa?.idLine,
                       })}
                     />
                     <FormErrorMessage>
