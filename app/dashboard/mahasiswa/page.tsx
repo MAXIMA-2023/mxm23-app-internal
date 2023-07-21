@@ -548,13 +548,6 @@ export default function Dashboard() {
                       {errors.name && errors.name.message}
                     </FormErrorMessage>
                   </FormControl>
-
-                  <Text py={8} textAlign="justify">
-                    <Text as="span" fontWeight="medium">
-                      Note :
-                    </Text>{" "}
-                    Hanya isi yang ingin diganti saja, tidak perlu diisi semua.
-                  </Text>
                 </ModalBody>
 
                 <ModalFooter>
