@@ -2,8 +2,7 @@ import axios, { isAxiosError, AxiosError } from "axios";
 import Swal from "sweetalert2";
 
 // !CHANGEME: hardcode
-export const baseUrl =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api";
+export const baseUrl = process.env.API_URL ?? "http://localhost:3000/api";
 
 export const HandleAxiosError = (error: any) => {
   if (!isAxiosError(error)) {
@@ -33,11 +32,7 @@ export const HandleAxiosError = (error: any) => {
     return;
   }
 
-  Swal.fire(
-    "Error",
-    response.data.message ?? "Terjadi kesalahan saat request",
-    "error"
-  );
+  Swal.fire("Error", response.data.message ?? "Terjadi kesalahan saat request", "error");
 };
 
 export type ResponseModel<T> = {
