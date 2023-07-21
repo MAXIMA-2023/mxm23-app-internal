@@ -10,18 +10,19 @@ import Charts from "@/components/Charts";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 // chart dummy data
-const dummyJmlMahasiswa = [20, 9, 12, 5, 7, 10, 15, 20, 25, 30];
+const dummyJmlMahasiswa = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 const dummyDates = [
-  "2023-07-18T15:50:24+0000",
-  "2023-07-25T15:50:24+0000",
-  "2023-07-30T15:50:24+0000",
-  "2023-08-01T15:50:24+0000",
-  "2023-08-05T15:50:24+0000",
-  "2023-08-08T15:50:24+0000",
-  "2023-08-15T15:50:24+0000",
-  "2023-08-21T15:50:24+0000",
-  "2023-08-30T15:50:24+0000",
-  "2023-09-01T15:50:24+0000",
+  "2023-09-18T00:00:00+0700",
+  "2023-09-19T00:00:00+0700",
+  "2023-09-20T00:00:00+07:00",
+  "2023-09-21T00:00:00+0700",
+  "2023-09-22T00:00:00+0700",
+  "2023-09-23T00:00:00+0700",
+  "2023-09-24T00:00:00+0700",
+  "2023-09-25T00:00:00+0700",
+  "2023-09-26T00:00:00+0700",
+  "2023-09-27T00:00:00+0700",
+  "2023-09-28T00:00:00+0700",
 ];
 
 const tabs = [
@@ -31,7 +32,7 @@ const tabs = [
     icon: MdOutlineShield,
     bgColor: "#E7EDFE",
     iconBgColor: "#185C99",
-    total: 249,
+    total: 0,
   },
   {
     name: "Panitia Divisi",
@@ -39,7 +40,7 @@ const tabs = [
     icon: MdOutlineShield,
     bgColor: "#E7EDFE",
     iconBgColor: "#185C99",
-    total: 19,
+    total: 0,
   },
   {
     name: "Organisator",
@@ -47,7 +48,7 @@ const tabs = [
     icon: HiOutlineOfficeBuilding,
     bgColor: "#FEE7E7",
     iconBgColor: "#E53E3E",
-    total: 86,
+    total: 0,
   },
   {
     name: "Mahasiswa",
@@ -55,7 +56,7 @@ const tabs = [
     icon: MdOutlineSchool,
     bgColor: "#FEF5E7",
     iconBgColor: "#D77300",
-    total: 3409,
+    total: 0,
   },
   {
     name: "STATE",
@@ -63,7 +64,7 @@ const tabs = [
     icon: MdOutlineAirplanemodeActive,
     bgColor: "#ECE7FE",
     iconBgColor: "#4A05DE",
-    total: 49,
+    total: 0,
   },
   {
     name: "Malpun",
@@ -71,7 +72,7 @@ const tabs = [
     icon: HiOutlineSparkles,
     bgColor: "#FEE7FC",
     iconBgColor: "#DE05C8",
-    total: 4021,
+    total: 0,
   },
 ];
 
