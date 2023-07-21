@@ -28,6 +28,7 @@
     "framer-motion": "^10.12.18",
     "mui-datatables": "^4.3.0",
     "next": "13.4.6",
+    "next-env": "^1.1.1",
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.1",
