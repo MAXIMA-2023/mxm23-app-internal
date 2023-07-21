@@ -11,7 +11,7 @@ export const DummyPresensiData = {
 
   state: {
     pilihan: "GDC UMN",
-    isEligible: false,
+    isEligible: true,
     masuk: {
       isHadir: false,
       presensiAt: new Date(Date.now()).toLocaleString(),
@@ -23,7 +23,7 @@ export const DummyPresensiData = {
   },
 
   malpun: {
-    isEligible: false,
+    isEligible: true,
     isHadir: false,
     presensiAt: null,
   },
