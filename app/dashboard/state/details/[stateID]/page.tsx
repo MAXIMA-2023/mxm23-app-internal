@@ -426,35 +426,28 @@ export default function Details() {
           <form
             // to handle multipart, please use formData :)
             onSubmit={handleSubmit((data) => {
-              // const formData = new FormData();
-              // formData.append("name", data.name);
-              // formData.append("day", data.day);
-              // formData.append("stateDesc", data.stateDesc);
-              // formData.append("location", data.location);
-              // formData.append("quota", data.quota.toString());
-              // formData.append("test_file", data.stateLogo);
+              const formData = new FormData();
+              formData.append("name", data.name);
+              formData.append("day", data.day);
+              formData.append("stateDesc", data.stateDesc);
+              formData.append("location", data.location);
+              formData.append("quota", data.quota.toString());
+              formData.append("test_file", data.stateLogo);
 
-              // api
-              //   .post(`/stateAct/createState/`, formData, {
-              //     headers: {
-              //       "Content-Type": "multipart/form-data",
-              //     },
-              //   })
-              //   .then((res) => {
-              //     // refetch
-              //     loadDataState();
-              //     Swal.fire(
-              //       "Berhasil!",
-              //       "Berhasil membuat STATE",
-              //       "success"
-              //     );
-              //   })
-              //   .catch((err) => {
-              //     HandleAxiosError(err);
-              //   });
-
-              console.log(data);
-              alert("NOT IMPLEMENTED, please check console");
+              api
+                .put(`/stateAct/update/`, formData, {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                })
+                .then((res) => {
+                  // refetch
+                  loadDataState();
+                  Swal.fire("Berhasil!", "Berhasil mengubah STATE", "success");
+                })
+                .catch((err) => {
+                  HandleAxiosError(err);
+                });
 
               onClose();
             })}
