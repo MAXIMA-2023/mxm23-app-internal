@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { QrScanner } from "@yudiel/react-qr-scanner";
 import { useForm, Controller } from "react-hook-form";
 import {
@@ -111,6 +112,7 @@ const QRScanner = ({
     fps: 0,
     cameraFacing: "environment",
   });
+  const [aspectRatio, setAspectRatio] = useState(4 / 3);
 
   // *modal disclosure
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -123,6 +125,10 @@ const QRScanner = ({
     formState: { errors },
   } = useForm<CameraSettings>({ mode: "onSubmit" });
 
+  useEffect(() => {
+    setAspectRatio(window.innerWidth / window.innerHeight);
+  }, []);
+
   return (
     <>
       <QrScanner
@@ -134,7 +140,7 @@ const QRScanner = ({
         containerStyle={{
           height: "100%",
           padding: 0,
-          aspectRatio: window.innerWidth / window.outerHeight,
+          aspectRatio: aspectRatio,
         }}
         videoStyle={{
           objectFit: "cover",
