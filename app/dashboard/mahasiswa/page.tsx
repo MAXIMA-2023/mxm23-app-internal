@@ -49,19 +49,26 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 type StateStatus = {
   stateID: number;
   stateName: string;
-  isFinished: boolean;
+  nim: number;
+  day: string;
+  attendanceTime: null | string;
+  isFirstAttended: number;
+  isLastAttended: number;
 };
 
 type Mahasiswa = {
   nim: number;
   name: string;
   email: string;
-  state_1?: StateStatus | null;
-  state_2?: StateStatus | null;
-  state_3?: StateStatus | null;
+  whatsapp: string;
+  angkatan: number;
+  idLine: string;
+  prodi: string;
+  token: string;
+  state: StateStatus[];
 };
 
-type ProfileMahasiswa = Omit<Mahasiswa, "state_1" | "state_2" | "state_3"> & {
+type ProfileMahasiswa = Omit<Mahasiswa, "state"> & {
   password: string;
   whatsapp: string;
   prodi: string;
@@ -96,7 +103,7 @@ export default function Dashboard() {
   const route = useRouter();
 
   const [dataMahasiswa, setDataMahasiswa] = useState<Mahasiswa[]>([]);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
 
   // modal
   const [selectOptions, setSelectOptions] = useState<SelectOptions | null>(
@@ -117,7 +124,7 @@ export default function Dashboard() {
   const loadDataMahasiswa = async () => {
     try {
       const { data } = await api.get<ResponseModel<Mahasiswa[]>>(
-        "/mahasiswa/data"
+        "/mahasiswa/dataWithState"
       );
       setDataMahasiswa(data.data!);
     } catch (error) {
@@ -165,15 +172,15 @@ export default function Dashboard() {
     },
     {
       label: "STATE 1",
-      name: "state_1",
+      name: "state",
       options: {
-        customBodyRender: (value: StateStatus | null, tableMeta) => {
+        customBodyRender: (value: StateStatus[], tableMeta) => {
           return (
-            <Stack direction={"row"} align={"center"}>
-              {value ? (
+            <Stack direction={"row"} align={"center"} justify={"space-between"}>
+              {value[0] ? (
                 <>
-                  <Text>{value.stateName}</Text>
-                  {value.isFinished ? (
+                  <Text>{value[0].stateName}</Text>
+                  {value[0].isFirstAttended && value[0].isLastAttended ? (
                     <Icon
                       as={BsCheckCircleFill}
                       mb={"0.5em"}
@@ -193,15 +200,15 @@ export default function Dashboard() {
     },
     {
       label: "STATE 2",
-      name: "state_2",
+      name: "state",
       options: {
-        customBodyRender: (value: StateStatus | null, tableMeta) => {
+        customBodyRender: (value: StateStatus[], tableMeta) => {
           return (
-            <Stack direction={"row"} align={"center"}>
-              {value ? (
+            <Stack direction={"row"} align={"center"} justify={"space-between"}>
+              {value[1] ? (
                 <>
-                  <Text>{value.stateName}</Text>
-                  {value.isFinished ? (
+                  <Text>{value[1].stateName}</Text>
+                  {value[1].isFirstAttended && value[1].isLastAttended ? (
                     <Icon
                       as={BsCheckCircleFill}
                       mb={"0.5em"}
@@ -221,15 +228,15 @@ export default function Dashboard() {
     },
     {
       label: "STATE 3",
-      name: "state_3",
+      name: "state",
       options: {
-        customBodyRender: (value: StateStatus | null, tableMeta) => {
+        customBodyRender: (value: StateStatus[], tableMeta) => {
           return (
-            <Stack direction={"row"} align={"center"}>
-              {value ? (
+            <Stack direction={"row"} align={"center"} justify={"space-between"}>
+              {value[2] ? (
                 <>
-                  <Text>{value.stateName}</Text>
-                  {value.isFinished ? (
+                  <Text>{value[2].stateName}</Text>
+                  {value[2].isFirstAttended && value[2].isLastAttended ? (
                     <Icon
                       as={BsCheckCircleFill}
                       mb={"0.5em"}
@@ -258,16 +265,18 @@ export default function Dashboard() {
           return (
             <>
               <Stack direction={"row"}>
-                <MuiButton
-                  startIcon={<MdOutlineEdit />}
+                <MuiIconButton
+                  size="small"
                   sx={{
-                    borderRadius: "100px",
-                    px: "1em",
+                    borderRadius: "8px",
+                    px: "0.5em",
+                    // backgroundColor: "red",
                     color: "#185C99",
+                    outlineColor: "#185C99",
+                    outline: "1px solid",
                     // color: "#fff",
                     textTransform: "none",
                   }}
-                  variant="outlined"
                   onClick={() => {
                     setSelectOptions({
                       selectMode: "Edit",
@@ -285,8 +294,8 @@ export default function Dashboard() {
                       });
                   }}
                 >
-                  Sunting
-                </MuiButton>
+                  <MdOutlineEdit />
+                </MuiIconButton>
                 <MuiIconButton
                   size="small"
                   sx={{
