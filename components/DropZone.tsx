@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
-import { Box, Text, Image, Center } from "@chakra-ui/react";
+import { Box, Text, Image, Center, Progress } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import imageCompression from "browser-image-compression";
 import Swal from "sweetalert2";
+
+const validateImg = (url: string) => {
+  return url.match(/(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/) != null;
+};
 
 const DropZone = ({
   control,
@@ -13,26 +17,23 @@ const DropZone = ({
 }: {
   control: any;
   name: string;
-  rules: any;
-  defaultValue?: any;
+  rules?: any;
+  defaultValue?: string;
 }) => {
   // yep ini buat nge hook ke react-hook-form
   const {
     field: { value, onChange },
     fieldState: { error },
-  } = useController({ control, name, rules, defaultValue });
-
-  useEffect(() => {
-    return () => {
-      if (value && value.preview) {
-        URL.revokeObjectURL(value.preview);
-      }
-    };
-  }, [value]);
+  } = useController({
+    control,
+    name,
+    rules,
+  });
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
-    accept: { "image/jpeg": [], "image/jpg": [], "image/png": [] },
+    // "image/jpg": [".jpg"],
+    accept: { "image/jpeg": [".jpeg", ".jpg"], "image/png": [".png"] },
     onDrop: (acceptedFiles: File[]) => {
       if (acceptedFiles.length) {
         imageCompression(acceptedFiles[0], {
@@ -40,7 +41,14 @@ const DropZone = ({
           maxWidthOrHeight: 512,
           useWebWorker: true,
         })
-          .then((file) => onChange(file))
+          .then((file) =>
+            onChange(
+              new File([file], file.name, {
+                lastModified: file.lastModified,
+                type: file.type,
+              })
+            )
+          )
           .catch((err) => {
             console.error(err);
             Swal.fire(
@@ -78,6 +86,28 @@ const DropZone = ({
     </Box>
   );
 
+  const before = defaultValue && validateImg(defaultValue) && (
+    <Box
+      display={"inline-flex"}
+      borderRadius={4}
+      border={"2px solid #eaeaea"}
+      mt={"16px"}
+      mx={1}
+      w={"auto"}
+      h={"auto"}
+      p={1}
+      boxSizing={"border-box"}
+    >
+      <Box display={"flex"} w={"auto"} h={"100%"}>
+        <Image
+          src={defaultValue}
+          style={{ display: "block", width: "auto", height: "100%" }}
+          alt={"before"}
+        />
+      </Box>
+    </Box>
+  );
+
   return (
     <>
       <Center
@@ -96,7 +126,7 @@ const DropZone = ({
         </Text>
       </Center>
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
-        {thumb}
+        {value ? thumb : before}
       </Box>
     </>
   );
