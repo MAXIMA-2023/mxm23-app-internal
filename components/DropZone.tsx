@@ -4,7 +4,10 @@ import { useController } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import imageCompression from "browser-image-compression";
 import Swal from "sweetalert2";
-import axios from "axios";
+
+const validateImg = (url: string) => {
+  return url.match(/(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/) != null;
+};
 
 const DropZone = ({
   control,
@@ -14,8 +17,8 @@ const DropZone = ({
 }: {
   control: any;
   name: string;
-  rules: any;
-  defaultValue?: any;
+  rules?: any;
+  defaultValue?: string;
 }) => {
   // yep ini buat nge hook ke react-hook-form
   const {
@@ -25,17 +28,12 @@ const DropZone = ({
     control,
     name,
     rules,
-    defaultValue: defaultValue
-      ? axios
-          .get(defaultValue)
-          .then((resp) => resp.data)
-          .catch((err) => defaultValue)
-      : undefined,
   });
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
-    accept: { "image/jpeg": [], "image/jpg": [], "image/png": [] },
+    // "image/jpg": [".jpg"],
+    accept: { "image/jpeg": [".jpeg", ".jpg"], "image/png": [".png"] },
     onDrop: (acceptedFiles: File[]) => {
       if (acceptedFiles.length) {
         imageCompression(acceptedFiles[0], {
@@ -88,6 +86,28 @@ const DropZone = ({
     </Box>
   );
 
+  const before = defaultValue && validateImg(defaultValue) && (
+    <Box
+      display={"inline-flex"}
+      borderRadius={4}
+      border={"2px solid #eaeaea"}
+      mt={"16px"}
+      mx={1}
+      w={"auto"}
+      h={"auto"}
+      p={1}
+      boxSizing={"border-box"}
+    >
+      <Box display={"flex"} w={"auto"} h={"100%"}>
+        <Image
+          src={defaultValue}
+          style={{ display: "block", width: "auto", height: "100%" }}
+          alt={"before"}
+        />
+      </Box>
+    </Box>
+  );
+
   return (
     <>
       <Center
@@ -106,7 +126,7 @@ const DropZone = ({
         </Text>
       </Center>
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
-        {thumb}
+        {value ? thumb : before}
       </Box>
     </>
   );
