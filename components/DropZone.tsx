@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Box, Text, Image, Center } from "@chakra-ui/react";
+import { Box, Text, Image, Center, Progress } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import imageCompression from "browser-image-compression";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const DropZone = ({
   control,
@@ -20,15 +21,17 @@ const DropZone = ({
   const {
     field: { value, onChange },
     fieldState: { error },
-  } = useController({ control, name, rules, defaultValue });
-
-  useEffect(() => {
-    return () => {
-      if (value && value.preview) {
-        URL.revokeObjectURL(value.preview);
-      }
-    };
-  }, [value]);
+  } = useController({
+    control,
+    name,
+    rules,
+    defaultValue: defaultValue
+      ? axios
+          .get(defaultValue)
+          .then((resp) => resp.data)
+          .catch((err) => defaultValue)
+      : undefined,
+  });
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
@@ -40,7 +43,14 @@ const DropZone = ({
           maxWidthOrHeight: 512,
           useWebWorker: true,
         })
-          .then((file) => onChange(file))
+          .then((file) =>
+            onChange(
+              new File([file], file.name, {
+                lastModified: file.lastModified,
+                type: file.type,
+              })
+            )
+          )
           .catch((err) => {
             console.error(err);
             Swal.fire(
