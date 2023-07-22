@@ -110,6 +110,7 @@ export default function Details() {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm<UpdateStateActivities>();
 
@@ -307,7 +308,10 @@ export default function Details() {
                 bgColor={"#185C99"}
                 borderRadius={"full"}
                 _hover={{ bgColor: "#295278" }}
-                onClick={onOpen}
+                onClick={() => {
+                  reset();
+                  onOpen();
+                }}
               >
                 <Flex alignItems={"center"} color={"white"}>
                   <Icon as={MdEdit} boxSize={4} />
@@ -431,16 +435,25 @@ export default function Details() {
       <Modal size={"2xl"} onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent borderRadius={"xl"}>
+          <ModalHeader>Sunting STATE {dataState?.name}</ModalHeader>
+          <ModalCloseButton />
+
           <form
             // to handle multipart, please use formData :)
             onSubmit={handleSubmit((data) => {
               const formData = new FormData();
-              formData.append("name", data.name);
-              formData.append("day", data.day);
+              formData.append("name", data.name ?? dataState?.name);
+              formData.append("day", data.day ?? dataState?.day);
               formData.append("stateDesc", data.stateDesc);
-              formData.append("location", data.location);
-              formData.append("quota", data.quota.toString());
-              formData.append("test_file", data.stateLogo);
+              formData.append("location", data.location ?? dataState?.location);
+              formData.append(
+                "quota",
+                data.quota ? data.quota.toString() : dataState!.quota.toString()
+              );
+
+              if (data.stateLogo) {
+                formData.append("test_file", data.stateLogo);
+              }
 
               api
                 .put(`/stateAct/update/${params.stateID}`, formData, {
@@ -460,86 +473,84 @@ export default function Details() {
               onClose();
             })}
           >
-            <ModalBody>
-              <Center w={"full"} my={"1em"}>
-                <Text fontSize={"2xl"} fontWeight={"semibold"} color={"#11D22"}>
-                  Sunting
-                </Text>
-              </Center>
-              <Box w={"full"}>
-                <ModalBody textColor="#1e1d22">
-                  <FormControl isInvalid={!!errors.stateLogo}>
-                    <Box w={"full"} mb={"2em"}>
-                      <FormLabel
-                        fontSize={"md"}
-                        fontWeight={"semibold"}
-                        color={"#11D22"}
-                      >
-                        Logo
-                      </FormLabel>
+            <ModalBody textColor="#1e1d22">
+              <FormControl isInvalid={!!errors.stateLogo}>
+                <Box w={"full"} mb={"2em"}>
+                  <FormLabel
+                    fontSize={"md"}
+                    fontWeight={"semibold"}
+                    color={"#11D22"}
+                  >
+                    Ganti Logo
+                  </FormLabel>
 
-                      <Box
-                        padding={"1em"}
-                        border={"solid #CBD5E0"}
-                        width={"100%"}
-                        height={"100%"}
-                        borderRadius={10}
-                        transition={"0.1s ease-in-out"}
-                        _hover={{ border: "solid #CBD5E0" }}
-                      >
-                        <DropZone
-                          control={control}
-                          name="stateLogo"
-                          rules={{
-                            required: "Logo STATE tidak boleh kosong.",
-                          }}
-                        />
-                        {/* <Input
+                  <Box
+                    padding={"1em"}
+                    border={"solid #CBD5E0"}
+                    width={"100%"}
+                    height={"100%"}
+                    borderRadius={10}
+                    transition={"0.1s ease-in-out"}
+                    _hover={{ border: "solid #CBD5E0" }}
+                  >
+                    <DropZone
+                      control={control}
+                      name="stateLogo"
+                      defaultValue={dataState?.stateLogo}
+                      // rules={{
+                      //   required: "Logo STATE tidak boleh kosong.",
+                      // }}
+                    />
+                    {/* <Input
                           id="stateLogo"
                           type="file"
                           {...register("stateLogo", {
                             required: "Logo STATE tidak boleh kosong.",
                           })}
                         /> */}
-                      </Box>
-                      <FormErrorMessage>
-                        {errors.stateLogo && errors.stateLogo.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </FormControl>
+                  </Box>
+                  <FormErrorMessage>
+                    {errors.stateLogo && errors.stateLogo.message}
+                  </FormErrorMessage>
+                </Box>
+              </FormControl>
 
-                  <FormControl isInvalid={!!errors.name}>
-                    <FormLabel>Name</FormLabel>
-                    <Input
-                      id="name"
-                      {...register("name", {
-                        value: dataState?.name,
-                        required: "Nama STATE tidak boleh kosong.",
-                        pattern: {
-                          value: /^[A-Za-z .]*$/,
-                          message: "Nama STATE tidak valid",
-                        },
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors.name && errors.name.message}
-                    </FormErrorMessage>
-                  </FormControl>
+              {auth.role !== "organisator" && (
+                <FormControl isInvalid={!!errors.name}>
+                  <FormLabel>Name</FormLabel>
+                  <Input
+                    id="name"
+                    {...register("name", {
+                      value: dataState?.name,
+                      required: "Nama STATE tidak boleh kosong.",
+                      pattern: {
+                        value: /^[A-Za-z .]*$/,
+                        message: "Nama STATE tidak valid",
+                      },
+                    })}
+                  />
+                  <FormErrorMessage>
+                    {errors.name && errors.name.message}
+                  </FormErrorMessage>
+                </FormControl>
+              )}
 
-                  <FormControl isInvalid={!!errors.stateDesc}>
-                    <FormLabel>Deksripsi</FormLabel>
-                    <Textarea
-                      id="stateDesc"
-                      {...register("stateDesc", {
-                        value: dataState?.stateDesc,
-                        required: "Deskripsi STATE tidak boleh kosong",
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors.stateDesc && errors.stateDesc.message}
-                    </FormErrorMessage>
-                  </FormControl>
+              <FormControl isInvalid={!!errors.stateDesc}>
+                <FormLabel>Deksripsi</FormLabel>
+                <Textarea
+                  id="stateDesc"
+                  {...register("stateDesc", {
+                    value: dataState?.stateDesc,
+                    required: "Deskripsi STATE tidak boleh kosong",
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.stateDesc && errors.stateDesc.message}
+                </FormErrorMessage>
+              </FormControl>
 
+              {auth.role !== "organisator" && (
+                <>
                   <FormControl isInvalid={!!errors.location}>
                     <FormLabel>Lokasi</FormLabel>
                     <Input
@@ -600,8 +611,8 @@ export default function Details() {
                       {errors.quota && errors.quota.message}
                     </FormErrorMessage>
                   </FormControl>
-                </ModalBody>
-              </Box>
+                </>
+              )}
             </ModalBody>
             <ModalFooter>
               <Button type="submit" color="#185C99" mr={3}>
