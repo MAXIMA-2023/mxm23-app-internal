@@ -443,7 +443,7 @@ export default function Details() {
               formData.append("test_file", data.stateLogo);
 
               api
-                .put(`/stateAct/update/`, formData, {
+                .put(`/stateAct/update/${params.stateID}`, formData, {
                   headers: {
                     "Content-Type": "multipart/form-data",
                   },
