@@ -2,19 +2,7 @@
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import {
-  Box,
-  Flex,
-  Text,
-  Divider,
-  HStack,
-  Switch,
-  Link,
-  Select,
-  Image,
-  Button,
-  SkeletonText,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, Divider, HStack, Switch, Link, Select, Image, Button, SkeletonText } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
 import api, { ResponseModel, HandleAxiosError } from "@/services/api";
@@ -71,11 +59,7 @@ export default function PanitiaDivisi() {
 
   useEffect(() => {
     if (!auth.loading && auth.role !== "panit") {
-      Swal.fire(
-        "Error!",
-        "Maaf, anda tidak memiliki akses ke page ini",
-        "error"
-      );
+      Swal.fire("Error!", "Maaf, anda tidak memiliki akses ke page ini", "error");
       route.push("/dashboard");
       return;
     }
@@ -83,11 +67,7 @@ export default function PanitiaDivisi() {
     const loadDataPanit = async () => {
       try {
         const { data } = await api.get<ResponseModel<Panitia[]>>(`panit/data`);
-        setDataPanitia(
-          data.data!.filter(
-            (panitia) => panitia.divisiID === auth.user?.divisiID
-          )
-        );
+        setDataPanitia(data.data!.filter((panitia) => panitia.divisiID === auth.user?.divisiID));
       } catch (error) {
         console.log(error);
         HandleAxiosError(error);
@@ -100,18 +80,9 @@ export default function PanitiaDivisi() {
   return (
     <>
       <title>MAXIMA 2023 Internal - Organisator</title>
-      <Layout
-        title="Organisator"
-        tag={auth.user?.divisiName}
-        showDashboardButton
-      >
+      <Layout title={"Panitia Divisi"} tag={auth.user?.divisiName} showDashboardButton>
         <Box w={"full"}>
-          <SkeletonText
-            isLoaded={!fetchLoading}
-            noOfLines={10}
-            spacing={8}
-            skeletonHeight={12}
-          >
+          <SkeletonText isLoaded={!fetchLoading} noOfLines={10} spacing={8} skeletonHeight={12}>
             <ThemeProvider theme={createTheme()}>
               <MUIDataTable
                 title={""}

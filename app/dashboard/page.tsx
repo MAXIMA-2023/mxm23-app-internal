@@ -2,81 +2,14 @@
 import React, { useRef, useEffect, useState, MutableRefObject } from "react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/Auth";
-import { Text, Box, Flex, Icon } from "@chakra-ui/react";
+import { Text, Box, Flex, Icon, Tooltip, Center } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { MdOutlineShield, MdOutlineSchool, MdOutlineAirplanemodeActive } from "react-icons/md";
+import { MdOutlineShield, MdOutlineSchool, MdOutlineAirplanemodeActive, MdInfoOutline } from "react-icons/md";
 import { HiOutlineOfficeBuilding, HiOutlineSparkles } from "react-icons/hi";
 import Charts from "@/components/Charts";
-import LoadingSpinner from "@/components/LoadingSpinner";
-
-// chart dummy data
-const dummyJmlMahasiswa = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-const dummyDates = [
-  "2023-09-18T00:00:00+0700",
-  "2023-09-19T00:00:00+0700",
-  "2023-09-20T00:00:00+07:00",
-  "2023-09-21T00:00:00+0700",
-  "2023-09-22T00:00:00+0700",
-  "2023-09-23T00:00:00+0700",
-  "2023-09-24T00:00:00+0700",
-  "2023-09-25T00:00:00+0700",
-  "2023-09-26T00:00:00+0700",
-  "2023-09-27T00:00:00+0700",
-  "2023-09-28T00:00:00+0700",
-];
-
-const tabs = [
-  {
-    name: "Panitia",
-    href: "/dashboard/daftarpanitia",
-    icon: MdOutlineShield,
-    bgColor: "#E7EDFE",
-    iconBgColor: "#185C99",
-    total: 0,
-  },
-  {
-    name: "Panitia Divisi",
-    href: "/dashboard/panitiafivisi",
-    icon: MdOutlineShield,
-    bgColor: "#E7EDFE",
-    iconBgColor: "#185C99",
-    total: 0,
-  },
-  {
-    name: "Organisator",
-    href: "/dashboard/organisator",
-    icon: HiOutlineOfficeBuilding,
-    bgColor: "#FEE7E7",
-    iconBgColor: "#E53E3E",
-    total: 0,
-  },
-  {
-    name: "Mahasiswa",
-    href: "/dashboard/mahasiswa",
-    icon: MdOutlineSchool,
-    bgColor: "#FEF5E7",
-    iconBgColor: "#D77300",
-    total: 0,
-  },
-  {
-    name: "STATE",
-    href: "/dashboard/daftarstate ",
-    icon: MdOutlineAirplanemodeActive,
-    bgColor: "#ECE7FE",
-    iconBgColor: "#4A05DE",
-    total: 0,
-  },
-  {
-    name: "Malpun",
-    href: "/dashboard/malpun ",
-    icon: HiOutlineSparkles,
-    bgColor: "#FEE7FC",
-    iconBgColor: "#DE05C8",
-    total: 0,
-  },
-];
-
+import { useRouter } from "next/navigation";
 export default function Dashboard() {
+  const router = useRouter();
   const auth = useAuth();
   const [width, setWidth] = useState(0);
   const cardRef = useRef() as MutableRefObject<HTMLDivElement>;
@@ -86,6 +19,84 @@ export default function Dashboard() {
       setWidth(cardRef.current.scrollWidth - cardRef.current.offsetWidth);
     }
   }, []);
+
+  // chart dummy data
+  const dummyJmlMahasiswa = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const dummyDates = [
+    "2023-09-18T00:00:00+0700",
+    "2023-09-19T00:00:00+0700",
+    "2023-09-20T00:00:00+07:00",
+    "2023-09-21T00:00:00+0700",
+    "2023-09-22T00:00:00+0700",
+    "2023-09-23T00:00:00+0700",
+    "2023-09-24T00:00:00+0700",
+    "2023-09-25T00:00:00+0700",
+    "2023-09-26T00:00:00+0700",
+    "2023-09-27T00:00:00+0700",
+    "2023-09-28T00:00:00+0700",
+  ];
+
+  const tabs = [
+    {
+      name: "Panitia",
+      href: "/dashboard/panitia/daftarpanitia",
+      icon: MdOutlineShield,
+      bgColor: "#E7EDFE",
+      iconBgColor: "#185C99",
+      tooltipLabel: "Data ini menampilkan jumlah panitia yang terdaftar",
+      tooltipIcon: "Panitia",
+      total: 0,
+    },
+    {
+      name: "Panitia Divisi",
+      href: "/dashboard/panitia/panitiadivisi",
+      icon: MdOutlineShield,
+      bgColor: "#E7EDFE",
+      iconBgColor: "#185C99",
+      tooltipLabel: `Data ini menampilkan jumlah panitia divisi ${auth.user?.divisiName} yang terdaftar`,
+      total: 0,
+    },
+    {
+      name: "Organisator",
+      href: "/dashboard/organisator",
+      icon: HiOutlineOfficeBuilding,
+      bgColor: "#FEE7E7",
+      iconBgColor: "#E53E3E",
+      tooltipLabel: "Data ini menampilkan jumlah PIC organisator yang terdaftar",
+      tooltipIcon: "Organisator",
+      total: 0,
+    },
+    {
+      name: "Mahasiswa",
+      href: "/dashboard/mahasiswa",
+      icon: MdOutlineSchool,
+      bgColor: "#FEF5E7",
+      iconBgColor: "#D77300",
+      tooltipLabel: "Data ini menampilkan jumlah mahasiswa yang terdaftar",
+      tooltipIcon: "Mahasiswa",
+      total: 0,
+    },
+    {
+      name: "STATE",
+      href: "/dashboard/state/daftarstate ",
+      icon: MdOutlineAirplanemodeActive,
+      bgColor: "#ECE7FE",
+      iconBgColor: "#4A05DE",
+      tooltipLabel: "Data ini menampilkan jumlah mahasiswa yang mengikuti STATE",
+      tooltipIcon: "STATE",
+      total: 0,
+    },
+    {
+      name: "Malpun",
+      href: "/dashboard/malpun/peserta ",
+      icon: HiOutlineSparkles,
+      bgColor: "#FEE7FC",
+      iconBgColor: "#DE05C8",
+      tooltipLabel: "Data ini menampilkan jumlah mahasiswa yang mengikuti Malam Puncak",
+      tooltipIcon: "Malpun",
+      total: 0,
+    },
+  ];
 
   return (
     <>
@@ -111,14 +122,28 @@ export default function Dashboard() {
                       <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tab.bgColor} mr={"1em"} mb={"1em"} key={index} borderRadius={"lg"}>
                         <Box w={"full"} h={"auto"}>
                           <Flex w={"full"} h={"auto"} justifyContent={"space-between"} alignItems={"center"}>
-                            <Box>
-                              <Text fontSize={"md"} fontWeight={"medium"}>
-                                {tab.name}
-                              </Text>
-                            </Box>
-                            <Box ml={"auto"} bg={tab.iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                              <Icon as={tab.icon} color={"white"} w={"1em"} h={"1em"} />
-                            </Box>
+                            <Flex w={"full"} justifyContent={"start"} alignItems={"center"}>
+                              <Box
+                                _hover={{ textDecoration: "underline", cursor: "pointer" }}
+                                onClick={() => {
+                                  router.push(tab.href);
+                                }}
+                              >
+                                <Text fontSize={"md"} fontWeight={"medium"}>
+                                  {tab.name}
+                                </Text>
+                              </Box>
+                              <Tooltip p={"1em"} hasArrow label={tab.tooltipLabel} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                                <Center _hover={{ cursor: "pointer" }}>
+                                  <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
+                                </Center>
+                              </Tooltip>
+                            </Flex>
+                            <Tooltip p={"0.5em"} hasArrow label={tab.tooltipIcon} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                              <Box ml={"auto"} bg={tab.iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                                <Icon as={tab.icon} color={"white"} w={"1em"} h={"1em"} />
+                              </Box>
+                            </Tooltip>
                           </Flex>
                           <Box w={"full"} h={"auto"} mt={"1em"}>
                             <Text fontSize={"3xl"} fontWeight={"semibold"}>
@@ -158,6 +183,20 @@ export default function Dashboard() {
             </Box>
           </Box>
           <Box w={"full"} mt={"2em"}>
+            <Flex justifyContent={"start"} alignItems={"center"}>
+              <Box>
+                <Text color={"#1E1D22"} fontSize="md" fontWeight={"semibold"}>
+                  Mahasiswa
+                </Text>
+              </Box>
+              <Box>
+                <Tooltip p={"1em"} hasArrow label={"Data ini menampilkan perkembangan mahasiswa yang mendaftar STATE kamu setiap harinya 🤩"} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                  <Center _hover={{ cursor: "pointer" }}>
+                    <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
+                  </Center>
+                </Tooltip>
+              </Box>
+            </Flex>
             <Charts jmlPendaftar={dummyJmlMahasiswa} dates={dummyDates} />
           </Box>
         </Box>

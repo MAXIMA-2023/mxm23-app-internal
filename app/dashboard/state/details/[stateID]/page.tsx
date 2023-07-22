@@ -175,6 +175,14 @@ export default function Details() {
 
   const allowedEditPanitia = ["D01", "D02", "D05", "D13"]; // divisi registrasi?
 
+  // exclude divisi D13 - Inspice (registrasi)
+  // cursed banget :(
+  const isSuntingAllowed =
+    auth.role === "organisator" ||
+    (auth.role === "panit" &&
+      allowedEditPanitia.includes(auth.user?.divisiID!) &&
+      auth.user?.divisiID !== "D13");
+
   const columnsDetails: MUIDataTableColumn[] = [
     {
       label: "Nama",
@@ -231,6 +239,7 @@ export default function Details() {
               disabled={
                 auth.role !== "panit" ||
                 !allowedEditPanitia.includes(auth.user?.divisiID!) ||
+                auth.user?.divisiID === "D05" ||
                 value
               }
             />
@@ -272,6 +281,7 @@ export default function Details() {
               disabled={
                 auth.role !== "panit" ||
                 !allowedEditPanitia.includes(auth.user?.divisiID!) ||
+                auth.user?.divisiID === "D05" ||
                 value
               }
             />
@@ -290,9 +300,7 @@ export default function Details() {
         showDashboardButton={auth.role === "organisator"}
       >
         <Box w={"full"} h={"auto"}>
-          {(auth.role === "organisator" ||
-            (auth.role === "panit" &&
-              allowedEditPanitia.includes(auth.user?.divisiID!))) && (
+          {isSuntingAllowed && (
             <Flex justifyContent={"flex-end"} mb={"2em"}>
               <Button
                 h={"2.25em"}
