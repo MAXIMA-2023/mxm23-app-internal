@@ -21,8 +21,8 @@ export default function Dashboard() {
   }, []);
 
   // chart dummy data
-  const dummyJmlMahasiswa = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const dummyDates = [
+  const dummyJmlPesertaSTATE = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const dummySTATEDates = [
     "2023-09-18T00:00:00+0700",
     "2023-09-19T00:00:00+0700",
     "2023-09-20T00:00:00+07:00",
@@ -34,6 +34,20 @@ export default function Dashboard() {
     "2023-09-26T00:00:00+0700",
     "2023-09-27T00:00:00+0700",
     "2023-09-28T00:00:00+0700",
+  ];
+
+  const dummyJmlMahasiswa = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const dummyDates = [
+    "2023-07-18T15:50:24+0000",
+    "2023-07-25T15:50:24+0000",
+    "2023-07-30T15:50:24+0000",
+    "2023-08-01T15:50:24+0000",
+    "2023-08-05T15:50:24+0000",
+    "2023-08-08T15:50:24+0000",
+    "2023-08-15T15:50:24+0000",
+    "2023-08-21T15:50:24+0000",
+    "2023-08-30T15:50:24+0000",
+    "2023-09-01T15:50:24+0000",
   ];
 
   const tabs = [
@@ -54,6 +68,7 @@ export default function Dashboard() {
       bgColor: "#E7EDFE",
       iconBgColor: "#185C99",
       tooltipLabel: `Data ini menampilkan jumlah panitia divisi ${auth.user?.divisiName} yang terdaftar`,
+      tooltipIcon: "Panitia",
       total: 0,
     },
     {
@@ -83,6 +98,16 @@ export default function Dashboard() {
       bgColor: "#ECE7FE",
       iconBgColor: "#4A05DE",
       tooltipLabel: "Data ini menampilkan jumlah mahasiswa yang mengikuti STATE",
+      tooltipIcon: "STATE",
+      total: 0,
+    },
+    {
+      name: "Detail dan Peserta",
+      href: `/dashboard/state/details/${auth.user?.stateID}`,
+      icon: MdOutlineAirplanemodeActive,
+      bgColor: "#ECE7FE",
+      iconBgColor: "#4A05DE",
+      tooltipLabel: `Data ini menampilkan jumlah mahasiswa yang mengikuti STATE kamu`,
       tooltipIcon: "STATE",
       total: 0,
     },
@@ -156,21 +181,35 @@ export default function Dashboard() {
                   </>
                 ) : auth.role === "organisator" ? (
                   <>
-                    <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tabs[4].bgColor} mr={"1em"} mb={"1em"} borderRadius={"lg"}>
+                    <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tabs[5].bgColor} mr={"1em"} mb={"1em"} borderRadius={"lg"}>
                       <Box w={"full"} h={"auto"}>
                         <Flex w={"full"} h={"auto"} justifyContent={"space-between"} alignItems={"center"}>
-                          <Box>
-                            <Text fontSize={"md"} fontWeight={"medium"}>
-                              Detail dan Peserta
-                            </Text>
-                          </Box>
-                          <Box ml={"auto"} bg={tabs[4].iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                            <Icon as={tabs[4].icon} color={"white"} w={"1em"} h={"1em"} />
-                          </Box>
+                          <Flex w={"full"} justifyContent={"start"} alignItems={"center"}>
+                            <Box
+                              _hover={{ textDecoration: "underline", cursor: "pointer" }}
+                              onClick={() => {
+                                router.push(tabs[5].href);
+                              }}
+                            >
+                              <Text fontSize={"md"} fontWeight={"medium"}>
+                                {tabs[5].name}
+                              </Text>
+                            </Box>
+                            <Tooltip p={"1em"} hasArrow label={tabs[5].tooltipLabel} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                              <Center _hover={{ cursor: "pointer" }}>
+                                <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
+                              </Center>
+                            </Tooltip>
+                          </Flex>
+                          <Tooltip p={"0.5em"} hasArrow label={tabs[5].tooltipIcon} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                            <Box ml={"auto"} bg={tabs[5].iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                              <Icon as={tabs[5].icon} color={"white"} w={"1em"} h={"1em"} />
+                            </Box>
+                          </Tooltip>
                         </Flex>
                         <Box w={"full"} h={"auto"} mt={"1em"}>
                           <Text fontSize={"3xl"} fontWeight={"semibold"}>
-                            0
+                            {tabs[5].total}
                           </Text>
                         </Box>
                       </Box>
@@ -182,23 +221,49 @@ export default function Dashboard() {
               </Flex>
             </Box>
           </Box>
-          <Box w={"full"} mt={"2em"}>
-            <Flex justifyContent={"start"} alignItems={"center"}>
-              <Box>
-                <Text color={"#1E1D22"} fontSize="md" fontWeight={"semibold"}>
-                  Mahasiswa
-                </Text>
+          {auth.role === "panit" ? (
+            <>
+              <Box w={"full"} mt={"2em"}>
+                <Flex justifyContent={"start"} alignItems={"center"}>
+                  <Box>
+                    <Text color={"#1E1D22"} fontSize="md" fontWeight={"semibold"}>
+                      Mahasiswa
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Tooltip p={"1em"} hasArrow label={"Data ini menampilkan perkembangan mahasiswa yang mendaftar akun saat HoME berlangsung setiap harinya 🤩"} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                      <Center _hover={{ cursor: "pointer" }}>
+                        <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
+                      </Center>
+                    </Tooltip>
+                  </Box>
+                </Flex>
+                <Charts jmlPendaftar={dummyJmlMahasiswa} dates={dummyDates} />
               </Box>
-              <Box>
-                <Tooltip p={"1em"} hasArrow label={"Data ini menampilkan perkembangan mahasiswa yang mendaftar STATE kamu setiap harinya 🤩"} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
-                  <Center _hover={{ cursor: "pointer" }}>
-                    <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
-                  </Center>
-                </Tooltip>
+            </>
+          ) : auth.role === "organisator" ? (
+            <>
+              <Box w={"full"} mt={"2em"}>
+                <Flex justifyContent={"start"} alignItems={"center"}>
+                  <Box>
+                    <Text color={"#1E1D22"} fontSize="md" fontWeight={"semibold"}>
+                      Peserta STATE
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Tooltip p={"1em"} hasArrow label={"Data ini menampilkan perkembangan mahasiswa yang mendaftar STATE kamu setiap harinya 🤩"} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                      <Center _hover={{ cursor: "pointer" }}>
+                        <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
+                      </Center>
+                    </Tooltip>
+                  </Box>
+                </Flex>
+                <Charts jmlPendaftar={dummyJmlPesertaSTATE} dates={dummySTATEDates} />
               </Box>
-            </Flex>
-            <Charts jmlPendaftar={dummyJmlMahasiswa} dates={dummyDates} />
-          </Box>
+            </>
+          ) : (
+            <></>
+          )}
         </Box>
       </Layout>
     </>
