@@ -373,7 +373,7 @@ export default function DaftarSTATE() {
                       {...register("name", {
                         required: "Nama STATE tidak boleh kosong.",
                         pattern: {
-                          value: /^[A-Za-z . - &]*$/,
+                          value: /^[A-Za-z . & -]*$/,
                           message: "Nama STATE tidak valid",
                         },
                       })}
