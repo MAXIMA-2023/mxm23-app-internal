@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Text,
@@ -13,24 +13,80 @@ import {
   Button,
   useDisclosure,
   Spacer,
+  Skeleton,
 } from "@chakra-ui/react";
 import Layout from "@/components/Layout";
 import QRScanner from "@/components/qrscan/QRScanner";
 import Swal from "sweetalert2";
 
-// !CHANGEME: Ini cuma dummy data, nanti diganti schema dengan POST requests
-import { DummyPresensiData } from "../data";
+import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 
-type Modal = {
-  isSuccess: boolean;
-  id?: string;
-  errorReason?: string;
+type StateReg = {
+  nim: number;
+  token: string;
+  name: string;
+  created_at: string;
+  attendanceTime: string;
+  isFirstAttended: boolean;
+  isLastAttended: boolean;
+  stateID: number;
+  stateName: string;
+  day: string;
+};
+
+type DayManagement = {
+  day: string;
+  hari: number;
+  date: string;
+};
+
+// format sekarang ikutin backend
+// harusnya ISOstring aja dari awal
+const parseDate = (date: string) => {
+  return new Date(Date.parse(date.replace(" WIB", "")));
 };
 
 export default function QRScanSTATE() {
   // modal
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [modalState, setModalState] = useState<Modal>({ isSuccess: false });
+  const [currentUser, setCurrentUser] = useState<StateReg | null>(null);
+
+  // fetch dayManagement
+  const [day, setDay] = useState<string | null>(null);
+  const [fetchLoading, setFetchLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchDayManagement = async () => {
+      try {
+        const { data } = await api.get<DayManagement[]>("/dayManagement");
+
+        // find day using today's date
+        const today = new Date();
+        const found = data.find((item) => {
+          const parsed = parseDate(item.date);
+          return (
+            parsed.getDate() === today.getDate() &&
+            parsed.getMonth() === today.getMonth() &&
+            parsed.getFullYear() === today.getFullYear()
+            //  && parsed <= today // uncomment kalo mau ini strict jam nya
+          );
+        });
+
+        if (found) {
+          return setDay(found.day);
+        }
+      } catch (err) {
+        console.log(err);
+        HandleAxiosError(err);
+      }
+    };
+
+    fetchDayManagement().finally(() => {
+      setFetchLoading(false);
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -43,38 +99,53 @@ export default function QRScanSTATE() {
           borderRadius="2xl"
           overflow="hidden"
         >
-          <QRScanner
-            onSuccess={(id) => {
-              // !CHANGEME: ganti dummy data dengan get init data dari get requests
+          <Skeleton isLoaded={!fetchLoading}>
+            <QRScanner
+              onSuccess={(id) => {
+                // handle empty day
+                if (!day) {
+                  Swal.fire(
+                    "Error!",
+                    "Tidak ada STATE yang aktif hari ini",
+                    "error"
+                  );
+                  return;
+                }
 
-              // *debouncing, biar ga open berkali kali
-              if (isOpen) {
-                return;
-              }
+                // *debouncing, biar ga open berkali kali
+                if (isOpen) {
+                  return;
+                }
 
-              if (!DummyPresensiData.state.isEligible) {
-                Swal.fire(
-                  "Error!",
-                  "Mahasiswa tidak Eligible untuk mengikuti STATE",
-                  "error"
-                );
-                return;
-              }
+                // get user state reg
+                api
+                  .get<ResponseModel<StateReg[]>>(`/state/data/${id}`)
+                  .then(({ data }) => {
+                    const stateReg = data.data?.find(
+                      (item) => item.day === day
+                    );
 
-              setModalState({
-                isSuccess: true,
-                id: id,
-              });
-              onOpen();
-            }}
-            onError={(reason) => {
-              setModalState({
-                isSuccess: false,
-                errorReason: reason,
-              });
-              onOpen();
-            }}
-          />
+                    if (!stateReg) {
+                      Swal.fire(
+                        "Error!",
+                        "Peserta tidak terdaftar di STATE manapun hari ini",
+                        "error"
+                      );
+                      return;
+                    }
+                    setCurrentUser(stateReg);
+                    onOpen();
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    HandleAxiosError(err);
+                  });
+              }}
+              onError={(reason) => {
+                Swal.fire("Error!", reason, "error");
+              }}
+            />
+          </Skeleton>
 
           {/* !TODO: Buat modal alert */}
           {/* ?TESTING: useState bikin re render gak ya?, sayang performance camera */}
@@ -82,73 +153,88 @@ export default function QRScanSTATE() {
             <ModalOverlay />
             <ModalContent>
               <ModalHeader textColor="#1e1d22" fontWeight="bold">
-                {modalState.isSuccess ? "Sukses!" : "Error!"}
+                Presensi STATE {currentUser?.stateName}
               </ModalHeader>
               <ModalCloseButton />
 
               <ModalBody textColor="#1e1d22">
-                {modalState.isSuccess ? (
-                  <Box>
-                    <Text>
-                      <Text fontWeight={"bold"}>NIM</Text>{" "}
-                      {DummyPresensiData.nim}
-                    </Text>
-                    <Text>
-                      <Text fontWeight={"bold"}>Nama</Text>{" "}
-                      {DummyPresensiData.name}
-                    </Text>
-                    <Text>
-                      <Text fontWeight={"bold"}>State</Text>
-                      {DummyPresensiData.state.pilihan}
-                    </Text>
-                    {DummyPresensiData.state.masuk.isHadir && (
-                      <Text>
-                        <Text fontWeight={"bold"}>Presensi Masuk</Text>
-                        {DummyPresensiData.state.masuk.presensiAt}
-                      </Text>
-                    )}
-                  </Box>
-                ) : (
-                  <Text>{modalState.errorReason}</Text>
-                )}
+                <Box>
+                  <Text>
+                    <Text fontWeight={"bold"}>NIM</Text>
+                    {currentUser?.nim}
+                  </Text>
+                  <Text>
+                    <Text fontWeight={"bold"}>Nama</Text>
+                    {currentUser?.name}
+                  </Text>
+                  <Text>
+                    <Text fontWeight={"bold"}>STATE</Text>
+                    {currentUser?.stateName}
+                  </Text>
+                  <Text>
+                    <Text fontWeight={"bold"}>Presensi Time</Text>
+                    {new Date(
+                      currentUser?.attendanceTime!
+                    ).toLocaleTimeString() ?? "-"}
+                  </Text>
+                </Box>
               </ModalBody>
 
               <ModalFooter>
-                {modalState.isSuccess && (
-                  <>
-                    <Button
-                      color="#185C99"
-                      mr={3}
-                      onClick={() => {
-                        // !CHANGEME: POST Requests absen masuk dan schema buat disable button
-                        console.log("ABSEN MASUK");
+                <Button
+                  color="#185C99"
+                  mr={3}
+                  onClick={() =>
+                    api
+                      .post("/state/attendance/first", {
+                        token: currentUser?.token,
+                        stateID: currentUser?.stateID,
+                      })
+                      .then(() => {
                         onClose();
-                      }}
-                      isDisabled={DummyPresensiData.state.masuk.isHadir}
-                    >
-                      Masuk
-                    </Button>
-                    <Button
-                      color="#185C99"
-                      mr={3}
-                      onClick={() => {
-                        if (!DummyPresensiData.state.masuk.isHadir) {
-                          Swal.fire(
-                            "Error!",
-                            "Peserta belum absen masuk",
-                            "warning"
-                          );
-                        }
-                        // !CHANGEME: POST Requests absen keluar dan schema buat disable button
-                        console.log("ABSEN KELUAR");
+                        Swal.fire(
+                          "Berhasil!",
+                          `Presensi awal NIM ${currentUser?.nim} di STATE ${currentUser?.stateName} Berhasil!`,
+                          "success"
+                        );
+                      })
+                      .catch((err) => {
                         onClose();
-                      }}
-                      isDisabled={DummyPresensiData.state.keluar.isHadir}
-                    >
-                      Keluar
-                    </Button>
-                  </>
-                )}
+                        console.log(err);
+                        HandleAxiosError(err);
+                      })
+                  }
+                  isDisabled={currentUser?.isFirstAttended}
+                >
+                  Masuk
+                </Button>
+                <Button
+                  color="#185C99"
+                  mr={3}
+                  onClick={() =>
+                    api
+                      .post("/state/attendance/last", {
+                        token: currentUser?.token,
+                        stateID: currentUser?.stateID,
+                      })
+                      .then(() => {
+                        onClose();
+                        Swal.fire(
+                          "Berhasil!",
+                          `Presensi akhir NIM ${currentUser?.nim} di STATE ${currentUser?.stateName} Berhasil!`,
+                          "success"
+                        );
+                      })
+                      .catch((err) => {
+                        onClose();
+                        console.log(err);
+                        HandleAxiosError(err);
+                      })
+                  }
+                  isDisabled={currentUser?.isLastAttended}
+                >
+                  Keluar
+                </Button>
                 <Spacer />
                 <Button color="#185C99" variant="outline" onClick={onClose}>
                   Cancel
