@@ -40,12 +40,6 @@ type DayManagement = {
   date: string;
 };
 
-// format sekarang ikutin backend
-// harusnya ISOstring aja dari awal
-const parseDate = (date: string) => {
-  return new Date(Date.parse(date.replace(" WIB", "")));
-};
-
 export default function QRScanSTATE() {
   // modal
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -63,7 +57,7 @@ export default function QRScanSTATE() {
         // find day using today's date
         const today = new Date();
         const found = data.find((item) => {
-          const parsed = parseDate(item.date);
+          const parsed = new Date(item.date);
           return (
             parsed.getDate() === today.getDate() &&
             parsed.getMonth() === today.getMonth() &&
