@@ -1,6 +1,14 @@
 "use client";
+import dynamic from "next/dynamic";
+
 import { useEffect, useState } from "react";
-import { QrScanner } from "@yudiel/react-qr-scanner";
+const QrScanner = dynamic(
+  () => import("@yudiel/react-qr-scanner").then((module) => module.QrScanner),
+  {
+    ssr: false,
+  }
+);
+
 import { useForm, Controller } from "react-hook-form";
 import {
   Button,
