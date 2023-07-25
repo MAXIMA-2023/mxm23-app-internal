@@ -133,6 +133,7 @@ export default function QRScanSTATE() {
                       );
                       return;
                     }
+
                     setCurrentUser(stateReg);
                     onOpen();
                   })
@@ -172,10 +173,10 @@ export default function QRScanSTATE() {
                     {currentUser?.stateName}
                   </Text>
                   <Text>
-                    <Text fontWeight={"bold"}>Presensi Time</Text>
-                    {new Date(
-                      currentUser?.attendanceTime!
-                    ).toLocaleTimeString() ?? "-"}
+                    <Text fontWeight={"bold"}>Waktu Presensi</Text>
+                    {currentUser?.attendanceTime
+                      ? new Date(currentUser?.attendanceTime!).toLocaleString()
+                      : "-"}
                   </Text>
                 </Box>
               </ModalBody>
