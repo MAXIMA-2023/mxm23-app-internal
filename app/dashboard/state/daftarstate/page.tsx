@@ -65,7 +65,7 @@ import { useAuth } from "@/contexts/Auth";
 import { useRouter } from "next/navigation";
 
 import Swal from "sweetalert2";
-import api, { HandleAxiosError } from "@/services/api";
+import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 import { useDropzone } from "react-dropzone";
 
 import DropZone from "@/components/DropZone";
@@ -134,9 +134,7 @@ export default function DaftarSTATE() {
       // - kalo superadmin bisa update all,
       // - kalo panitia bisa read all,
       // - organisator cuma bisa read dan update state mereka sendiri
-      const { data } = await api.get<StateActivites[]>(
-        `/stateAct/${auth.role === "organisator" ? auth.user?.stateID : ""}`
-      );
+      const { data } = await api.get<StateActivites[]>(`/stateAct/`);
       setDataSTATE(data);
       return;
     } catch (err) {
@@ -253,9 +251,11 @@ export default function DaftarSTATE() {
                       });
 
                       api
-                        .get(`/stateAct/${rowData.stateID}`)
-                        .then((res) => {
-                          setSelectedStateAct(res.data[0]);
+                        .get<ResponseModel<StateActivites>>(
+                          `/stateAct/${rowData.stateID}`
+                        )
+                        .then(({ data }) => {
+                          setSelectedStateAct(data.data!);
                         })
                         .catch((err) => {
                           HandleAxiosError(err);
