@@ -485,11 +485,25 @@ export default function DaftarSTATE() {
                           onChange={onChange}
                           value={value}
                         >
-                          {dataDayManagement.map((day) => (
-                            <option value={day.day} key={day.day}>
-                              {day.date}
-                            </option>
-                          ))}
+                          {dataDayManagement.map((day) => {
+                            const date = new Date(day.date)
+                              .toUTCString()
+                              .split(" ")
+                              .slice(0, 4)
+                              .join(" ");
+                            const time = new Date(day.date).toLocaleTimeString(
+                              "en-GB",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            );
+                            return (
+                              <option value={day.day} key={day.day}>
+                                {date} {time} WIB
+                              </option>
+                            );
+                          })}
                         </Select>
                       )}
                     />
