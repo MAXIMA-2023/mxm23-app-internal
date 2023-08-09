@@ -4,7 +4,13 @@ import React, { Component, useState } from "react";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { Text, Box, Flex, Icon } from "@chakra-ui/react";
 
-const Charts = ({ jmlPendaftar, dates }: { jmlPendaftar: number[]; dates: string[] }) => {
+const Charts = ({
+  jmlPendaftar,
+  dates,
+}: {
+  jmlPendaftar: number[];
+  dates: string[];
+}) => {
   return (
     <>
       <Box w={"full"}>
@@ -54,6 +60,7 @@ const Charts = ({ jmlPendaftar, dates }: { jmlPendaftar: number[]; dates: string
           }}
           series={[
             {
+              name: "Jumlah Mahasiswa",
               data: jmlPendaftar,
             },
           ]}
