@@ -110,9 +110,11 @@ export default function Dashboard() {
           const { data } = await api.get<
             ResponseModel<StatisticMahasiswaResponse>
           >("/mahasiswa/statistic");
+
+          const combined = [...data.data?.maxTown!, ...data.data?.home!];
           setStatisticMahasiswa({
-            date: data.data?.home.map((item) => item.date) ?? [],
-            registered: data.data?.home.map((item) => item.registered) ?? [],
+            date: combined.map((item) => item.date),
+            registered: combined.map((item) => item.registered),
           });
         } catch (error) {
           HandleAxiosError(error);
@@ -487,7 +489,7 @@ export default function Dashboard() {
                         p={"1em"}
                         hasArrow
                         label={
-                          "Data ini menampilkan perkembangan mahasiswa yang mendaftar akun saat HoME berlangsung setiap harinya 🤩"
+                          "Data ini menampilkan perkembangan mahasiswa yang mendaftar akun saat MaxTown dan HoME berlangsung setiap harinya 🤩"
                         }
                         bg={"white"}
                         color={"#1E1D22"}
