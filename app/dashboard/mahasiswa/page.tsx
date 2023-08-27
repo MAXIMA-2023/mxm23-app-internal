@@ -417,12 +417,12 @@ export default function Dashboard() {
                         required: false,
                         value: selectedMahasiswa?.nim,
                         max: {
-                          value: 99999,
-                          message: "NIM harus 5 digit",
+                          value: 999999,
+                          message: "NIM harus 5/6 digit",
                         },
                         min: {
-                          value: 1000,
-                          message: "NIM harus 5 digit",
+                          value: 10000,
+                          message: "NIM harus 5/6 digit",
                         },
                         valueAsNumber: true,
                       })}
@@ -462,7 +462,7 @@ export default function Dashboard() {
                         required: false,
                         value: selectedMahasiswa?.email,
                         pattern: {
-                          value: /^(\w+(.\w+)*)(@student.umn.ac.id)$/gm,
+                          value: /^(\w+(\.\w+)*)@student\.umn\.ac\.id$/gm,
                           message: "Harus menggunakan email student",
                         },
                       })}

@@ -165,7 +165,7 @@ const QRScanner = ({
 
           const id = result.replace("MXM-", "");
 
-          if (id.length !== 5) {
+          if (id.length !== 5 && id.length !== 6) {
             onError("Data QR berformat MAXIMA, namun format id salah");
             return;
           }
