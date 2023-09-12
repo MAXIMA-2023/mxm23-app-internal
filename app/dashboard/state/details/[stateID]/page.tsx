@@ -40,12 +40,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import DropZone from "@/components/DropZone";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
-import {
-  MdCalendarToday,
-  MdPeople,
-  MdLocationOn,
-  MdEdit,
-} from "react-icons/md";
+import { MdCalendarToday, MdPeople, MdLocationOn, MdEdit } from "react-icons/md";
 import { useAuth } from "@/contexts/Auth";
 import { useParams, useRouter } from "next/navigation";
 import api, { HandleAxiosError, ResponseModel } from "@/services/api";
@@ -63,10 +58,7 @@ type StateActivities = {
   date: string;
 };
 
-type UpdateStateActivities = Omit<
-  StateActivities,
-  "stateID" | "stateLogo" | "registered" | "date"
-> & {
+type UpdateStateActivities = Omit<StateActivities, "stateID" | "stateLogo" | "registered" | "date"> & {
   stateLogo: File;
 };
 
@@ -97,9 +89,7 @@ export default function Details() {
   // data
   const [dataState, setDataState] = useState<StateActivities | null>(null);
   const [dataPesertaState, setDataPesertaState] = useState<PesertaSTATE[]>([]);
-  const [dataDayManagement, setDataDayManagement] = useState<DayManagement[]>(
-    []
-  );
+  const [dataDayManagement, setDataDayManagement] = useState<DayManagement[]>([]);
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
 
   const auth = useAuth();
@@ -116,9 +106,7 @@ export default function Details() {
 
   const loadDataState = async () => {
     try {
-      const { data } = await api.get<ResponseModel<StateActivities>>(
-        `/stateAct/${params.stateID}`
-      );
+      const { data } = await api.get<ResponseModel<StateActivities>>(`/stateAct/${params.stateID}`);
       setDataState(data.data!);
     } catch (error) {
       console.log(error);
@@ -128,9 +116,7 @@ export default function Details() {
 
   const loadDataPesertaState = async () => {
     try {
-      const { data } = await api.get<ResponseModel<PesertaSTATE[]>>(
-        `/stateRegBySID/data/${params.stateID}`
-      );
+      const { data } = await api.get<ResponseModel<PesertaSTATE[]>>(`/stateRegBySID/data/${params.stateID}`);
       setDataPesertaState(data.data!);
     } catch (error) {
       console.log(error);
@@ -154,24 +140,13 @@ export default function Details() {
       return;
     }
 
-    if (
-      auth.role === "organisator" &&
-      auth.user?.stateID !== Number(params.stateID)
-    ) {
-      Swal.fire(
-        "Error!",
-        "Anda tidak memiliki akses untuk mengakses details selain STATE anda sendiri!",
-        "error"
-      );
+    if (auth.role === "organisator" && auth.user?.stateID !== Number(params.stateID)) {
+      Swal.fire("Error!", "Anda tidak memiliki akses untuk mengakses details selain STATE anda sendiri!", "error");
       router.push("/dashboard");
       return;
     }
 
-    Promise.all([
-      loadDataState(),
-      loadDataPesertaState(),
-      loadDataDayManagement(),
-    ]).finally(() => setFetchLoading(false));
+    Promise.all([loadDataState(), loadDataPesertaState(), loadDataDayManagement()]).finally(() => setFetchLoading(false));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.loading]);
@@ -180,11 +155,7 @@ export default function Details() {
 
   // exclude divisi D13 - Inspice (registrasi)
   // cursed banget :(
-  const isSuntingAllowed =
-    auth.role === "organisator" ||
-    (auth.role === "panit" &&
-      allowedEditPanitia.includes(auth.user?.divisiID!) &&
-      auth.user?.divisiID !== "D13");
+  const isSuntingAllowed = auth.role === "organisator" || (auth.role === "panit" && allowedEditPanitia.includes(auth.user?.divisiID!) && auth.user?.divisiID !== "D13");
 
   const getHours = (date: string) => {
     const dateObj = new Date(date);
@@ -217,24 +188,15 @@ export default function Details() {
       label: "Waktu Kehadiran",
       name: "attendanceTime",
       options: {
-        display:
-          auth.role === "panit" &&
-          allowedEditPanitia.includes(auth.user?.divisiID!) &&
-          auth.user?.divisiID !== "D05",
-        viewColumns:
-          auth.role === "panit" &&
-          allowedEditPanitia.includes(auth.user?.divisiID!) &&
-          auth.user?.divisiID !== "D05",
+        display: auth.role === "panit" && allowedEditPanitia.includes(auth.user?.divisiID!) && auth.user?.divisiID !== "D05",
+        viewColumns: auth.role === "panit" && allowedEditPanitia.includes(auth.user?.divisiID!) && auth.user?.divisiID !== "D05",
         customBodyRender: (value: boolean, tableMeta: any, updatevalue) => {
           const rowData = dataPesertaState[tableMeta.rowIndex];
           return (
             <>
               {rowData.attendanceTime ? (
                 <Text>
-                  {getHours(rowData.attendanceTime) < 10
-                    ? `0${getHours(rowData.attendanceTime)}`
-                    : getHours(rowData.attendanceTime)}
-                  :{rowData.attendanceTime.split(":")[1]} WIB
+                  {getHours(rowData.attendanceTime) < 10 ? `0${getHours(rowData.attendanceTime)}` : getHours(rowData.attendanceTime)}:{rowData.attendanceTime.split(":")[1]} WIB
                 </Text>
               ) : (
                 <Text>-</Text>
@@ -248,14 +210,8 @@ export default function Details() {
       label: "Kehadiran Awal",
       name: "isFirstAttended",
       options: {
-        display:
-          auth.role === "panit" &&
-          allowedEditPanitia.includes(auth.user?.divisiID!) &&
-          auth.user?.divisiID !== "D05",
-        viewColumns:
-          auth.role === "panit" &&
-          allowedEditPanitia.includes(auth.user?.divisiID!) &&
-          auth.user?.divisiID !== "D05",
+        display: auth.role === "panit" && allowedEditPanitia.includes(auth.user?.divisiID!) && auth.user?.divisiID !== "D05",
+        viewColumns: auth.role === "panit" && allowedEditPanitia.includes(auth.user?.divisiID!) && auth.user?.divisiID !== "D05",
         customBodyRender: (value: boolean, tableMeta, updatevalue) => {
           const rowData = dataPesertaState[tableMeta.rowIndex];
           return (
@@ -270,11 +226,7 @@ export default function Details() {
                     })
                     .then((res) => {
                       if (res.status === 200) {
-                        Swal.fire(
-                          "Berhasil!",
-                          `Berhasil mengubah kehadiran awal ${rowData.name}`,
-                          "success"
-                        );
+                        Swal.fire("Berhasil!", `Berhasil mengubah kehadiran awal ${rowData.name}`, "success");
                         updatevalue(true as unknown as string);
                         loadDataPesertaState();
                       }
@@ -284,12 +236,7 @@ export default function Details() {
                       HandleAxiosError(err);
                     });
                 }}
-                disabled={
-                  auth.role !== "panit" ||
-                  !allowedEditPanitia.includes(auth.user?.divisiID!) ||
-                  auth.user?.divisiID === "D05" ||
-                  value
-                }
+                disabled={auth.role !== "panit" || !allowedEditPanitia.includes(auth.user?.divisiID!) || auth.user?.divisiID === "D05" || value}
               />
             </>
           );
@@ -300,14 +247,8 @@ export default function Details() {
       label: "Kehadiran Akhir",
       name: "isLastAttended",
       options: {
-        display:
-          auth.role === "panit" &&
-          allowedEditPanitia.includes(auth.user?.divisiID!) &&
-          auth.user?.divisiID !== "D05",
-        viewColumns:
-          auth.role === "panit" &&
-          allowedEditPanitia.includes(auth.user?.divisiID!) &&
-          auth.user?.divisiID !== "D05",
+        display: auth.role === "panit" && allowedEditPanitia.includes(auth.user?.divisiID!) && auth.user?.divisiID !== "D05",
+        viewColumns: auth.role === "panit" && allowedEditPanitia.includes(auth.user?.divisiID!) && auth.user?.divisiID !== "D05",
         customBodyRender: (value: boolean, tableMeta: any, updatevalue) => {
           const rowData = dataPesertaState[tableMeta.rowIndex];
           return (
@@ -320,11 +261,7 @@ export default function Details() {
                     stateID: rowData.stateID,
                   })
                   .then((res) => {
-                    Swal.fire(
-                      "Berhasil!",
-                      `Berhasil mengubah kehadiran akhir ${rowData.name}`,
-                      "success"
-                    );
+                    Swal.fire("Berhasil!", `Berhasil mengubah kehadiran akhir ${rowData.name}`, "success");
                     updatevalue(true as unknown as string);
                     loadDataPesertaState();
                   })
@@ -334,12 +271,7 @@ export default function Details() {
                     HandleAxiosError(err);
                   });
               }}
-              disabled={
-                auth.role !== "panit" ||
-                !allowedEditPanitia.includes(auth.user?.divisiID!) ||
-                auth.user?.divisiID === "D05" ||
-                value
-              }
+              disabled={auth.role !== "panit" || !allowedEditPanitia.includes(auth.user?.divisiID!) || auth.user?.divisiID === "D05" || value}
             />
           );
         },
@@ -355,19 +287,11 @@ export default function Details() {
             <>
               {rowData.isFirstAttended && rowData.isLastAttended ? (
                 <Flex alignItems={"center"}>
-                  <Icon
-                    as={BsCheckCircleFill}
-                    boxSize={iconBoxSize}
-                    color={"#36AD2C"}
-                  />
+                  <Icon as={BsCheckCircleFill} boxSize={iconBoxSize} color={"#36AD2C"} />
                 </Flex>
               ) : (
                 <Flex alignItems={"center"}>
-                  <Icon
-                    as={BsXCircleFill}
-                    boxSize={iconBoxSize}
-                    color={"#F43535"}
-                  />
+                  <Icon as={BsXCircleFill} boxSize={iconBoxSize} color={"#F43535"} />
                 </Flex>
               )}
             </>
@@ -380,11 +304,7 @@ export default function Details() {
   return (
     <>
       <title>MAXIMA 2023 Internal - STATE</title>
-      <Layout
-        title="Detail dan Peserta"
-        showDaftarStateButton={auth.role === "panit"}
-        showDashboardButton={auth.role === "organisator"}
-      >
+      <Layout title="Detail dan Peserta" showDaftarStateButton={auth.role === "panit"} showDashboardButton={auth.role === "organisator"}>
         <Box w={"full"} h={"auto"}>
           {isSuntingAllowed && (
             <Flex justifyContent={"flex-end"} mb={"2em"}>
@@ -408,45 +328,27 @@ export default function Details() {
             </Flex>
           )}
           <Skeleton isLoaded={!fetchLoading}>
-            <Stack
-              direction={["column", "row"]}
-              spacing={"1.25em"}
-              w={"full"}
-              h={"auto"}
-              mb={"3em"}
-            >
-              <Center
-                w={"auto"}
-                h={"auto"}
-                borderWidth={2}
-                borderColor={"#EFEFEF"}
-              >
-                <Image
-                  w={"20em"}
-                  h={"10em"}
-                  src={dataState?.stateLogo}
-                  alt={`Logo ${dataState?.name}`}
-                  objectFit={"contain"}
-                />
+            <Stack direction={["column", "row"]} spacing={"1.25em"} w={"full"} h={"auto"} mb={"3em"}>
+              <Center w={"auto"} h={"auto"} borderWidth={2} borderColor={"#EFEFEF"}>
+                <Image w={"20em"} h={"10em"} src={dataState?.stateLogo} alt={`Logo ${dataState?.name}`} objectFit={"contain"} />
               </Center>
               <Box w={["full", "20em"]} maxH={"12.5em"} overflowY={"auto"}>
                 <Stack direction={"column"} spacing={"0.75em"}>
-                  <Text
-                    fontSize={"3xl"}
-                    fontWeight={"semibold"}
-                    color={"#11D22"}
-                  >
+                  <Text fontSize={"3xl"} fontWeight={"semibold"} color={"#11D22"}>
                     {dataState?.name}
                   </Text>
                   <Flex alignItems={"center"}>
                     <Icon as={MdCalendarToday} boxSize={iconBoxSize} />
                     <Text ml={"0.7em"} fontSize={"md"} fontWeight={"normal"}>
                       {dataState?.day} /{" "}
-                      {new Date(dataState?.date!)
-                        .toUTCString()
-                        .split(" ")
-                        .slice(0, 4)
-                        .join(" ")}
+                      {new Date(dataState?.date!).toLocaleDateString("id-ID", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        // hour: "2-digit",
+                        // minute: "2-digit",
+                      })}
                     </Text>
                   </Flex>
                   <Flex alignItems={"center"}>
@@ -464,20 +366,11 @@ export default function Details() {
                 </Stack>
               </Box>
               <Center display={["none", "flex"]} height={"auto"}>
-                <Divider
-                  orientation={"vertical"}
-                  borderWidth={2}
-                  borderColor={"#EFEFEF"}
-                  borderRadius={"full"}
-                />
+                <Divider orientation={"vertical"} borderWidth={2} borderColor={"#EFEFEF"} borderRadius={"full"} />
               </Center>
               <Box w={["auto", "25em"]}>
                 <Box mb={["0.25em", "0.5em"]}>
-                  <Text
-                    fontSize={"xl"}
-                    fontWeight={"semibold"}
-                    color={"#11D22"}
-                  >
+                  <Text fontSize={"xl"} fontWeight={"semibold"} color={"#11D22"}>
                     Deskripsi
                   </Text>
                 </Box>
@@ -490,20 +383,10 @@ export default function Details() {
             </Stack>
           </Skeleton>
           <Box w={"full"}>
-            <Text
-              mb={"0.5em"}
-              fontSize={"2xl"}
-              color={"#11D22"}
-              fontWeight={"semibold"}
-            >
+            <Text mb={"0.5em"} fontSize={"2xl"} color={"#11D22"} fontWeight={"semibold"}>
               Peserta
             </Text>
-            <SkeletonText
-              isLoaded={!fetchLoading}
-              noOfLines={10}
-              spacing={8}
-              skeletonHeight={12}
-            >
+            <SkeletonText isLoaded={!fetchLoading} noOfLines={10} spacing={8} skeletonHeight={12}>
               <ThemeProvider theme={createTheme()}>
                 <MUIDataTable
                   title={""}
@@ -536,10 +419,7 @@ export default function Details() {
               formData.append("day", data.day ?? dataState?.day);
               formData.append("stateDesc", data.stateDesc);
               formData.append("location", data.location ?? dataState?.location);
-              formData.append(
-                "quota",
-                data.quota ? data.quota.toString() : dataState!.quota.toString()
-              );
+              formData.append("quota", data.quota ? data.quota.toString() : dataState!.quota.toString());
 
               if (data.stateLogo) {
                 formData.append("test_file", data.stateLogo);
@@ -566,23 +446,11 @@ export default function Details() {
             <ModalBody textColor="#1e1d22">
               <FormControl isInvalid={!!errors.stateLogo}>
                 <Box w={"full"} mb={"2em"}>
-                  <FormLabel
-                    fontSize={"md"}
-                    fontWeight={"semibold"}
-                    color={"#11D22"}
-                  >
+                  <FormLabel fontSize={"md"} fontWeight={"semibold"} color={"#11D22"}>
                     Ganti Logo
                   </FormLabel>
 
-                  <Box
-                    padding={"1em"}
-                    border={"solid #CBD5E0"}
-                    width={"100%"}
-                    height={"100%"}
-                    borderRadius={10}
-                    transition={"0.1s ease-in-out"}
-                    _hover={{ border: "solid #CBD5E0" }}
-                  >
+                  <Box padding={"1em"} border={"solid #CBD5E0"} width={"100%"} height={"100%"} borderRadius={10} transition={"0.1s ease-in-out"} _hover={{ border: "solid #CBD5E0" }}>
                     <DropZone
                       control={control}
                       name="stateLogo"
@@ -599,9 +467,7 @@ export default function Details() {
                           })}
                         /> */}
                   </Box>
-                  <FormErrorMessage>
-                    {errors.stateLogo && errors.stateLogo.message}
-                  </FormErrorMessage>
+                  <FormErrorMessage>{errors.stateLogo && errors.stateLogo.message}</FormErrorMessage>
                 </Box>
               </FormControl>
 
@@ -619,9 +485,7 @@ export default function Details() {
                       },
                     })}
                   />
-                  <FormErrorMessage>
-                    {errors.name && errors.name.message}
-                  </FormErrorMessage>
+                  <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
                 </FormControl>
               )}
 
@@ -634,9 +498,7 @@ export default function Details() {
                     required: "Deskripsi STATE tidak boleh kosong",
                   })}
                 />
-                <FormErrorMessage>
-                  {errors.stateDesc && errors.stateDesc.message}
-                </FormErrorMessage>
+                <FormErrorMessage>{errors.stateDesc && errors.stateDesc.message}</FormErrorMessage>
               </FormControl>
 
               {auth.role !== "organisator" && (
@@ -650,9 +512,7 @@ export default function Details() {
                         required: "Lokasi STATE tidak boleh kosong",
                       })}
                     />
-                    <FormErrorMessage>
-                      {errors.location && errors.location.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors.location && errors.location.message}</FormErrorMessage>
                   </FormControl>
 
                   <FormControl isInvalid={!!errors.day}>
@@ -669,30 +529,23 @@ export default function Details() {
                           value={value}
                         >
                           {dataDayManagement.map((day) => {
-                            const date = new Date(day.date)
-                              .toUTCString()
-                              .split(" ")
-                              .slice(0, 4)
-                              .join(" ");
-                            const time = new Date(day.date).toLocaleTimeString(
-                              "en-GB",
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }
-                            );
                             return (
                               <option value={day.day} key={day.day}>
-                                {date} {time} WIB
+                                {new Date(day.date).toLocaleDateString("id-ID", {
+                                  weekday: "long",
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
                               </option>
                             );
                           })}
                         </Select>
                       )}
                     />
-                    <FormErrorMessage>
-                      {errors.day && errors.day.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors.day && errors.day.message}</FormErrorMessage>
                   </FormControl>
 
                   <FormControl isInvalid={!!errors.quota}>
@@ -711,9 +564,7 @@ export default function Details() {
                         valueAsNumber: true,
                       })}
                     />
-                    <FormErrorMessage>
-                      {errors.quota && errors.quota.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors.quota && errors.quota.message}</FormErrorMessage>
                   </FormControl>
                 </>
               )}

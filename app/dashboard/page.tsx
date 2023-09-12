@@ -2,22 +2,9 @@
 import React, { useRef, useEffect, useState, MutableRefObject } from "react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/Auth";
-import {
-  Text,
-  Box,
-  Flex,
-  Icon,
-  Tooltip,
-  Center,
-  Skeleton,
-} from "@chakra-ui/react";
+import { Text, Box, Flex, Icon, Tooltip, Center, Skeleton } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import {
-  MdOutlineShield,
-  MdOutlineSchool,
-  MdOutlineAirplanemodeActive,
-  MdInfoOutline,
-} from "react-icons/md";
+import { MdOutlineShield, MdOutlineSchool, MdOutlineAirplanemodeActive, MdInfoOutline } from "react-icons/md";
 import { HiOutlineOfficeBuilding, HiOutlineSparkles } from "react-icons/hi";
 import Charts from "@/components/Charts";
 import { useRouter } from "next/navigation";
@@ -71,11 +58,10 @@ export default function Dashboard() {
 
   const [fetchLoading, setFetchLoading] = useState(true);
 
-  const [statisticMahasiswa, setStatisticMahasiswa] =
-    useState<StatisticMahasiwa>({
-      date: [],
-      registered: [],
-    });
+  const [statisticMahasiswa, setStatisticMahasiswa] = useState<StatisticMahasiwa>({
+    date: [],
+    registered: [],
+  });
   const [statisticSTATE, setStatisticSTATE] = useState<StatisticSTATE>({
     day: [],
     total: [],
@@ -96,9 +82,7 @@ export default function Dashboard() {
     if (!auth.loading && auth.role === "panit") {
       const fetchPanitiaTabData = async () => {
         try {
-          const { data } = await api.get<ResponseModel<PanitiaTabData>>(
-            "/panit/data/stat"
-          );
+          const { data } = await api.get<ResponseModel<PanitiaTabData>>("/panit/data/stat");
           setPanitiaTabData(data.data!);
         } catch (error) {
           HandleAxiosError(error);
@@ -107,31 +91,26 @@ export default function Dashboard() {
 
       const fetchStatisticMahasiswa = async () => {
         try {
-          const { data } = await api.get<
-            ResponseModel<StatisticMahasiswaResponse>
-          >("/mahasiswa/statistic");
+          const { data } = await api.get<ResponseModel<StatisticMahasiswaResponse>>("/mahasiswa/statistic");
 
           const combined = [...data.data?.maxTown!, ...data.data?.home!];
           setStatisticMahasiswa({
             date: combined.map((item) => item.date),
             registered: combined.map((item) => item.registered),
           });
+          console.log(combined);
         } catch (error) {
           HandleAxiosError(error);
         }
       };
 
-      Promise.all([fetchPanitiaTabData(), fetchStatisticMahasiswa()]).finally(
-        () => setFetchLoading(false)
-      );
+      Promise.all([fetchPanitiaTabData(), fetchStatisticMahasiswa()]).finally(() => setFetchLoading(false));
     }
 
     if (!auth.loading && auth.role === "organisator") {
       const fetchOrganisatorTabData = async () => {
         try {
-          const { data } = await api.get<ResponseModel<number>>(
-            "/organisator/data/stat"
-          );
+          const { data } = await api.get<ResponseModel<number>>("/organisator/data/stat");
           setOrganisatorTabData(data.data!);
         } catch (error) {
           HandleAxiosError(error);
@@ -140,9 +119,7 @@ export default function Dashboard() {
 
       const fetchStatisticSTATE = async () => {
         try {
-          const { data } = await api.get<ResponseModel<StatisticSTATEResponse>>(
-            `/organisator/state/statistik/${auth.user?.stateID}`
-          );
+          const { data } = await api.get<ResponseModel<StatisticSTATEResponse>>(`/organisator/state/statistik/${auth.user?.stateID}`);
           setStatisticSTATE({
             day: data.data?.statistic.map((item) => item.day) ?? [],
             total: data.data?.statistic.map((item) => item.total) ?? [],
@@ -152,9 +129,7 @@ export default function Dashboard() {
         }
       };
 
-      Promise.all([fetchOrganisatorTabData(), fetchStatisticSTATE()]).finally(
-        () => setFetchLoading(false)
-      );
+      Promise.all([fetchOrganisatorTabData(), fetchStatisticSTATE()]).finally(() => setFetchLoading(false));
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,8 +169,7 @@ export default function Dashboard() {
       icon: HiOutlineOfficeBuilding,
       bgColor: "#FEE7E7",
       iconBgColor: "#E53E3E",
-      tooltipLabel:
-        "Data ini menampilkan jumlah PIC organisator yang terdaftar",
+      tooltipLabel: "Data ini menampilkan jumlah PIC organisator yang terdaftar",
       tooltipIcon: "Organisator",
       total: panitiaTabData.totalOrg,
     },
@@ -215,8 +189,7 @@ export default function Dashboard() {
       icon: MdOutlineAirplanemodeActive,
       bgColor: "#ECE7FE",
       iconBgColor: "#4A05DE",
-      tooltipLabel:
-        "Data ini menampilkan jumlah mahasiswa yang mengikuti STATE",
+      tooltipLabel: "Data ini menampilkan jumlah mahasiswa yang mengikuti STATE",
       tooltipIcon: "STATE",
       total: panitiaTabData.totalMabaState,
     },
@@ -226,8 +199,7 @@ export default function Dashboard() {
       icon: HiOutlineSparkles,
       bgColor: "#FEE7FC",
       iconBgColor: "#DE05C8",
-      tooltipLabel:
-        "Data ini menampilkan jumlah mahasiswa yang mengikuti Malam Puncak",
+      tooltipLabel: "Data ini menampilkan jumlah mahasiswa yang mengikuti Malam Puncak",
       tooltipIcon: "Malpun",
       total: 0, // todo: tunggu api malpun
     },
@@ -262,48 +234,16 @@ export default function Dashboard() {
                 Tab
               </Text>
             </Box> */}
-            <Box
-              as={motion.div}
-              overflowX={"hidden"}
-              cursor={"grab"}
-              whileTap={{ cursor: "grabbing" }}
-            >
+            <Box as={motion.div} overflowX={"hidden"} cursor={"grab"} whileTap={{ cursor: "grabbing" }}>
               <Skeleton isLoaded={!fetchLoading}>
-                <Flex
-                  as={motion.div}
-                  w={"full"}
-                  maxW={"full"}
-                  mt={"0.5em"}
-                  drag={"x"}
-                  dragConstraints={{ right: 0, left: -width }}
-                  ref={cardRef}
-                >
+                <Flex as={motion.div} w={"full"} maxW={"full"} mt={"0.5em"} drag={"x"} dragConstraints={{ right: 0, left: -width }} ref={cardRef}>
                   {auth.role === "panit" ? (
                     <>
                       {tabsPanitia.map((tab, index) => (
-                        <Box
-                          as={motion.div}
-                          minW={"15em"}
-                          h={"7.5em"}
-                          p={"1em"}
-                          bg={tab.bgColor}
-                          mr={"1em"}
-                          mb={"1em"}
-                          key={index}
-                          borderRadius={"lg"}
-                        >
+                        <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tab.bgColor} mr={"1em"} mb={"1em"} key={index} borderRadius={"lg"}>
                           <Box w={"full"} h={"auto"}>
-                            <Flex
-                              w={"full"}
-                              h={"auto"}
-                              justifyContent={"space-between"}
-                              alignItems={"center"}
-                            >
-                              <Flex
-                                w={"full"}
-                                justifyContent={"start"}
-                                alignItems={"center"}
-                              >
+                            <Flex w={"full"} h={"auto"} justifyContent={"space-between"} alignItems={"center"}>
+                              <Flex w={"full"} justifyContent={"start"} alignItems={"center"}>
                                 <Box
                                   _hover={{
                                     textDecoration: "underline",
@@ -317,49 +257,15 @@ export default function Dashboard() {
                                     {tab.name}
                                   </Text>
                                 </Box>
-                                <Tooltip
-                                  p={"1em"}
-                                  hasArrow
-                                  label={tab.tooltipLabel}
-                                  bg={"white"}
-                                  color={"#1E1D22"}
-                                  borderRadius={"md"}
-                                >
+                                <Tooltip p={"1em"} hasArrow label={tab.tooltipLabel} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
                                   <Center _hover={{ cursor: "pointer" }}>
-                                    <Icon
-                                      as={MdInfoOutline}
-                                      color={"#1E1D22"}
-                                      w={"0.85em"}
-                                      h={"0.85em"}
-                                      ml={"0.25em"}
-                                    />
+                                    <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
                                   </Center>
                                 </Tooltip>
                               </Flex>
-                              <Tooltip
-                                p={"0.5em"}
-                                hasArrow
-                                label={tab.tooltipIcon}
-                                bg={"white"}
-                                color={"#1E1D22"}
-                                borderRadius={"md"}
-                              >
-                                <Box
-                                  ml={"auto"}
-                                  bg={tab.iconBgColor}
-                                  w={"1.5em"}
-                                  h={"1.5em"}
-                                  borderRadius={"50%"}
-                                  display={"flex"}
-                                  justifyContent={"center"}
-                                  alignItems={"center"}
-                                >
-                                  <Icon
-                                    as={tab.icon}
-                                    color={"white"}
-                                    w={"1em"}
-                                    h={"1em"}
-                                  />
+                              <Tooltip p={"0.5em"} hasArrow label={tab.tooltipIcon} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                                <Box ml={"auto"} bg={tab.iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                                  <Icon as={tab.icon} color={"white"} w={"1em"} h={"1em"} />
                                 </Box>
                               </Tooltip>
                             </Flex>
@@ -374,28 +280,10 @@ export default function Dashboard() {
                     </>
                   ) : auth.role === "organisator" ? (
                     <>
-                      <Box
-                        as={motion.div}
-                        minW={"15em"}
-                        h={"7.5em"}
-                        p={"1em"}
-                        bg={tabsOrganisator[0].bgColor}
-                        mr={"1em"}
-                        mb={"1em"}
-                        borderRadius={"lg"}
-                      >
+                      <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tabsOrganisator[0].bgColor} mr={"1em"} mb={"1em"} borderRadius={"lg"}>
                         <Box w={"full"} h={"auto"}>
-                          <Flex
-                            w={"full"}
-                            h={"auto"}
-                            justifyContent={"space-between"}
-                            alignItems={"center"}
-                          >
-                            <Flex
-                              w={"full"}
-                              justifyContent={"start"}
-                              alignItems={"center"}
-                            >
+                          <Flex w={"full"} h={"auto"} justifyContent={"space-between"} alignItems={"center"}>
+                            <Flex w={"full"} justifyContent={"start"} alignItems={"center"}>
                               <Box
                                 _hover={{
                                   textDecoration: "underline",
@@ -409,55 +297,21 @@ export default function Dashboard() {
                                   {tabsOrganisator[0].name}
                                 </Text>
                               </Box>
-                              <Tooltip
-                                p={"1em"}
-                                hasArrow
-                                label={tabsOrganisator[0].tooltipLabel}
-                                bg={"white"}
-                                color={"#1E1D22"}
-                                borderRadius={"md"}
-                              >
+                              <Tooltip p={"1em"} hasArrow label={tabsOrganisator[0].tooltipLabel} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
                                 <Center _hover={{ cursor: "pointer" }}>
-                                  <Icon
-                                    as={MdInfoOutline}
-                                    color={"#1E1D22"}
-                                    w={"0.85em"}
-                                    h={"0.85em"}
-                                    ml={"0.25em"}
-                                  />
+                                  <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
                                 </Center>
                               </Tooltip>
                             </Flex>
-                            <Tooltip
-                              p={"0.5em"}
-                              hasArrow
-                              label={tabsOrganisator[0].tooltipIcon}
-                              bg={"white"}
-                              color={"#1E1D22"}
-                              borderRadius={"md"}
-                            >
-                              <Box
-                                ml={"auto"}
-                                bg={tabsOrganisator[0].iconBgColor}
-                                w={"1.5em"}
-                                h={"1.5em"}
-                                borderRadius={"50%"}
-                                display={"flex"}
-                                justifyContent={"center"}
-                                alignItems={"center"}
-                              >
-                                <Icon
-                                  as={tabsOrganisator[0].icon}
-                                  color={"white"}
-                                  w={"1em"}
-                                  h={"1em"}
-                                />
+                            <Tooltip p={"0.5em"} hasArrow label={tabsOrganisator[0].tooltipIcon} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                              <Box ml={"auto"} bg={tabsOrganisator[0].iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                                <Icon as={tabsOrganisator[0].icon} color={"white"} w={"1em"} h={"1em"} />
                               </Box>
                             </Tooltip>
                           </Flex>
                           <Box w={"full"} h={"auto"} mt={"1em"}>
                             <Text fontSize={"3xl"} fontWeight={"semibold"}>
-                              {tabsPanitia[5].total}
+                              {tabsOrganisator[0].total}
                             </Text>
                           </Box>
                         </Box>
@@ -476,41 +330,19 @@ export default function Dashboard() {
                 <Box w={"full"} mt={"2em"}>
                   <Flex justifyContent={"start"} alignItems={"center"}>
                     <Box>
-                      <Text
-                        color={"#1E1D22"}
-                        fontSize="md"
-                        fontWeight={"semibold"}
-                      >
+                      <Text color={"#1E1D22"} fontSize="md" fontWeight={"semibold"}>
                         Mahasiswa
                       </Text>
                     </Box>
                     <Box>
-                      <Tooltip
-                        p={"1em"}
-                        hasArrow
-                        label={
-                          "Data ini menampilkan perkembangan mahasiswa yang mendaftar akun saat MaxTown dan HoME berlangsung setiap harinya 🤩"
-                        }
-                        bg={"white"}
-                        color={"#1E1D22"}
-                        borderRadius={"md"}
-                      >
+                      <Tooltip p={"1em"} hasArrow label={"Data ini menampilkan perkembangan mahasiswa yang mendaftar akun saat MaxTown dan HoME berlangsung setiap harinya 🤩"} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
                         <Center _hover={{ cursor: "pointer" }}>
-                          <Icon
-                            as={MdInfoOutline}
-                            color={"#1E1D22"}
-                            w={"0.85em"}
-                            h={"0.85em"}
-                            ml={"0.25em"}
-                          />
+                          <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
                         </Center>
                       </Tooltip>
                     </Box>
                   </Flex>
-                  <Charts
-                    jmlPendaftar={statisticMahasiswa.registered}
-                    dates={statisticMahasiswa.date}
-                  />
+                  <Charts jmlPendaftar={statisticMahasiswa.registered} dates={statisticMahasiswa.date} />
                 </Box>
               </>
             ) : auth.role === "organisator" ? (
@@ -518,41 +350,19 @@ export default function Dashboard() {
                 <Box w={"full"} mt={"2em"}>
                   <Flex justifyContent={"start"} alignItems={"center"}>
                     <Box>
-                      <Text
-                        color={"#1E1D22"}
-                        fontSize="md"
-                        fontWeight={"semibold"}
-                      >
+                      <Text color={"#1E1D22"} fontSize="md" fontWeight={"semibold"}>
                         Peserta STATE
                       </Text>
                     </Box>
                     <Box>
-                      <Tooltip
-                        p={"1em"}
-                        hasArrow
-                        label={
-                          "Data ini menampilkan perkembangan mahasiswa yang mendaftar STATE kamu setiap harinya 🤩"
-                        }
-                        bg={"white"}
-                        color={"#1E1D22"}
-                        borderRadius={"md"}
-                      >
+                      <Tooltip p={"1em"} hasArrow label={"Data ini menampilkan perkembangan mahasiswa yang mendaftar STATE kamu setiap harinya 🤩"} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
                         <Center _hover={{ cursor: "pointer" }}>
-                          <Icon
-                            as={MdInfoOutline}
-                            color={"#1E1D22"}
-                            w={"0.85em"}
-                            h={"0.85em"}
-                            ml={"0.25em"}
-                          />
+                          <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
                         </Center>
                       </Tooltip>
                     </Box>
                   </Flex>
-                  <Charts
-                    jmlPendaftar={statisticSTATE.total}
-                    dates={statisticSTATE.day}
-                  />
+                  <Charts jmlPendaftar={statisticSTATE.total} dates={statisticSTATE.day} />
                 </Box>
               </>
             ) : (
