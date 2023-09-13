@@ -30,10 +30,7 @@ import {
   SkeletonText,
 } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
-import {
-  Button as MuiButton,
-  IconButton as MuiIconButton,
-} from "@mui/material";
+import { Button as MuiButton, IconButton as MuiIconButton } from "@mui/material";
 
 import Layout from "@/components/Layout";
 import { Controller, SubmitHandler, set, useForm } from "react-hook-form";
@@ -80,21 +77,7 @@ type SelectOptions = {
   nim: string;
 };
 
-const dataProdi = [
-  "Akuntansi",
-  "Arsitektur",
-  "DKV",
-  "Film dan Animasi",
-  "Informatika",
-  "Jurnalistik",
-  "Manajemen",
-  "Perhotelan",
-  "Sistem Informasi",
-  "Strategic Communication",
-  "Teknik Elektro",
-  "Teknik Fisika",
-  "Teknik Komputer",
-];
+const dataProdi = ["Akuntansi", "Arsitektur", "DKV", "Film dan Animasi", "Informatika", "Jurnalistik", "Manajemen", "Perhotelan", "Sistem Informasi", "Strategic Communication", "Teknik Elektro", "Teknik Fisika", "Teknik Komputer"];
 
 export default function Dashboard() {
   // dummy data for now, tunggu backend
@@ -106,11 +89,8 @@ export default function Dashboard() {
   const [fetchLoading, setFetchLoading] = useState(true);
 
   // modal
-  const [selectOptions, setSelectOptions] = useState<SelectOptions | null>(
-    null
-  );
-  const [selectedMahasiswa, setSelectedMahasiswa] =
-    useState<ProfileMahasiswa | null>(null);
+  const [selectOptions, setSelectOptions] = useState<SelectOptions | null>(null);
+  const [selectedMahasiswa, setSelectedMahasiswa] = useState<ProfileMahasiswa | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
@@ -123,9 +103,7 @@ export default function Dashboard() {
 
   const loadDataMahasiswa = async () => {
     try {
-      const { data } = await api.get<ResponseModel<Mahasiswa[]>>(
-        "/mahasiswa/dataWithState"
-      );
+      const { data } = await api.get<ResponseModel<Mahasiswa[]>>("/mahasiswa/dataWithState");
       setDataMahasiswa(data.data!);
     } catch (error) {
       console.log(error);
@@ -180,15 +158,7 @@ export default function Dashboard() {
               {value[0] ? (
                 <>
                   <Text>{value[0].stateName}</Text>
-                  {value[0].isFirstAttended && value[0].isLastAttended ? (
-                    <Icon
-                      as={BsCheckCircleFill}
-                      mb={"0.5em"}
-                      color="green.500"
-                    />
-                  ) : (
-                    <Icon as={BsXCircleFill} mb={"0.5em"} color="red.500" />
-                  )}
+                  {value[0].isFirstAttended && value[0].isLastAttended ? <Icon as={BsCheckCircleFill} mb={"0.5em"} color="green.500" /> : <Icon as={BsXCircleFill} mb={"0.5em"} color="red.500" />}
                 </>
               ) : (
                 <Text>-</Text>
@@ -208,15 +178,7 @@ export default function Dashboard() {
               {value[1] ? (
                 <>
                   <Text>{value[1].stateName}</Text>
-                  {value[1].isFirstAttended && value[1].isLastAttended ? (
-                    <Icon
-                      as={BsCheckCircleFill}
-                      mb={"0.5em"}
-                      color="green.500"
-                    />
-                  ) : (
-                    <Icon as={BsXCircleFill} mb={"0.5em"} color="red.500" />
-                  )}
+                  {value[1].isFirstAttended && value[1].isLastAttended ? <Icon as={BsCheckCircleFill} mb={"0.5em"} color="green.500" /> : <Icon as={BsXCircleFill} mb={"0.5em"} color="red.500" />}
                 </>
               ) : (
                 <Text>-</Text>
@@ -236,15 +198,7 @@ export default function Dashboard() {
               {value[2] ? (
                 <>
                   <Text>{value[2].stateName}</Text>
-                  {value[2].isFirstAttended && value[2].isLastAttended ? (
-                    <Icon
-                      as={BsCheckCircleFill}
-                      mb={"0.5em"}
-                      color="green.500"
-                    />
-                  ) : (
-                    <Icon as={BsXCircleFill} mb={"0.5em"} color="red.500" />
-                  )}
+                  {value[2].isFirstAttended && value[2].isLastAttended ? <Icon as={BsCheckCircleFill} mb={"0.5em"} color="green.500" /> : <Icon as={BsXCircleFill} mb={"0.5em"} color="red.500" />}
                 </>
               ) : (
                 <Text>-</Text>
@@ -334,22 +288,9 @@ export default function Dashboard() {
   return (
     <>
       <title>MAXIMA 2023 Internal - Mahasiswa</title>
-      <Layout
-        title="Mahasiswa"
-        tag={
-          allowedEditPanitia.includes(auth.user?.divisiID!)
-            ? "SUPERADMIN"
-            : auth.user?.divisiName
-        }
-        showDashboardButton
-      >
+      <Layout title="Mahasiswa" tag={allowedEditPanitia.includes(auth.user?.divisiID!) ? "SUPERADMIN" : auth.user?.divisiName} showDashboardButton>
         <Box w={"full"}>
-          <SkeletonText
-            isLoaded={!fetchLoading}
-            noOfLines={10}
-            spacing={8}
-            skeletonHeight={12}
-          >
+          <SkeletonText isLoaded={!fetchLoading} noOfLines={10} spacing={8} skeletonHeight={12}>
             <ThemeProvider theme={createTheme()}>
               <MUIDataTable
                 title={""}
@@ -378,11 +319,7 @@ export default function Dashboard() {
                 onSubmit={handleSubmit((data) => {
                   // sanitize data, gatau gmn caranya biar nggak empty string/nan
                   Object.keys(data).forEach((key) => {
-                    if (
-                      data[key as keyof typeof data] === "" ||
-                      Number.isNaN(data[key as keyof typeof data]) ||
-                      data[key as keyof typeof data] === null
-                    ) {
+                    if (data[key as keyof typeof data] === "" || Number.isNaN(data[key as keyof typeof data]) || data[key as keyof typeof data] === null) {
                       delete data[key as keyof typeof data];
                     }
                   });
@@ -393,11 +330,7 @@ export default function Dashboard() {
                     .then((res) => {
                       // refetch
                       loadDataMahasiswa();
-                      Swal.fire(
-                        "Berhasil!",
-                        "Berhasil mengupdate data",
-                        "success"
-                      );
+                      Swal.fire("Berhasil!", "Berhasil mengupdate data", "success");
                     })
                     .catch((err) => {
                       HandleAxiosError(err);
@@ -427,9 +360,7 @@ export default function Dashboard() {
                         valueAsNumber: true,
                       })}
                     />
-                    <FormErrorMessage>
-                      {errors.nim && errors.nim.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors.nim && errors.nim.message}</FormErrorMessage>
                   </FormControl>
 
                   <FormControl isInvalid={!!errors.name}>
@@ -439,19 +370,13 @@ export default function Dashboard() {
                       {...register("name", {
                         required: false,
                         value: selectedMahasiswa?.name,
-                        maxLength: {
-                          value: 20,
-                          message: "Nama lengkap maximum 20 karakter",
-                        },
                         pattern: {
                           value: /^[A-Za-z .]*$/,
                           message: "Nama lengkap tidak valid",
                         },
                       })}
                     />
-                    <FormErrorMessage>
-                      {errors.name && errors.name.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
                   </FormControl>
 
                   <FormControl isInvalid={!!errors.email}>
@@ -467,9 +392,7 @@ export default function Dashboard() {
                         },
                       })}
                     />
-                    <FormErrorMessage>
-                      {errors.email && errors.email.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
                   </FormControl>
 
                   <FormControl isInvalid={!!errors.password}>
@@ -485,9 +408,7 @@ export default function Dashboard() {
                         },
                       })}
                     />
-                    <FormErrorMessage>
-                      {errors.password && errors.password.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
                   </FormControl>
 
                   <HStack>
@@ -507,9 +428,7 @@ export default function Dashboard() {
                           </Select>
                         )}
                       />
-                      <FormErrorMessage>
-                        {errors.prodi && errors.prodi.message}
-                      </FormErrorMessage>
+                      <FormErrorMessage>{errors.prodi && errors.prodi.message}</FormErrorMessage>
                     </FormControl>
                   </HStack>
 
@@ -530,9 +449,7 @@ export default function Dashboard() {
                         },
                       })}
                     />
-                    <FormErrorMessage>
-                      {errors.name && errors.name.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
                   </FormControl>
 
                   <FormControl isInvalid={!!errors.idLine}>
@@ -544,9 +461,7 @@ export default function Dashboard() {
                         value: selectedMahasiswa?.idLine,
                       })}
                     />
-                    <FormErrorMessage>
-                      {errors.name && errors.name.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
                   </FormControl>
                 </ModalBody>
 
@@ -592,11 +507,7 @@ export default function Dashboard() {
                         .then((res) => {
                           // refetch
                           loadDataMahasiswa();
-                          Swal.fire(
-                            "Berhasil!",
-                            "Berhasil menghapus data",
-                            "success"
-                          );
+                          Swal.fire("Berhasil!", "Berhasil menghapus data", "success");
                         })
                         .catch((err) => {
                           HandleAxiosError(err);
