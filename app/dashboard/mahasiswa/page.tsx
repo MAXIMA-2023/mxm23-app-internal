@@ -36,12 +36,14 @@ import Layout from "@/components/Layout";
 import { Controller, SubmitHandler, set, useForm } from "react-hook-form";
 
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
-import { MdDeleteForever, MdOutlineEdit } from "react-icons/md";
+import { MdDeleteForever, MdOutlineEdit, MdDownload } from "react-icons/md";
 import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 import { useAuth } from "@/contexts/Auth";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
+import exportToExcel from "@/components/Excel";
 
 type StateStatus = {
   stateID: number;
@@ -290,6 +292,30 @@ export default function Dashboard() {
       <title>MAXIMA 2023 Internal - Mahasiswa</title>
       <Layout title="Mahasiswa" tag={allowedEditPanitia.includes(auth.user?.divisiID!) ? "SUPERADMIN" : auth.user?.divisiName} showDashboardButton>
         <Box w={"full"}>
+        <Flex justifyContent={"flex-end"}>
+          <Button
+              h={"2.25em"}
+              mt={"1em"}
+              mb={"1em"}
+              bgColor="#185C99"
+              borderRadius="full"
+              _hover={{ bgColor: "#295278" }}
+              onClick={() =>
+                exportToExcel(
+                "Daftar Mahasiswa",
+                columnsMahasiswa,
+                dataMahasiswa
+                )
+              }
+            >
+              <Flex alignItems="center" color="white">
+                <Icon as={MdDownload} boxSize={4} />
+                  <Text ml="0.5em" fontSize="lg" fontWeight="semibold">
+                    Export to Excel
+                  </Text>
+              </Flex>
+            </Button>
+          </Flex>
           <SkeletonText isLoaded={!fetchLoading} noOfLines={10} spacing={8} skeletonHeight={12}>
             <ThemeProvider theme={createTheme()}>
               <MUIDataTable
