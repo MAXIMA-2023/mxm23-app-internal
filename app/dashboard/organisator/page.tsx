@@ -44,6 +44,8 @@ import {
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 
+import exportToExcel from "@/components/Excel";
+
 type Organisator = {
   nim: number;
   name: string;
@@ -266,6 +268,18 @@ export default function Organisator() {
                 }}
               />
             </ThemeProvider>
+            {/* button buat export */}
+            <Button
+              onClick={() =>
+                exportToExcel(
+                  "Organisator",
+                  columnsOrganisator,
+                  dataOrganisator
+                )
+              }
+            >
+              Export to Excel
+            </Button>
           </SkeletonText>
         </Box>
         {/* buat moodal */}
