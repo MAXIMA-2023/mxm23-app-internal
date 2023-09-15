@@ -58,6 +58,7 @@ import {
   MdCloudDownload,
   MdFilterList,
   MdAddBox,
+  MdDownload
 } from "react-icons/md";
 import { MdDeleteForever, MdInfo, MdOutlineEdit } from "react-icons/md";
 
@@ -69,6 +70,8 @@ import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 import { useDropzone } from "react-dropzone";
 
 import DropZone from "@/components/DropZone";
+
+import exportToExcel from "@/components/Excel";
 
 type StateActivites = {
   stateID: number;
@@ -338,6 +341,30 @@ export default function DaftarSTATE() {
                 }}
               />
             </ThemeProvider>
+            <Flex justifyContent={"flex-end"}>
+              <Button
+                h={"2.25em"}
+                mt={"1em"}
+                mb={"1em"}
+                bgColor="#185C99"
+                borderRadius="full"
+                _hover={{ bgColor: "#295278" }}
+                onClick={() =>
+                  exportToExcel(
+                  "Daftar STATE",
+                  columnsSTATE,
+                  dataSTATE
+                  )
+                }
+              >
+                <Flex alignItems="center" color="white">
+                  <Icon as={MdDownload} boxSize={4} />
+                    <Text ml="0.5em" fontSize="lg" fontWeight="semibold">
+                      Export to Excel
+                    </Text>
+                </Flex>
+              </Button>
+            </Flex>
           </SkeletonText>
         </Box>
         {/* modal goes here */}
