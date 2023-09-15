@@ -36,7 +36,7 @@ import { useAuth } from "@/contexts/Auth";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import { MdDeleteForever, MdInfo, MdOutlineEdit } from "react-icons/md";
+import { MdDeleteForever, MdInfo, MdOutlineEdit, MdDownload } from "react-icons/md";
 
 // mui button
 import {
@@ -44,6 +44,8 @@ import {
   IconButton as MuiIconButton,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
+
+import exportToExcel from "@/components/Excel";
 
 type Panitia = {
   nim: number;
@@ -237,9 +239,33 @@ export default function DaftarPanitia() {
 
   return (
     <>
-      <title>MAXIMA 2023 Internal - Organisator</title>
+      <title>MAXIMA 2023 Internal - Panitia</title>
       <Layout title="Panitia" tag="SUPERADMIN" showDashboardButton>
         <Box w={"full"}>
+          <Flex justifyContent={"flex-end"}>
+            <Button
+                h={"2.25em"}
+                mt={"1em"}
+                mb={"1em"}
+                bgColor="#185C99"
+                borderRadius="full"
+                _hover={{ bgColor: "#295278" }}
+                onClick={() =>
+                  exportToExcel(
+                  "Daftar Panitia",
+                  columnsPanitia,
+                  dataPanitia
+                  )
+                }
+              >
+                <Flex alignItems="center" color="white">
+                  <Icon as={MdDownload} boxSize={4} />
+                    <Text ml="0.5em" fontSize="lg" fontWeight="semibold">
+                      Export to Excel
+                    </Text>
+                </Flex>
+              </Button>
+            </Flex>
           <SkeletonText
             isLoaded={!fetchLoading}
             noOfLines={10}
