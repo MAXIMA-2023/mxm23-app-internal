@@ -40,11 +40,13 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import DropZone from "@/components/DropZone";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
-import { MdCalendarToday, MdPeople, MdLocationOn, MdEdit } from "react-icons/md";
+import { MdCalendarToday, MdPeople, MdLocationOn, MdEdit, MdPrint, MdDownload } from "react-icons/md";
 import { useAuth } from "@/contexts/Auth";
 import { useParams, useRouter } from "next/navigation";
 import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 import Swal from "sweetalert2";
+
+import exportToExcel from "@/components/Excel";
 
 type StateActivities = {
   stateID: number;
@@ -383,9 +385,31 @@ export default function Details() {
             </Stack>
           </Skeleton>
           <Box w={"full"}>
-            <Text mb={"0.5em"} fontSize={"2xl"} color={"#11D22"} fontWeight={"semibold"}>
+          <Flex justifyContent="space-between" alignItems="center" mt={"1em"} mb={"1em"}>
+            <Text fontSize="2xl" color="#11D22" fontWeight="semibold">
               Peserta
             </Text>
+            <Button
+              h={"2.25em"}
+              bgColor="#185C99"
+              borderRadius="full"
+              _hover={{ bgColor: "#295278" }}
+              onClick={() =>
+                exportToExcel(
+                  "Daftar Peserta STATE",
+                  columnsDetails,
+                  dataPesertaState
+                )
+              }
+            >
+              <Flex alignItems="center" color="white">
+                <Icon as={MdDownload} boxSize={4} />
+                <Text ml="0.5em" fontSize="lg" fontWeight="semibold">
+                  Export to Excel
+                </Text>
+              </Flex>
+            </Button>
+          </Flex>
             <SkeletonText isLoaded={!fetchLoading} noOfLines={10} spacing={8} skeletonHeight={12}>
               <ThemeProvider theme={createTheme()}>
                 <MUIDataTable
@@ -401,6 +425,8 @@ export default function Details() {
                   }}
                 />
               </ThemeProvider>
+            
+              
             </SkeletonText>
           </Box>
         </Box>

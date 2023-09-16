@@ -27,6 +27,7 @@ import {
   FormLabel,
   Input,
   SkeletonText,
+  Icon,
 } from "@chakra-ui/react";
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
@@ -35,7 +36,7 @@ import { useAuth } from "@/contexts/Auth";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import { MdDeleteForever, MdOutlineEdit } from "react-icons/md";
+import { MdDeleteForever, MdOutlineEdit, MdDownload } from "react-icons/md";
 
 // mui button
 import {
@@ -43,6 +44,8 @@ import {
   IconButton as MuiIconButton,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
+
+import exportToExcel from "@/components/Excel";
 
 type Organisator = {
   nim: number;
@@ -246,6 +249,30 @@ export default function Organisator() {
       <title>MAXIMA 2023 Internal - Organisator</title>
       <Layout title="Organisator" showDashboardButton>
         <Box w={"full"}>
+          <Flex justifyContent={"flex-end"}>
+            <Button
+                h={"2.25em"}
+                mt={"1em"}
+                mb={"1em"}
+                bgColor="#185C99"
+                borderRadius="full"
+                _hover={{ bgColor: "#295278" }}
+                onClick={() =>
+                  exportToExcel(
+                  "Daftar Organisator",
+                  columnsOrganisator,
+                  dataOrganisator,
+                  )
+                }
+              >
+                <Flex alignItems="center" color="white">
+                  <Icon as={MdDownload} boxSize={4} />
+                    <Text ml="0.5em" fontSize="lg" fontWeight="semibold">
+                      Export to Excel
+                    </Text>
+                </Flex>
+              </Button>
+            </Flex>
           <SkeletonText
             isLoaded={!fetchLoading}
             noOfLines={10}

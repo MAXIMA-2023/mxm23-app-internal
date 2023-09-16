@@ -25,6 +25,7 @@
     "browser-image-compression": "^2.0.2",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.6",
+    "exceljs": "^4.3.0",
     "framer-motion": "^10.12.18",
     "mui-datatables": "^4.3.0",
     "next": "13.4.6",
