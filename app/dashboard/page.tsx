@@ -78,6 +78,8 @@ export default function Dashboard() {
 
   const [organisatorTabData, setOrganisatorTabData] = useState<number>(0);
 
+  const yaxisMaxValue = auth.role === "panit" ? 1000 : 200;
+
   useEffect(() => {
     if (!auth.loading && auth.role === "panit") {
       const fetchPanitiaTabData = async () => {
@@ -493,7 +495,7 @@ export default function Dashboard() {
               <Charts
                 jmlPendaftar={statisticMahasiswa.registered}
                 dates={statisticMahasiswa.date}
-                yaxisMax={200}
+                yaxisMax={yaxisMaxValue}
               />
             </Box>
           </Skeleton>

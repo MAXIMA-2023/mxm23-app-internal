@@ -57,7 +57,7 @@ const Charts = ({
             },
             yaxis: {
               min: 0,
-              max: yaxisMax || 1000,
+              max: yaxisMax,
             },
           }}
           series={[
