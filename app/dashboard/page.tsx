@@ -493,6 +493,7 @@ export default function Dashboard() {
               <Charts
                 jmlPendaftar={statisticMahasiswa.registered}
                 dates={statisticMahasiswa.date}
+                yaxisMax={200}
               />
             </Box>
           </Skeleton>
