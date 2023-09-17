@@ -34,14 +34,9 @@ type DetailsMahasiswa = {
   registered: number;
 };
 
-type StatisticSTATE = {
-  date: string;
-  total: number;
-};
-
 type StatisticSTATEResponse = {
   name: string;
-  statistic: StatisticSTATE[];
+  statistic: DetailsMahasiswa[];
 };
 
 // state
@@ -137,7 +132,8 @@ export default function Dashboard() {
           );
           setStatisticMahasiswa({
             date: data.data?.statistic.map((item) => item.date) ?? [],
-            registered: data.data?.statistic.map((item) => item.total) ?? [],
+            registered:
+              data.data?.statistic.map((item) => item.registered) ?? [],
           });
         } catch (error) {
           HandleAxiosError(error);
