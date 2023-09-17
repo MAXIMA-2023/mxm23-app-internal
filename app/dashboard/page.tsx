@@ -77,8 +77,7 @@ export default function Dashboard() {
   });
 
   const [organisatorTabData, setOrganisatorTabData] = useState<number>(0);
-
-  const yaxisMaxValue = auth.role === "panit" ? 1000 : 200;
+  const yaxisMaxValue = auth.role === "panit" ? 500 : 200;
 
   useEffect(() => {
     if (!auth.loading && auth.role === "panit") {
