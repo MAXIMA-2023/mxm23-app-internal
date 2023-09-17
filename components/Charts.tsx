@@ -7,9 +7,11 @@ import { Text, Box, Flex, Icon } from "@chakra-ui/react";
 const Charts = ({
   jmlPendaftar,
   dates,
+  yaxisMax,
 }: {
   jmlPendaftar: number[];
   dates: string[];
+  yaxisMax: number;
 }) => {
   return (
     <>
@@ -55,7 +57,7 @@ const Charts = ({
             },
             yaxis: {
               min: 0,
-              max: 1000,
+              max: yaxisMax,
             },
           }}
           series={[
