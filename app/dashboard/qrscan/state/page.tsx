@@ -21,6 +21,8 @@ import Swal from "sweetalert2";
 
 import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 
+import { useAuth } from "@/contexts/Auth";
+
 type StateReg = {
   nim: number;
   token: string;
@@ -49,6 +51,8 @@ export default function QRScanSTATE() {
   const [day, setDay] = useState<string | null>(null);
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
 
+  const { loading } = useAuth();
+
   useEffect(() => {
     const fetchDayManagement = async () => {
       try {
@@ -75,12 +79,20 @@ export default function QRScanSTATE() {
       }
     };
 
-    fetchDayManagement().finally(() => {
-      setFetchLoading(false);
-    });
+    if (!loading) {
+      fetchDayManagement().finally(() => {
+        setFetchLoading(false);
+      });
+    }
+
+    // fetchDayManagement().finally(() => {
+    //   setFetchLoading(false);
+    // });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loading]);
+
+  console.log(day);
 
   return (
     <>
