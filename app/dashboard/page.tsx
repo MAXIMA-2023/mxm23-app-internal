@@ -34,9 +34,14 @@ type DetailsMahasiswa = {
   registered: number;
 };
 
+type StatisticSTATE = {
+  date: string;
+  total: number;
+};
+
 type StatisticSTATEResponse = {
   name: string;
-  statistic: DetailsMahasiswa[];
+  statistic: StatisticSTATE[];
 };
 
 // state
@@ -77,7 +82,7 @@ export default function Dashboard() {
   });
 
   const [organisatorTabData, setOrganisatorTabData] = useState<number>(0);
-  const yaxisMaxValue = auth.role === "panit" ? 500 : 200;
+  const yaxisMaxValue = auth.role === "panit" ? 1000 : 200;
 
   useEffect(() => {
     if (!auth.loading && auth.role === "panit") {
@@ -132,8 +137,7 @@ export default function Dashboard() {
           );
           setStatisticMahasiswa({
             date: data.data?.statistic.map((item) => item.date) ?? [],
-            registered:
-              data.data?.statistic.map((item) => item.registered) ?? [],
+            registered: data.data?.statistic.map((item) => item.total) ?? [],
           });
         } catch (error) {
           HandleAxiosError(error);
