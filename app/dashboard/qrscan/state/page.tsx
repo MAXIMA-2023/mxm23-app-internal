@@ -20,8 +20,8 @@ import QRScanner from "@/components/qrscan/QRScanner";
 import Swal from "sweetalert2";
 
 import api, { HandleAxiosError, ResponseModel } from "@/services/api";
-
 import { useAuth } from "@/contexts/Auth";
+import { set } from "react-hook-form";
 
 type StateReg = {
   nim: number;
@@ -43,17 +43,18 @@ type DayManagement = {
 };
 
 export default function QRScanSTATE() {
+  const { loading } = useAuth();
+
   // modal
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentUser, setCurrentUser] = useState<StateReg | null>(null);
 
   // fetch dayManagement
   const [day, setDay] = useState<string | null>(null);
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
 
-  const { loading } = useAuth();
-
   useEffect(() => {
+    if (loading) return;
+
     const fetchDayManagement = async () => {
       try {
         const { data } = await api.get<DayManagement[]>("/dayManagement");
@@ -71,23 +72,19 @@ export default function QRScanSTATE() {
         });
 
         if (found) {
-          return setDay(found.day);
+          setDay(found.day);
+          setFetchLoading(false);
+          return;
         }
+
+        Swal.fire("Error!", "Tidak ada STATE yang aktif hari ini", "error");
       } catch (err) {
         console.log(err);
         HandleAxiosError(err);
       }
     };
 
-    if (!loading) {
-      fetchDayManagement().finally(() => {
-        setFetchLoading(false);
-      });
-    }
-
-    // fetchDayManagement().finally(() => {
-    //   setFetchLoading(false);
-    // });
+    fetchDayManagement();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
@@ -109,17 +106,9 @@ export default function QRScanSTATE() {
             <QRScanner
               onSuccess={(id) => {
                 // handle empty day
-                if (!day) {
-                  Swal.fire(
-                    "Error!",
-                    "Tidak ada STATE yang aktif hari ini",
-                    "error"
-                  );
-                  return;
-                }
 
                 // *debouncing, biar ga open berkali kali
-                if (isOpen) {
+                if (currentUser) {
                   return;
                 }
 
@@ -141,7 +130,6 @@ export default function QRScanSTATE() {
                     }
 
                     setCurrentUser(stateReg);
-                    onOpen();
                   })
                   .catch((err) => {
                     console.log(err);
@@ -156,7 +144,11 @@ export default function QRScanSTATE() {
 
           {/* !TODO: Buat modal alert */}
           {/* ?TESTING: useState bikin re render gak ya?, sayang performance camera */}
-          <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <Modal
+            isOpen={currentUser !== null}
+            onClose={() => setCurrentUser(null)}
+            isCentered
+          >
             <ModalOverlay />
             <ModalContent>
               <ModalHeader textColor="#1e1d22" fontWeight="bold">
@@ -198,7 +190,7 @@ export default function QRScanSTATE() {
                         stateID: currentUser?.stateID,
                       })
                       .then(() => {
-                        onClose();
+                        setCurrentUser(null);
                         Swal.fire(
                           "Berhasil!",
                           `Presensi awal NIM ${currentUser?.nim} di STATE ${currentUser?.stateName} Berhasil!`,
@@ -206,7 +198,7 @@ export default function QRScanSTATE() {
                         );
                       })
                       .catch((err) => {
-                        onClose();
+                        setCurrentUser(null);
                         console.log(err);
                         HandleAxiosError(err);
                       })
@@ -225,7 +217,7 @@ export default function QRScanSTATE() {
                         stateID: currentUser?.stateID,
                       })
                       .then(() => {
-                        onClose();
+                        setCurrentUser(null);
                         Swal.fire(
                           "Berhasil!",
                           `Presensi akhir NIM ${currentUser?.nim} di STATE ${currentUser?.stateName} Berhasil!`,
@@ -233,7 +225,7 @@ export default function QRScanSTATE() {
                         );
                       })
                       .catch((err) => {
-                        onClose();
+                        setCurrentUser(null);
                         console.log(err);
                         HandleAxiosError(err);
                       })
@@ -243,7 +235,11 @@ export default function QRScanSTATE() {
                   Keluar
                 </Button>
                 <Spacer />
-                <Button color="#185C99" variant="outline" onClick={onClose}>
+                <Button
+                  color="#185C99"
+                  variant="outline"
+                  onClick={() => setCurrentUser(null)}
+                >
                   Cancel
                 </Button>
               </ModalFooter>
