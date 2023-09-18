@@ -16,12 +16,23 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import Layout from "@/components/Layout";
-import QRScanner from "@/components/qrscan/QRScanner";
+
+import dynamic from "next/dynamic";
+// import QRScanner from "@/components/qrscan/QRScanner";
+
+// dynamic import, biar ga ssr
+const QRScanner = dynamic(
+  () =>
+    import("@/components/qrscan/QRScanner").then((module) => module.default),
+  {
+    ssr: false,
+  }
+);
+
 import Swal from "sweetalert2";
 
 import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 import { useAuth } from "@/contexts/Auth";
-import { set } from "react-hook-form";
 
 type StateReg = {
   nim: number;
@@ -89,8 +100,6 @@ export default function QRScanSTATE() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
-  console.log(day);
-
   return (
     <>
       <title>MAXIMA 2023 Internal - QR Scan State</title>
@@ -105,8 +114,6 @@ export default function QRScanSTATE() {
           <Skeleton isLoaded={!fetchLoading}>
             <QRScanner
               onSuccess={(id) => {
-                // handle empty day
-
                 // *debouncing, biar ga open berkali kali
                 if (currentUser) {
                   return;
@@ -145,7 +152,7 @@ export default function QRScanSTATE() {
           {/* !TODO: Buat modal alert */}
           {/* ?TESTING: useState bikin re render gak ya?, sayang performance camera */}
           <Modal
-            isOpen={currentUser !== null}
+            isOpen={!!currentUser}
             onClose={() => setCurrentUser(null)}
             isCentered
           >
