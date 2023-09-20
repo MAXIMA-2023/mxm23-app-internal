@@ -127,16 +127,16 @@ export default function QRScanSTATE() {
                       (item) => item.day === day
                     );
 
-                    if (!stateReg) {
-                      Swal.fire(
-                        "Error!",
-                        "Peserta tidak terdaftar di STATE manapun hari ini",
-                        "error"
-                      );
-                      return;
-                    }
+                    // if (!stateReg) {
+                    //   Swal.fire(
+                    //     "Error!",
+                    //     "Peserta tidak terdaftar di STATE manapun hari ini",
+                    //     "error"
+                    //   );
+                    //   return;
+                    // }
 
-                    setCurrentUser(stateReg);
+                    setCurrentUser(stateReg ?? null);
                   })
                   .catch((err) => {
                     console.log(err);
