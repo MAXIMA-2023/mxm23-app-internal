@@ -113,35 +113,33 @@ export default function QRScanSTATE() {
         >
           <Skeleton isLoaded={!fetchLoading}>
             <QRScanner
-              onSuccess={(id) => {
+              onSuccess={async (id) => {
                 // *debouncing, biar ga open berkali kali
                 if (currentUser) {
+                  console.log("debounced");
                   return;
                 }
 
-                // get user state reg
-                api
-                  .get<ResponseModel<StateReg[]>>(`/state/data/${id}`)
-                  .then(({ data }) => {
-                    const stateReg = data.data?.find(
-                      (item) => item.day === day
+                try {
+                  const { data } = await api.get<ResponseModel<StateReg[]>>(
+                    `/state/data/${id}`
+                  );
+
+                  const stateReg = data.data?.find((item) => item.day === day);
+                  if (!stateReg) {
+                    await Swal.fire(
+                      "Error!",
+                      "Peserta tidak terdaftar di STATE manapun hari ini",
+                      "error"
                     );
+                    return;
+                  }
 
-                    // if (!stateReg) {
-                    //   Swal.fire(
-                    //     "Error!",
-                    //     "Peserta tidak terdaftar di STATE manapun hari ini",
-                    //     "error"
-                    //   );
-                    //   return;
-                    // }
-
-                    setCurrentUser(stateReg ?? null);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                    HandleAxiosError(err);
-                  });
+                  setCurrentUser(stateReg);
+                } catch (err) {
+                  console.log(err);
+                  HandleAxiosError(err);
+                }
               }}
               onError={(reason) => {
                 Swal.fire("Error!", reason, "error");
