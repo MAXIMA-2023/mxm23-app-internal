@@ -141,7 +141,7 @@ const QRScanner = ({
     <>
       <QrScanner
         // ? TESTING: apakah harus di kasih > 500ms (default) per scan?
-        scanDelay={1000}
+        scanDelay={2000}
         // remove default viewfinder
         viewFinderBorder={0}
         viewFinder={ViewFinder}
