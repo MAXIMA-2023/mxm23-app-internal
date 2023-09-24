@@ -10,7 +10,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
-export default function PesertaMalpun() {
+export default function PesertExternalaMalpun() {
   const columnsMalpun: MUIDataTableColumn[] = [
     {
       label: "Nama",
@@ -27,21 +27,15 @@ export default function PesertaMalpun() {
       },
     },
     {
-      label: "NIM",
-      name: "nim",
+      label: "Email",
+      name: "email",
       options: {
-        customBodyRender: (value: any, tableMeta: any) => {
-          return (
-            <HStack>
-              <Text>{value}</Text>
-            </HStack>
-          );
-        },
+        filter: true,
       },
     },
     {
-      label: "Email",
-      name: "email",
+      label: "No. WhatsApp",
+      name: "whatsapp",
       options: {
         filter: true,
       },
@@ -61,22 +55,22 @@ export default function PesertaMalpun() {
 
   // data dummy
   const dataMalpun = [
-    ["GawrGura1", "12345678", "gawrgura1@student.umn.ac.id", true],
-    ["GawrGura2", "23456789", "gawrgura2@student.umn.ac.id", false],
-    ["GawrGura3", "34567890", "gawrgura3@student.umn.ac.id", true],
-    ["GawrGura4", "45678901", "gawrgura4@student.umn.ac.id", true],
-    ["GawrGura5", "56789012", "gawrgura5@student.umn.ac.id", false],
-    ["GawrGura6", "67890123", "gawrgura6@student.umn.ac.id", true],
-    ["GawrGura7", "78901234", "gawrgura7@student.umn.ac.id", true],
-    ["GawrGura8", "89012345", "gawrgura8@student.umn.ac.id", true],
-    ["GawrGura9", "90123456", "gawrgura9@student.umn.ac.id", false],
-    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", false],
+    ["GawrGura1", "gawrgura1@student.umn.ac.id", true],
+    ["GawrGura2", "gawrgura2@student.umn.ac.id", false],
+    ["GawrGura3", "gawrgura3@student.umn.ac.id", true],
+    ["GawrGura4", "gawrgura4@student.umn.ac.id", true],
+    ["GawrGura5", "gawrgura5@student.umn.ac.id", false],
+    ["GawrGura6", "gawrgura6@student.umn.ac.id", true],
+    ["GawrGura7", "gawrgura7@student.umn.ac.id", true],
+    ["GawrGura8", "gawrgura8@student.umn.ac.id", true],
+    ["GawrGura9", "gawrgura9@student.umn.ac.id", false],
+    ["GawrGura10", "gawrgura10@student.umn.ac.id", false],
   ];
 
   return (
     <>
-      <title>MAXIMA 2023 Internal - MALPUN</title>
-      <Layout title="Malpun" showDashboardButton>
+      <title>MAXIMA 2023 Internal - MALPUN (EXTERNAL)</title>
+      <Layout title="Malpun External" showDashboardButton>
         <Box w={"full"}>
           <ThemeProvider theme={createTheme()}>
             <MUIDataTable
