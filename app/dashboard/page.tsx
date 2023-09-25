@@ -51,6 +51,7 @@ type PanitiaTabData = {
   totalOrg: number;
   totalMaba: number;
   totalMabaState: number;
+  totalMabaMalpun: number;
 };
 
 export default function Dashboard() {
@@ -74,6 +75,7 @@ export default function Dashboard() {
     totalOrg: 0,
     totalMaba: 0,
     totalMabaState: 0,
+    totalMabaMalpun: 0,
   });
 
   const [organisatorTabData, setOrganisatorTabData] = useState<number>(0);
@@ -217,7 +219,7 @@ export default function Dashboard() {
       tooltipLabel:
         "Data ini menampilkan jumlah mahasiswa yang mengikuti Malam Puncak",
       tooltipIcon: "Malpun",
-      total: 0, // todo: tunggu api malpun
+      total: panitiaTabData.totalMabaMalpun,
     },
   ];
 
