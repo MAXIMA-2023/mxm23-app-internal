@@ -2,76 +2,134 @@
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
 import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { Box, Flex, Text, Divider, HStack, Switch, Link, Select, Image, Button, Center, Icon } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  Divider,
+  HStack,
+  Switch,
+  Link,
+  Select,
+  Image,
+  Button,
+  Center,
+  Icon,
+} from "@chakra-ui/react";
+
+import { Checkbox as MuiCheckbox } from "@mui/material";
+
 import { createTheme } from "@mui/material/styles";
 import Layout from "@/components/Layout";
-import { useReadLocalStorage } from "usehooks-ts";
-import { SubmitHandler, useForm } from "react-hook-form";
-import axios from "axios";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
-export default function PesertaInernalMalpun() {
+import { useAuth } from "@/contexts/Auth";
+import api, { HandleAxiosError, ResponseModel } from "@/services/api";
+import Swal from "sweetalert2";
+import LoadingSpinner from "@/components/LoadingSpinner";
+
+type MalpunInternal = {
+  name: string;
+  nim: number;
+  ticketClaimed: boolean;
+  isAttendedMalpun: boolean;
+  tokenMalpun: string;
+};
+
+export default function PesertaInternalMalpun() {
+  const auth = useAuth();
+  const allowedEditPanitia = ["D01", "D02", "D05", "D13"];
+
+  const [dataMalpun, setDataMalpun] = useState<MalpunInternal[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!auth.loading) {
+      api
+        .get<ResponseModel<MalpunInternal[]>>("/malpun/mabatiket/data")
+        .then(({ data }) => {
+          setDataMalpun(data.data!);
+        })
+        .catch(HandleAxiosError)
+        .finally(() => setIsLoading(false));
+    }
+  }, [auth.loading]);
+
   const columnsMalpun: MUIDataTableColumn[] = [
     {
       label: "Nama",
-      name: "nama",
-      options: {
-        filter: true,
-        customBodyRender: (value: any, tableMeta: any) => {
-          return (
-            <Flex w={"12em"} alignItems={"center"}>
-              <Text>{value}</Text>
-            </Flex>
-          );
-        },
-      },
+      name: "name",
+      // options: {
+      //   filter: true,
+      // },
     },
     {
       label: "NIM",
       name: "nim",
-      options: {
-        customBodyRender: (value: any, tableMeta: any) => {
-          return (
-            <HStack>
-              <Text>{value}</Text>
-            </HStack>
-          );
-        },
-      },
+      // options: {
+      //   filter: true,
+      // },
     },
     {
-      label: "Email",
-      name: "email",
+      label: "Token",
+      name: "tokenMalpun",
       options: {
-        filter: true,
+        // filter: true,
+        display: "false",
       },
     },
     {
       label: "Kehadiran",
-      name: "kehadiran",
+      name: "isAttendedMalpun",
       options: {
-        customBodyRender: (value: any, tableMeta: any) => {
-          return <>{value ? <Icon as={BsCheckCircleFill} w={5} h={5} color="#36AD2C" /> : <Icon as={BsXCircleFill} w={5} h={5} color="#F43535" />}</>;
+        customBodyRender: (value: boolean, tableMeta: any, updateValue) => {
+          const rowData = dataMalpun[tableMeta.rowIndex];
+
+          return (
+            <MuiCheckbox
+              checked={Boolean(value)}
+              disabled={
+                auth.role !== "panit" ||
+                !allowedEditPanitia.includes(auth.user?.divisiID!) ||
+                value
+              }
+              onChange={() => {
+                Swal.fire({
+                  title: "Apakah kamu yakin?",
+                  text: `Toggle absensi ${rowData.nim} ${rowData.name}?`,
+                  showCancelButton: true,
+                  confirmButtonText: "Yakin",
+                  cancelButtonText: "Batal",
+                  cancelButtonColor: "red",
+                  icon: "warning",
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    api
+                      .post("/malpun/absen/", {
+                        token: rowData.tokenMalpun,
+                      })
+                      .then(({ data }) => {
+                        Swal.fire(
+                          "Berhasil!",
+                          `Berhasil mengubah kehadiran ${rowData.name}`,
+                          "success"
+                        );
+                        updateValue(1 as unknown as string); // mui-datatables jelek :(
+                      })
+                      .catch(HandleAxiosError);
+                  }
+                });
+              }}
+            />
+          );
         },
       },
     },
   ];
 
-  const options = {};
-
-  // data dummy
-  const dataMalpun = [
-    ["GawrGura1", "12345678", "gawrgura1@student.umn.ac.id", true],
-    ["GawrGura2", "23456789", "gawrgura2@student.umn.ac.id", false],
-    ["GawrGura3", "34567890", "gawrgura3@student.umn.ac.id", true],
-    ["GawrGura4", "45678901", "gawrgura4@student.umn.ac.id", true],
-    ["GawrGura5", "56789012", "gawrgura5@student.umn.ac.id", false],
-    ["GawrGura6", "67890123", "gawrgura6@student.umn.ac.id", true],
-    ["GawrGura7", "78901234", "gawrgura7@student.umn.ac.id", true],
-    ["GawrGura8", "89012345", "gawrgura8@student.umn.ac.id", true],
-    ["GawrGura9", "90123456", "gawrgura9@student.umn.ac.id", false],
-    ["GawrGura10", "01234567", "gawrgura10@student.umn.ac.id", false],
-  ];
+  if (auth.loading || isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>
