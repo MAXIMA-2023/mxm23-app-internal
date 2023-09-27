@@ -34,7 +34,23 @@ import {
 } from "@chakra-ui/react";
 
 // icons
-import { MdAccountCircle, MdLogout, MdAdminPanelSettings, MdSpaceDashboard, MdGroups, MdWorkspacesFilled, MdQrCodeScanner, MdAirplanemodeActive, MdSchool, MdShield, MdToggleOff, MdPeople, MdViewList, MdEdit } from "react-icons/md";
+import {
+  MdAccountCircle,
+  MdLogout,
+  MdAdminPanelSettings,
+  MdSpaceDashboard,
+  MdGroups,
+  MdWorkspacesFilled,
+  MdQrCodeScanner,
+  MdAirplanemodeActive,
+  MdSchool,
+  MdShield,
+  MdToggleOff,
+  MdPeople,
+  MdViewList,
+  MdEdit,
+  MdPeopleOutline,
+} from "react-icons/md";
 import { HiSparkles, HiOfficeBuilding } from "react-icons/hi";
 import { BsCheckCircleFill } from "react-icons/bs";
 
@@ -335,13 +351,38 @@ export const BottomBar = () => {
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
-            {auth.role === "panit" && (
-              <>
-                <BottomBarMenuItem href={"/dashboard/malpun/peserta"} activeIcon={HiSparkles} inactiveIcon={HiOutlineSparkles} isActive={pathname === "/dashboard/malpun/peserta"}>
-                  MALPUN
-                </BottomBarMenuItem>
-              </>
-            )}
+            <Accordion allowToggle>
+              <AccordionItem border={"none"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                <AccordionButton px={"0.5em"} color={pathname.includes("/dashboard/malpun") ? activeColor : inactiveColor}>
+                  <Stack direction={"row"}>
+                    <Icon as={pathname.includes("/dashboard/malpun") ? HiSparkles : HiOutlineSparkles} boxSize={"1.5em"} />
+                    <Text px={"0.5em"}>MALPUN</Text>
+                  </Stack>
+                  <Spacer />
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel ml={"1.5em"} p={0}>
+                  {auth.role === "panit" && (
+                    <>
+                      <Stack as={Link} href={"/dashboard/malpun/internal"} direction={"row"} align={"center"} my={"0.5em"} color={pathname === "/dashboard/malpun/internal" ? activeColor : inactiveColor}>
+                        <Icon as={pathname === "/dashboard/malpun/internal" ? MdPeople : MdPeopleOutline} />
+                        <Text fontSize={"sm"}>Internal</Text>
+                      </Stack>
+                    </>
+                  )}
+                </AccordionPanel>
+                <AccordionPanel ml={"1.5em"} p={0}>
+                  {auth.role === "panit" && (
+                    <>
+                      <Stack as={Link} href={"/dashboard/malpun/external"} direction={"row"} align={"center"} my={"0.5em"} color={pathname === "/dashboard/malpun/external" ? activeColor : inactiveColor}>
+                        <Icon as={pathname === "/dashboard/malpun/external" ? MdPeople : MdPeopleOutline} />
+                        <Text fontSize={"sm"}>External</Text>
+                      </Stack>
+                    </>
+                  )}
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
           </BottomBarMenu>
         </Flex>
       </Box>

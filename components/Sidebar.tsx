@@ -357,26 +357,61 @@ export default function Sidebar() {
               )}
               {auth.role === "panit" ? (
                 <>
-                  <Box>
-                    <Link href={"/dashboard/malpun/peserta"}>
-                      <Flex
-                        alignItems={"center"}
-                        py={"0.75em"}
-                        px={"1.25em"}
-                        bgColor={pathname === "/dashboard/malpun/peserta" ? "#FAFAFA" : "transparent"}
-                        color={pathname === "/dashboard/malpun/peserta" ? "#185C99" : "#1E1D22"}
-                        _hover={{ bgColor: "#FAFAFA", color: "#185C99" }}
-                        cursor={"pointer"}
-                        borderRadius={"md"}
-                        transition={"0.1s ease-in-out"}
-                      >
-                        <Icon as={pathname === "/dashboard/malpun/peserta" ? HiSparkles : HiOutlineSparkles} boxSize={iconBoxSize} />
-                        <Text ml={"0.7em"} fontSize={"md"} fontWeight={"medium"}>
-                          MALPUN
-                        </Text>
-                      </Flex>
-                    </Link>
-                  </Box>
+                  <Flex
+                    justifyContent={"start"}
+                    textColor={pathname.includes("/dashboard/malpun") ? "#185C99" : "#1E1D22"}
+                    py={"0.75em"}
+                    px={"1.25em"}
+                    _hover={{ bgColor: "#FAFAFA", color: "#185C99" }}
+                    cursor={"pointer"}
+                    transition={"0.1s ease-in-out"}
+                  >
+                    <Accordion w={"full"} allowToggle defaultIndex={pathname.includes("/dashboard/malpun") ? [0] : undefined} borderRadius={"md"}>
+                      <AccordionItem border={"none"}>
+                        <AccordionButton p={0} _hover={{ color: "#185C99" }} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                          <Box flex="1" textAlign="left">
+                            <Flex alignItems={"center"}>
+                              <Icon as={pathname.includes("/dashboard/state") ? HiSparkles : HiOutlineSparkles} boxSize={iconBoxSize} />
+                              <Text ml={"0.7em"} fontSize={"md"} fontWeight={"medium"}>
+                                MALPUN
+                              </Text>
+                            </Flex>
+                          </Box>
+                          <AccordionIcon />
+                        </AccordionButton>
+                        <AccordionPanel p={0}>
+                          <Stack ml={"0.35em"} mt={"0.5em"} direction={"column"} spacing={"0.5em"}>
+                            {auth.role === "panit" ? (
+                              <>
+                                <Box>
+                                  <Link href={"/dashboard/malpun/internal"}>
+                                    <Flex alignItems={"center"} _hover={{ color: "#185C99" }} color={pathname.includes("/dashboard/malpun/internal") ? "#185C99" : "#1E1D22"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                                      <Icon ml={"1.75em"} as={pathname.includes("/dashboard/malpun/internal") ? MdPeople : MdPeopleOutline} boxSize={iconBoxSize} />
+                                      <Text ml={"0.5em"} fontSize={"md"} fontWeight={"medium"}>
+                                        Internal
+                                      </Text>
+                                    </Flex>
+                                  </Link>
+                                </Box>
+                                <Box>
+                                  <Link href={"/dashboard/malpun/external"}>
+                                    <Flex alignItems={"center"} _hover={{ color: "#185C99" }} color={pathname.includes("/dashboard/malpun/external") ? "#185C99" : "#1E1D22"} cursor={"pointer"} transition={"0.1s ease-in-out"}>
+                                      <Icon ml={"1.75em"} as={pathname.includes("/dashboard/malpun/external") ? MdPeople : MdPeopleOutline} boxSize={iconBoxSize} />
+                                      <Text ml={"0.5em"} fontSize={"md"} fontWeight={"medium"}>
+                                        External
+                                      </Text>
+                                    </Flex>
+                                  </Link>
+                                </Box>
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                          </Stack>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    </Accordion>
+                  </Flex>
                 </>
               ) : (
                 <></>
