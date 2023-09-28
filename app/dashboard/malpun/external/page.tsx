@@ -10,11 +10,44 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
+import { Checkbox as MuiCheckbox } from "@mui/material";
+
+
+import { useAuth } from "@/contexts/Auth";
+import api, { HandleAxiosError, ResponseModel } from "@/services/api";
+import Swal from "sweetalert2";
+import LoadingSpinner from "@/components/LoadingSpinner";
+
+type MalpunExternal = {
+  name: string;
+  email: number;
+  whatsapp: string;
+  isAttendedMalpun: boolean;
+  tokenMalpun: string;
+};
+
 export default function PesertExternalaMalpun() {
+  const auth = useAuth();
+  const allowedEditPanitia = ["D01", "D02", "D05", "D13"];
+
+  const [dataMalpun, setDataMalpun] = useState<MalpunExternal[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!auth.loading) {
+      api
+        .get<ResponseModel<MalpunExternal[]>>("/malpun/purchase/paid")
+        .then(({ data }) => {
+          setDataMalpun(data.data!);
+        })
+        .catch(HandleAxiosError)
+        .finally(() => setIsLoading(false));
+    }
+  }, [auth.loading]);
   const columnsMalpun: MUIDataTableColumn[] = [
     {
       label: "Nama",
-      name: "nama",
+      name: "name",
       options: {
         filter: true,
         customBodyRender: (value: any, tableMeta: any) => {
@@ -44,28 +77,54 @@ export default function PesertExternalaMalpun() {
       label: "Kehadiran",
       name: "kehadiran",
       options: {
-        customBodyRender: (value: any, tableMeta: any) => {
-          return <>{value ? <Icon as={BsCheckCircleFill} w={5} h={5} color="#36AD2C" /> : <Icon as={BsXCircleFill} w={5} h={5} color="#F43535" />}</>;
+        customBodyRender: (value: boolean, tableMeta: any, updateValue) => {
+          const rowData = dataMalpun[tableMeta.rowIndex];
+
+          return (
+            <MuiCheckbox
+              checked={Boolean(value)}
+              disabled={
+                auth.role !== "panit" ||
+                !allowedEditPanitia.includes(auth.user?.divisiID!) ||
+                value
+              }
+              onChange={() => {
+                Swal.fire({
+                  title: "Apakah kamu yakin?",
+                  text: `Toggle absensi ${rowData.email} ${rowData.name}?`,
+                  showCancelButton: true,
+                  confirmButtonText: "Yakin",
+                  cancelButtonText: "Batal",
+                  cancelButtonColor: "red",
+                  icon: "warning",
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    api
+                      .post("/malpun/absen/", {
+                        token: rowData.tokenMalpun,
+                      })
+                      .then(({ data }) => {
+                        Swal.fire(
+                          "Berhasil!",
+                          `Berhasil mengubah kehadiran ${rowData.name}`,
+                          "success"
+                        );
+                        updateValue(1 as unknown as string); // mui-datatables jelek :(
+                      })
+                      .catch(HandleAxiosError);
+                  }
+                });
+              }}
+            />
+          );
         },
       },
     },
   ];
 
-  const options = {};
-
-  // data dummy
-  const dataMalpun = [
-    ["GawrGura1", "gawrgura1@student.umn.ac.id", true],
-    ["GawrGura2", "gawrgura2@student.umn.ac.id", false],
-    ["GawrGura3", "gawrgura3@student.umn.ac.id", true],
-    ["GawrGura4", "gawrgura4@student.umn.ac.id", true],
-    ["GawrGura5", "gawrgura5@student.umn.ac.id", false],
-    ["GawrGura6", "gawrgura6@student.umn.ac.id", true],
-    ["GawrGura7", "gawrgura7@student.umn.ac.id", true],
-    ["GawrGura8", "gawrgura8@student.umn.ac.id", true],
-    ["GawrGura9", "gawrgura9@student.umn.ac.id", false],
-    ["GawrGura10", "gawrgura10@student.umn.ac.id", false],
-  ];
+  if (auth.loading || isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>
