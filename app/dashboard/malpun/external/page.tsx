@@ -23,7 +23,7 @@ type MalpunExternal = {
   email: number;
   whatsapp: string;
   isAttendedMalpun: boolean;
-  tokenMalpun: string;
+  token: string;
 };
 
 export default function PesertExternalaMalpun() {
@@ -74,8 +74,16 @@ export default function PesertExternalaMalpun() {
       },
     },
     {
+      label: "Token",
+      name: "token",
+      options: {
+        // filter: true,
+        display: "false",
+      },
+    },
+    {
       label: "Kehadiran",
-      name: "kehadiran",
+      name: "isAttendedMalpun",
       options: {
         customBodyRender: (value: boolean, tableMeta: any, updateValue) => {
           const rowData = dataMalpun[tableMeta.rowIndex];
@@ -101,7 +109,7 @@ export default function PesertExternalaMalpun() {
                   if (result.isConfirmed) {
                     api
                       .post("/malpun/absen/", {
-                        token: rowData.tokenMalpun,
+                        token: rowData.token,
                       })
                       .then(({ data }) => {
                         Swal.fire(
