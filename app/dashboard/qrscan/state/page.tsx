@@ -113,6 +113,14 @@ export default function QRScanSTATE() {
         >
           <Skeleton isLoaded={!fetchLoading}>
             <QRScanner
+              validation={(id) => {
+                if (!id.startsWith("MXM-")) {
+                  return "Data QR bukan berformat MAXIMA";
+                }
+                if (id.length !== 9 && id.length !== 10) {
+                  return "Data QR berformat MAXIMA, namun format id salah";
+                }
+              }}
               onSuccess={async (id) => {
                 // *debouncing, biar ga open berkali kali
                 if (currentUser) {

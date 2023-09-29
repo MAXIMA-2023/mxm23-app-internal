@@ -109,9 +109,11 @@ const ViewFinder = () => {
   );
 };
 const QRScanner = ({
+  validation,
   onSuccess,
   onError,
 }: {
+  validation: (id: string) => string | undefined;
   onSuccess: (result: string) => void;
   onError: (reason: string) => void;
 }) => {
@@ -158,19 +160,13 @@ const QRScanner = ({
           facingMode: { exact: cameraState.cameraFacing },
         }}
         onDecode={(result) => {
-          if (!result.startsWith("MXM-")) {
-            onError("Data QR bukan berformat MAXIMA");
+          const validate = validation(result);
+          if (validate) {
+            onError(validate);
             return;
           }
 
-          const id = result.replace("MXM-", "");
-
-          if (id.length !== 5 && id.length !== 6) {
-            onError("Data QR berformat MAXIMA, namun format id salah");
-            return;
-          }
-
-          onSuccess(id);
+          onSuccess(result);
         }}
         onError={(reason) => {
           if (reason.name === "OverconstrainedError") {
