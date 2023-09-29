@@ -33,6 +33,7 @@ import Swal from "sweetalert2";
 
 import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 import { useAuth } from "@/contexts/Auth";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type UserMalpun = {
   name: string;
@@ -49,25 +50,9 @@ export default function QRScanMalpun() {
   // modal
   const [currentUser, setCurrentUser] = useState<UserMalpun | null>(null);
 
-  // fetch dayManagement
-  const [isDay, setIsDay] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (loading) return;
-
-    // compare today's date with 7 october 2023
-    const today = new Date();
-    const malpunDate = new Date(2023, 8, 29);
-
-    console.log(today, malpunDate);
-    if (today >= malpunDate) {
-      setIsDay(true);
-      return;
-    }
-
-    Swal.fire("Error!", "Hari ini bukan hari malam puncak", "error");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>
@@ -80,40 +65,38 @@ export default function QRScanMalpun() {
           borderRadius="2xl"
           overflow="hidden"
         >
-          <Skeleton isLoaded={isDay}>
-            <QRScanner
-              validation={(id) => {
-                if (!id.startsWith("MXM23-")) {
-                  return "Data QR bukan berformat MAXIMA";
-                }
+          <QRScanner
+            validation={(id) => {
+              if (!id.startsWith("MXM23-")) {
+                return "Data QR bukan berformat MAXIMA";
+              }
 
-                if (id.length != 38) {
-                  return "Data QR tidak valid";
-                }
-              }}
-              onSuccess={async (id) => {
-                // *debouncing, biar ga open berkali kali
-                if (currentUser) {
-                  console.log("debounced");
-                  return;
-                }
+              if (id.length != 38) {
+                return "Data QR tidak valid";
+              }
+            }}
+            onSuccess={async (id) => {
+              // *debouncing, biar ga open berkali kali
+              if (currentUser) {
+                console.log("debounced");
+                return;
+              }
 
-                try {
-                  const { data } = await api.get<ResponseModel<UserMalpun>>(
-                    `/malpun/data/${id}` // tunggu endpoint dari backend
-                  );
+              try {
+                const { data } = await api.get<ResponseModel<UserMalpun>>(
+                  `/malpun/data/${id}` // tunggu endpoint dari backend
+                );
 
-                  setCurrentUser(data.data!);
-                } catch (err) {
-                  console.log(err);
-                  HandleAxiosError(err);
-                }
-              }}
-              onError={(reason) => {
-                Swal.fire("Error!", reason, "error");
-              }}
-            />
-          </Skeleton>
+                setCurrentUser(data.data!);
+              } catch (err) {
+                console.log(err);
+                HandleAxiosError(err);
+              }
+            }}
+            onError={(reason) => {
+              Swal.fire("Error!", reason, "error");
+            }}
+          />
           <Modal
             isOpen={!!currentUser}
             onClose={() => setCurrentUser(null)}
