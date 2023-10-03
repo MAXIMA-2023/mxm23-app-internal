@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Text,
@@ -13,29 +13,51 @@ import {
   Button,
   useDisclosure,
   Spacer,
+  Skeleton,
 } from "@chakra-ui/react";
 import Layout from "@/components/Layout";
-import QRScanner from "@/components/qrscan/QRScanner";
+
+import dynamic from "next/dynamic";
+// import QRScanner from "@/components/qrscan/QRScanner";
+
+// dynamic import, biar ga ssr
+const QRScanner = dynamic(
+  () =>
+    import("@/components/qrscan/QRScanner").then((module) => module.default),
+  {
+    ssr: false,
+  }
+);
+
 import Swal from "sweetalert2";
 
-// !CHANGEME: Ini cuma dummy data, nanti diganti schema dengan POST requests
-import { DummyPresensiData } from "../data";
+import api, { HandleAxiosError, ResponseModel } from "@/services/api";
+import { useAuth } from "@/contexts/Auth";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
-type Modal = {
-  isSuccess: boolean;
-  id?: string;
-  errorReason?: string;
+type UserMalpun = {
+  name: string;
+  nim: number | null; // kalo external, nimnya null
+  ticketClaimed: boolean;
+  isAttendedMalpun: boolean;
+  tokenMalpun: string;
+  isInternal: boolean;
 };
 
-export default function QRScanSTATE() {
+export default function QRScanMalpun() {
+  const { loading } = useAuth();
+
   // modal
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [modalState, setModalState] = useState<Modal>({ isSuccess: false });
+  const [currentUser, setCurrentUser] = useState<UserMalpun | null>(null);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>
       <title>MAXIMA 2023 Internal - QR Scan Malpun</title>
-      <Layout title="QR Scan MALPUN" showDashboardButton disablePadding>
+      <Layout title="QR Scan Malpun" showDashboardButton disablePadding>
         <Box
           w="full"
           h="80vh"
@@ -44,100 +66,96 @@ export default function QRScanSTATE() {
           overflow="hidden"
         >
           <QRScanner
-            onSuccess={(id) => {
-              // !CHANGEME: ganti dummy data dengan get init data dari get requests
+            validation={(id) => {
+              if (!id.startsWith("MXM23-")) {
+                return "Data QR bukan berformat MAXIMA";
+              }
 
+              if (id.length != 38) {
+                return "Data QR tidak valid";
+              }
+            }}
+            onSuccess={async (id) => {
               // *debouncing, biar ga open berkali kali
-              if (isOpen) {
+              if (currentUser) {
+                console.log("debounced");
                 return;
               }
 
-              // !TODO: Handling buat akun yang gak eligible atau belum bayar.
-              if (!DummyPresensiData.malpun.isEligible) {
-                Swal.fire(
-                  "Error!",
-                  DummyPresensiData.isInternal
-                    ? "Mahasiswa tidak eligible untuk mengikuti MALPUN"
-                    : "Peserta tidak berhak untuk mengikuti MALPUN karena belum bayar",
-                  "error"
+              try {
+                const { data } = await api.get<ResponseModel<UserMalpun>>(
+                  `/malpun/data/${id}` // tunggu endpoint dari backend
                 );
-                return;
-              }
 
-              setModalState({
-                isSuccess: true,
-                id: id,
-              });
-              onOpen();
+                setCurrentUser(data.data!);
+              } catch (err) {
+                console.log(err);
+                HandleAxiosError(err);
+              }
             }}
             onError={(reason) => {
-              setModalState({
-                isSuccess: false,
-                errorReason: reason,
-              });
-              onOpen();
+              Swal.fire("Error!", reason, "error");
             }}
           />
-
-          {/* !TODO: Buat modal alert */}
-          {/* ?TESTING: useState bikin re render gak ya?, sayang performance camera */}
-          <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <Modal
+            isOpen={!!currentUser}
+            onClose={() => setCurrentUser(null)}
+            isCentered
+          >
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader textColor="#1e1d22">
-                {modalState.isSuccess ? "Sukses!" : "Error!"}
+              <ModalHeader textColor="#1e1d22" fontWeight="bold">
+                Presensi Malpun
               </ModalHeader>
               <ModalCloseButton />
 
               <ModalBody textColor="#1e1d22">
-                {modalState.isSuccess ? (
-                  <Box>
-                    {DummyPresensiData.isInternal ? (
-                      <Text>
-                        <Text fontWeight={"bold"}>NIM</Text>{" "}
-                        {DummyPresensiData.nim}
-                      </Text>
-                    ) : (
-                      <Text>
-                        <Text fontWeight={"bold"}>KTP</Text>{" "}
-                        {DummyPresensiData.ktp}
-                      </Text>
-                    )}
+                <Box>
+                  <Text>
+                    <Text fontWeight={"bold"}>Nama</Text>
+                    {currentUser?.name}
+                  </Text>
+                  {currentUser?.nim && (
                     <Text>
-                      <Text fontWeight={"bold"}>Nama</Text>{" "}
-                      {DummyPresensiData.name}
+                      <Text fontWeight={"bold"}>NIM</Text>
+                      {currentUser?.nim}
                     </Text>
-                    <Text>
-                      <Text fontWeight={"bold"}>Status</Text>
-                      {DummyPresensiData.isInternal ? "Internal" : "External"}
-                    </Text>
-                  </Box>
-                ) : (
-                  <Text>{modalState.errorReason}</Text>
-                )}
+                  )}
+                  <Text>
+                    <Text fontWeight={"bold"}>Status</Text>
+                    {currentUser?.isInternal ? "Internal" : "External"}
+                  </Text>
+                </Box>
               </ModalBody>
 
               <ModalFooter>
-                {modalState.isSuccess && (
-                  <Button
-                    color="#185C99"
-                    mr={3}
-                    onClick={() => {
-                      // !CHANGEME: POST Requests absen masuk dan schema buat disable button
-                      console.log("ABSEN MASUK MALPUN");
-                      onClose();
-                    }}
-                    isDisabled={DummyPresensiData.malpun.isHadir}
-                  >
-                    Masuk
-                  </Button>
-                )}
+                <Button
+                  color="#185C99"
+                  // mr={3}
+                  onClick={() =>
+                    api
+                      .post("/malpun/absen/", {
+                        token: currentUser?.tokenMalpun,
+                      })
+                      .then(({ data }) => {
+                        Swal.fire(
+                          "Berhasil!",
+                          `Berhasil presensi masuk ${currentUser?.name}`,
+                          "success"
+                        );
+                      })
+                      .catch(HandleAxiosError)
+                      .finally(() => setCurrentUser(null))
+                  }
+                  isDisabled={currentUser?.isAttendedMalpun}
+                >
+                  Masuk
+                </Button>
                 <Spacer />
                 <Button
                   color="#185C99"
-                  variant={"outline"}
-                  mr={3}
-                  onClick={onClose}
+                  variant="outline"
+                  onClick={() => setCurrentUser(null)}
                 >
                   Cancel
                 </Button>
