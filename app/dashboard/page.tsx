@@ -2,22 +2,9 @@
 import React, { useRef, useEffect, useState, MutableRefObject } from "react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/Auth";
-import {
-  Text,
-  Box,
-  Flex,
-  Icon,
-  Tooltip,
-  Center,
-  Skeleton,
-} from "@chakra-ui/react";
+import { Text, Box, Flex, Icon, Tooltip, Center, Skeleton } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import {
-  MdOutlineShield,
-  MdOutlineSchool,
-  MdOutlineAirplanemodeActive,
-  MdInfoOutline,
-} from "react-icons/md";
+import { MdOutlineShield, MdOutlineSchool, MdOutlineAirplanemodeActive, MdInfoOutline } from "react-icons/md";
 import { HiOutlineOfficeBuilding, HiOutlineSparkles } from "react-icons/hi";
 import Charts from "@/components/Charts";
 import { useRouter } from "next/navigation";
@@ -54,6 +41,14 @@ type PanitiaTabData = {
   totalMabaMalpun: number;
 };
 
+type MalpunExternal = {
+  name: string;
+  email: number;
+  whatsapp: string;
+  isAttendedMalpun: boolean;
+  token: string;
+};
+
 export default function Dashboard() {
   const router = useRouter();
   const auth = useAuth();
@@ -62,11 +57,11 @@ export default function Dashboard() {
 
   const [fetchLoading, setFetchLoading] = useState(true);
 
-  const [statisticMahasiswa, setStatisticMahasiswa] =
-    useState<StatisticMahasiwa>({
-      date: [],
-      registered: [],
-    });
+  const [statisticMahasiswa, setStatisticMahasiswa] = useState<StatisticMahasiwa>({
+    date: [],
+    registered: [],
+  });
+  const [dataMalpunExternal, setDataMalpunExternal] = useState<MalpunExternal[]>([]);
 
   // todo: tunggu api malpun, add totalMalpun
   const [panitiaTabData, setPanitiaTabData] = useState<PanitiaTabData>({
@@ -85,10 +80,17 @@ export default function Dashboard() {
     if (!auth.loading && auth.role === "panit") {
       const fetchPanitiaTabData = async () => {
         try {
-          const { data } = await api.get<ResponseModel<PanitiaTabData>>(
-            "/panit/data/stat"
-          );
+          const { data } = await api.get<ResponseModel<PanitiaTabData>>("/panit/data/stat");
           setPanitiaTabData(data.data!);
+        } catch (error) {
+          HandleAxiosError(error);
+        }
+      };
+
+      const fetchMalpunExternal = async () => {
+        try {
+          const { data } = await api.get<ResponseModel<MalpunExternal[]>>("/malpun/purchase/paid");
+          setDataMalpunExternal(data.data!);
         } catch (error) {
           HandleAxiosError(error);
         }
@@ -96,9 +98,7 @@ export default function Dashboard() {
 
       const fetchStatisticMahasiswa = async () => {
         try {
-          const { data } = await api.get<
-            ResponseModel<StatisticMahasiswaResponse>
-          >("/mahasiswa/statistic");
+          const { data } = await api.get<ResponseModel<StatisticMahasiswaResponse>>("/mahasiswa/statistic");
 
           const combined = [...data.data?.maxTown!, ...data.data?.home!];
           setStatisticMahasiswa({
@@ -110,17 +110,13 @@ export default function Dashboard() {
         }
       };
 
-      Promise.all([fetchPanitiaTabData(), fetchStatisticMahasiswa()]).finally(
-        () => setFetchLoading(false)
-      );
+      Promise.all([fetchPanitiaTabData(), fetchStatisticMahasiswa(), fetchMalpunExternal()]).finally(() => setFetchLoading(false));
     }
 
     if (!auth.loading && auth.role === "organisator") {
       const fetchOrganisatorTabData = async () => {
         try {
-          const { data } = await api.get<ResponseModel<number>>(
-            "/organisator/data/stat"
-          );
+          const { data } = await api.get<ResponseModel<number>>("/organisator/data/stat");
           setOrganisatorTabData(data.data!);
         } catch (error) {
           HandleAxiosError(error);
@@ -129,22 +125,17 @@ export default function Dashboard() {
 
       const fetchStatisticSTATE = async () => {
         try {
-          const { data } = await api.get<ResponseModel<StatisticSTATEResponse>>(
-            `/organisator/state/statistik/${auth.user?.stateID}`
-          );
+          const { data } = await api.get<ResponseModel<StatisticSTATEResponse>>(`/organisator/state/statistik/${auth.user?.stateID}`);
           setStatisticMahasiswa({
             date: data.data?.statistic.map((item) => item.date) ?? [],
-            registered:
-              data.data?.statistic.map((item) => item.registered) ?? [],
+            registered: data.data?.statistic.map((item) => item.registered) ?? [],
           });
         } catch (error) {
           HandleAxiosError(error);
         }
       };
 
-      Promise.all([fetchOrganisatorTabData(), fetchStatisticSTATE()]).finally(
-        () => setFetchLoading(false)
-      );
+      Promise.all([fetchOrganisatorTabData(), fetchStatisticSTATE()]).finally(() => setFetchLoading(false));
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,8 +175,7 @@ export default function Dashboard() {
       icon: HiOutlineOfficeBuilding,
       bgColor: "#FEE7E7",
       iconBgColor: "#E53E3E",
-      tooltipLabel:
-        "Data ini menampilkan jumlah PIC organisator yang terdaftar",
+      tooltipLabel: "Data ini menampilkan jumlah PIC organisator yang terdaftar",
       tooltipIcon: "Organisator",
       total: panitiaTabData.totalOrg,
     },
@@ -205,21 +195,29 @@ export default function Dashboard() {
       icon: MdOutlineAirplanemodeActive,
       bgColor: "#ECE7FE",
       iconBgColor: "#4A05DE",
-      tooltipLabel:
-        "Data ini menampilkan jumlah mahasiswa yang mengikuti STATE",
+      tooltipLabel: "Data ini menampilkan jumlah mahasiswa yang mengikuti STATE",
       tooltipIcon: "STATE",
       total: panitiaTabData.totalMabaState,
     },
     {
-      name: "Malpun",
-      href: "/dashboard/malpun/peserta ",
+      name: "Malpun Internal",
+      href: "/dashboard/malpun/internal ",
       icon: HiOutlineSparkles,
       bgColor: "#FEE7FC",
       iconBgColor: "#DE05C8",
-      tooltipLabel:
-        "Data ini menampilkan jumlah mahasiswa yang mengikuti Malam Puncak",
+      tooltipLabel: "Data ini menampilkan jumlah internal yang mengikuti Malam Puncak",
       tooltipIcon: "Malpun",
       total: panitiaTabData.totalMabaMalpun,
+    },
+    {
+      name: "Malpun External",
+      href: "/dashboard/malpun/external ",
+      icon: HiOutlineSparkles,
+      bgColor: "#FEE7FC",
+      iconBgColor: "#DE05C8",
+      tooltipLabel: "Data ini menampilkan jumlah external yang mengikuti Malam Puncak",
+      tooltipIcon: "Malpun",
+      total: dataMalpunExternal.length - 1,
     },
   ];
 
@@ -252,48 +250,16 @@ export default function Dashboard() {
                 Tab
               </Text>
             </Box> */}
-            <Box
-              as={motion.div}
-              overflowX={"hidden"}
-              cursor={"grab"}
-              whileTap={{ cursor: "grabbing" }}
-            >
+            <Box as={motion.div} overflowX={"hidden"} cursor={"grab"} whileTap={{ cursor: "grabbing" }}>
               <Skeleton isLoaded={!fetchLoading}>
-                <Flex
-                  as={motion.div}
-                  w={"full"}
-                  maxW={"full"}
-                  mt={"0.5em"}
-                  drag={"x"}
-                  dragConstraints={{ right: 0, left: -width }}
-                  ref={cardRef}
-                >
+                <Flex as={motion.div} w={"full"} maxW={"full"} mt={"0.5em"} drag={"x"} dragConstraints={{ right: 0, left: -width }} ref={cardRef}>
                   {auth.role === "panit" ? (
                     <>
                       {tabsPanitia.map((tab, index) => (
-                        <Box
-                          as={motion.div}
-                          minW={"15em"}
-                          h={"7.5em"}
-                          p={"1em"}
-                          bg={tab.bgColor}
-                          mr={"1em"}
-                          mb={"1em"}
-                          key={index}
-                          borderRadius={"lg"}
-                        >
+                        <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tab.bgColor} mr={"1em"} mb={"1em"} key={index} borderRadius={"lg"}>
                           <Box w={"full"} h={"auto"}>
-                            <Flex
-                              w={"full"}
-                              h={"auto"}
-                              justifyContent={"space-between"}
-                              alignItems={"center"}
-                            >
-                              <Flex
-                                w={"full"}
-                                justifyContent={"start"}
-                                alignItems={"center"}
-                              >
+                            <Flex w={"full"} h={"auto"} justifyContent={"space-between"} alignItems={"center"}>
+                              <Flex w={"full"} justifyContent={"start"} alignItems={"center"}>
                                 <Box
                                   _hover={{
                                     textDecoration: "underline",
@@ -307,49 +273,15 @@ export default function Dashboard() {
                                     {tab.name}
                                   </Text>
                                 </Box>
-                                <Tooltip
-                                  p={"1em"}
-                                  hasArrow
-                                  label={tab.tooltipLabel}
-                                  bg={"white"}
-                                  color={"#1E1D22"}
-                                  borderRadius={"md"}
-                                >
+                                <Tooltip p={"1em"} hasArrow label={tab.tooltipLabel} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
                                   <Center _hover={{ cursor: "pointer" }}>
-                                    <Icon
-                                      as={MdInfoOutline}
-                                      color={"#1E1D22"}
-                                      w={"0.85em"}
-                                      h={"0.85em"}
-                                      ml={"0.25em"}
-                                    />
+                                    <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
                                   </Center>
                                 </Tooltip>
                               </Flex>
-                              <Tooltip
-                                p={"0.5em"}
-                                hasArrow
-                                label={tab.tooltipIcon}
-                                bg={"white"}
-                                color={"#1E1D22"}
-                                borderRadius={"md"}
-                              >
-                                <Box
-                                  ml={"auto"}
-                                  bg={tab.iconBgColor}
-                                  w={"1.5em"}
-                                  h={"1.5em"}
-                                  borderRadius={"50%"}
-                                  display={"flex"}
-                                  justifyContent={"center"}
-                                  alignItems={"center"}
-                                >
-                                  <Icon
-                                    as={tab.icon}
-                                    color={"white"}
-                                    w={"1em"}
-                                    h={"1em"}
-                                  />
+                              <Tooltip p={"0.5em"} hasArrow label={tab.tooltipIcon} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                                <Box ml={"auto"} bg={tab.iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                                  <Icon as={tab.icon} color={"white"} w={"1em"} h={"1em"} />
                                 </Box>
                               </Tooltip>
                             </Flex>
@@ -364,28 +296,10 @@ export default function Dashboard() {
                     </>
                   ) : auth.role === "organisator" ? (
                     <>
-                      <Box
-                        as={motion.div}
-                        minW={"15em"}
-                        h={"7.5em"}
-                        p={"1em"}
-                        bg={tabsOrganisator[0].bgColor}
-                        mr={"1em"}
-                        mb={"1em"}
-                        borderRadius={"lg"}
-                      >
+                      <Box as={motion.div} minW={"15em"} h={"7.5em"} p={"1em"} bg={tabsOrganisator[0].bgColor} mr={"1em"} mb={"1em"} borderRadius={"lg"}>
                         <Box w={"full"} h={"auto"}>
-                          <Flex
-                            w={"full"}
-                            h={"auto"}
-                            justifyContent={"space-between"}
-                            alignItems={"center"}
-                          >
-                            <Flex
-                              w={"full"}
-                              justifyContent={"start"}
-                              alignItems={"center"}
-                            >
+                          <Flex w={"full"} h={"auto"} justifyContent={"space-between"} alignItems={"center"}>
+                            <Flex w={"full"} justifyContent={"start"} alignItems={"center"}>
                               <Box
                                 _hover={{
                                   textDecoration: "underline",
@@ -399,49 +313,15 @@ export default function Dashboard() {
                                   {tabsOrganisator[0].name}
                                 </Text>
                               </Box>
-                              <Tooltip
-                                p={"1em"}
-                                hasArrow
-                                label={tabsOrganisator[0].tooltipLabel}
-                                bg={"white"}
-                                color={"#1E1D22"}
-                                borderRadius={"md"}
-                              >
+                              <Tooltip p={"1em"} hasArrow label={tabsOrganisator[0].tooltipLabel} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
                                 <Center _hover={{ cursor: "pointer" }}>
-                                  <Icon
-                                    as={MdInfoOutline}
-                                    color={"#1E1D22"}
-                                    w={"0.85em"}
-                                    h={"0.85em"}
-                                    ml={"0.25em"}
-                                  />
+                                  <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
                                 </Center>
                               </Tooltip>
                             </Flex>
-                            <Tooltip
-                              p={"0.5em"}
-                              hasArrow
-                              label={tabsOrganisator[0].tooltipIcon}
-                              bg={"white"}
-                              color={"#1E1D22"}
-                              borderRadius={"md"}
-                            >
-                              <Box
-                                ml={"auto"}
-                                bg={tabsOrganisator[0].iconBgColor}
-                                w={"1.5em"}
-                                h={"1.5em"}
-                                borderRadius={"50%"}
-                                display={"flex"}
-                                justifyContent={"center"}
-                                alignItems={"center"}
-                              >
-                                <Icon
-                                  as={tabsOrganisator[0].icon}
-                                  color={"white"}
-                                  w={"1em"}
-                                  h={"1em"}
-                                />
+                            <Tooltip p={"0.5em"} hasArrow label={tabsOrganisator[0].tooltipIcon} bg={"white"} color={"#1E1D22"} borderRadius={"md"}>
+                              <Box ml={"auto"} bg={tabsOrganisator[0].iconBgColor} w={"1.5em"} h={"1.5em"} borderRadius={"50%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                                <Icon as={tabsOrganisator[0].icon} color={"white"} w={"1em"} h={"1em"} />
                               </Box>
                             </Tooltip>
                           </Flex>
@@ -482,22 +362,12 @@ export default function Dashboard() {
                     borderRadius={"md"}
                   >
                     <Center _hover={{ cursor: "pointer" }}>
-                      <Icon
-                        as={MdInfoOutline}
-                        color={"#1E1D22"}
-                        w={"0.85em"}
-                        h={"0.85em"}
-                        ml={"0.25em"}
-                      />
+                      <Icon as={MdInfoOutline} color={"#1E1D22"} w={"0.85em"} h={"0.85em"} ml={"0.25em"} />
                     </Center>
                   </Tooltip>
                 </Box>
               </Flex>
-              <Charts
-                jmlPendaftar={statisticMahasiswa.registered}
-                dates={statisticMahasiswa.date}
-                yaxisMax={yaxisMaxValue}
-              />
+              <Charts jmlPendaftar={statisticMahasiswa.registered} dates={statisticMahasiswa.date} yaxisMax={yaxisMaxValue} />
             </Box>
           </Skeleton>
         </Box>
