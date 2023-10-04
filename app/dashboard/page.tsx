@@ -217,7 +217,7 @@ export default function Dashboard() {
       iconBgColor: "#DE05C8",
       tooltipLabel: "Data ini menampilkan jumlah external yang mengikuti Malam Puncak",
       tooltipIcon: "Malpun",
-      total: dataMalpunExternal.length - 1,
+      total: dataMalpunExternal.length,
     },
   ];
 
