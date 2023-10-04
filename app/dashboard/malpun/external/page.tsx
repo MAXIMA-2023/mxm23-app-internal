@@ -12,7 +12,6 @@ import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 
 import { Checkbox as MuiCheckbox } from "@mui/material";
 
-
 import { useAuth } from "@/contexts/Auth";
 import api, { HandleAxiosError, ResponseModel } from "@/services/api";
 import Swal from "sweetalert2";
@@ -29,8 +28,9 @@ type MalpunExternal = {
 export default function PesertExternalaMalpun() {
   const auth = useAuth();
   const allowedEditPanitia = ["D01", "D02", "D05", "D13"];
+  const iconBoxSize = 5;
 
-  const [dataMalpun, setDataMalpun] = useState<MalpunExternal[]>([]);
+  const [dataMalpunExternal, setDataMalpunExternal] = useState<MalpunExternal[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function PesertExternalaMalpun() {
       api
         .get<ResponseModel<MalpunExternal[]>>("/malpun/purchase/paid")
         .then(({ data }) => {
-          setDataMalpun(data.data!);
+          setDataMalpunExternal(data.data!);
         })
         .catch(HandleAxiosError)
         .finally(() => setIsLoading(false));
@@ -82,20 +82,18 @@ export default function PesertExternalaMalpun() {
       },
     },
     {
-      label: "Kehadiran",
+      label: "Absensi Kehadiran",
       name: "isAttendedMalpun",
       options: {
+        display: auth.role === "panit" && allowedEditPanitia.includes(auth.user?.divisiID!) && auth.user?.divisiID !== "D05",
+        viewColumns: auth.role === "panit" && allowedEditPanitia.includes(auth.user?.divisiID!) && auth.user?.divisiID !== "D05",
         customBodyRender: (value: boolean, tableMeta: any, updateValue) => {
-          const rowData = dataMalpun[tableMeta.rowIndex];
+          const rowData = dataMalpunExternal[tableMeta.rowIndex];
 
           return (
             <MuiCheckbox
               checked={Boolean(value)}
-              disabled={
-                auth.role !== "panit" ||
-                !allowedEditPanitia.includes(auth.user?.divisiID!) ||
-                value
-              }
+              disabled={auth.role !== "panit" || !allowedEditPanitia.includes(auth.user?.divisiID!) || value}
               onChange={() => {
                 Swal.fire({
                   title: "Apakah kamu yakin?",
@@ -112,11 +110,7 @@ export default function PesertExternalaMalpun() {
                         token: rowData.token,
                       })
                       .then(({ data }) => {
-                        Swal.fire(
-                          "Berhasil!",
-                          `Berhasil mengubah kehadiran ${rowData.name}`,
-                          "success"
-                        );
+                        Swal.fire("Berhasil!", `Berhasil mengubah kehadiran ${rowData.name}`, "success");
                         updateValue(1 as unknown as string); // mui-datatables jelek :(
                       })
                       .catch(HandleAxiosError);
@@ -124,6 +118,28 @@ export default function PesertExternalaMalpun() {
                 });
               }}
             />
+          );
+        },
+      },
+    },
+    {
+      label: "Kehadiran",
+      name: "",
+      options: {
+        customBodyRender: (value: boolean, tableMeta: any, updatevalue) => {
+          const rowData = dataMalpunExternal[tableMeta.rowIndex];
+          return (
+            <>
+              {rowData.isAttendedMalpun ? (
+                <Flex alignItems={"center"}>
+                  <Icon as={BsCheckCircleFill} boxSize={iconBoxSize} color={"#36AD2C"} />
+                </Flex>
+              ) : (
+                <Flex alignItems={"center"}>
+                  <Icon as={BsXCircleFill} boxSize={iconBoxSize} color={"#F43535"} />
+                </Flex>
+              )}
+            </>
           );
         },
       },
@@ -142,7 +158,7 @@ export default function PesertExternalaMalpun() {
           <ThemeProvider theme={createTheme()}>
             <MUIDataTable
               title={""}
-              data={dataMalpun}
+              data={dataMalpunExternal}
               columns={columnsMalpun}
               options={{
                 rowsPerPage: 10,
